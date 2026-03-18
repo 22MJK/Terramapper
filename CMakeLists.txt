@@ -15,6 +15,7 @@ add_library(mapper_lib
   mapper/mapper.cpp
   taskflow/json.cpp
   taskflow/taskflow.cpp
+  workload/json_io.cpp
   workload/workload.cpp
 )
 

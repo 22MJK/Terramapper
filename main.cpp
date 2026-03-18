@@ -1,6 +1,7 @@
 #include "hardware_topology/topology.h"
 #include "mapper/mapper.h"
 #include "hardware_topology/json_io.h"
+#include "workload/json_io.h"
 #include "workload/workload.h"
 
 #include <cstdlib>
@@ -72,6 +73,7 @@ int main(int argc, char** argv) {
     bool time_unit_set = false;
     std::string taskflow_path = "taskflow.json";
     std::string hardware_path;
+    std::string workload_path;
     for (int i = 1; i < argc; ++i) {
         const std::string arg(argv[i]);
         node_count = parse_int_arg(arg, "--nodes=", node_count);
@@ -83,11 +85,12 @@ int main(int argc, char** argv) {
         }
         taskflow_path = parse_string_arg(arg, "--out=", taskflow_path);
         hardware_path = parse_string_arg(arg, "--hardware=", hardware_path);
+        workload_path = parse_string_arg(arg, "--workload=", workload_path);
     }
     if (node_count <= 0 || depth <= 0) {
         std::cerr
             << "Usage: mapper_demo [--nodes=N] [--depth=D] [--parts=P] [--time_unit=UNIT] [--out=PATH] "
-               "[--hardware=PATH]\n";
+               "[--hardware=PATH] [--workload=PATH]\n";
         return 2;
     }
 
@@ -105,8 +108,17 @@ int main(int argc, char** argv) {
         topology = build_demo_topology(node_count);
     }
 
-    workload::WorkloadGenerator generator;
-    const auto workload = generator.build("demo", depth);
+    workload::Workload workload("demo", {});
+    if (!workload_path.empty()) {
+        std::string error;
+        if (!workload::load_from_json(workload_path, workload, &error)) {
+            std::cerr << "Failed to load workload: " << error << "\n";
+            return 2;
+        }
+    } else {
+        workload::WorkloadGenerator generator;
+        workload = generator.build("demo", depth);
+    }
 
     mapper::Options options;
     options.parts = parts;

@@ -67,9 +67,38 @@ Arguments:
 - `--out=PATH`: output path for `taskflow.json` (default: `taskflow.json`)
 - `--hardware=PATH`: load hardware topology from JSON; if set, `--nodes` is ignored
   - If `--time_unit` is not provided, it will use `time_unit` from the hardware JSON.
+- `--workload=PATH`: load workload DAG from JSON; if set, `--depth` is ignored
 
 Outputs:
 - `taskflow.json`: tasks and edges (no timestamps)
+
+## workload.json schema (current)
+
+```json
+{
+  "name": "demo",
+  "tasks": [
+    {
+      "name": "stage_0",
+      "compute_flops": 50,
+      "memory_gb": 0.5,
+      "dependencies": []
+    }
+  ],
+  "edges": [
+    {
+      "src": "stage_0",
+      "dst": "stage_1",
+      "tensor_size_mb": 4.0
+    }
+  ]
+}
+```
+
+Notes:
+- `edges` is optional. If omitted, dependencies from each task are used and tensor size is derived from
+  `compute_flops * 0.1` (MB) to preserve previous behavior.
+- If `edges` is present, it is used verbatim.
 
 ## taskflow.json schema (current)
 

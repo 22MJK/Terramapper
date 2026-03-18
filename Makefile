@@ -11,6 +11,7 @@ OBJ := \
 	$(BUILD_DIR)/json.o \
 	$(BUILD_DIR)/taskflow.o \
 	$(BUILD_DIR)/mapper_core.o \
+	$(BUILD_DIR)/workload_json.o \
 	$(BUILD_DIR)/workload.o \
 	$(BUILD_DIR)/main.o
 
@@ -48,6 +49,9 @@ $(BUILD_DIR)/mapper_core.o: mapper/mapper.cpp mapper/mapper.h taskflow/taskflow.
 
 $(BUILD_DIR)/workload.o: workload/workload.cpp workload/workload.h mapping/graph.h | $(BUILD_DIR)
 	$(CXX) $(CXXFLAGS) -c -o $@ workload/workload.cpp
+
+$(BUILD_DIR)/workload_json.o: workload/json_io.cpp workload/json_io.h workload/workload.h | $(BUILD_DIR)
+	$(CXX) $(CXXFLAGS) -c -o $@ workload/json_io.cpp
 
 $(BUILD_DIR)/main.o: main.cpp | $(BUILD_DIR)
 	$(CXX) $(CXXFLAGS) -c -o $@ main.cpp

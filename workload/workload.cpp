@@ -4,8 +4,8 @@
 
 namespace workload {
 
-Workload::Workload(std::string name, std::vector<WorkloadStage> stages)
-    : name_(std::move(name)), stages_(std::move(stages)) {}
+Workload::Workload(std::string name, std::vector<WorkloadStage> stages, std::vector<WorkloadEdge> edges)
+    : name_(std::move(name)), stages_(std::move(stages)), edges_(std::move(edges)) {}
 
 mapping::TaskGraph Workload::to_task_graph() const {
     mapping::TaskGraph graph;
@@ -16,10 +16,16 @@ mapping::TaskGraph Workload::to_task_graph() const {
         task.memory_gb = stage.memory_gb;
         graph.add_task(std::move(task));
     }
-    for (const auto& stage : stages_) {
-        for (const auto& dep : stage.dependencies) {
-            const double tensor_size = stage.compute_flops * 0.1;
-            graph.add_edge(dep, stage.name, tensor_size);
+    if (!edges_.empty()) {
+        for (const auto& edge : edges_) {
+            graph.add_edge(edge.src, edge.dst, edge.tensor_size_mb);
+        }
+    } else {
+        for (const auto& stage : stages_) {
+            for (const auto& dep : stage.dependencies) {
+                const double tensor_size = stage.compute_flops * 0.1;
+                graph.add_edge(dep, stage.name, tensor_size);
+            }
         }
     }
     return graph;
