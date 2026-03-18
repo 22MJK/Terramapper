@@ -1,55 +1,48 @@
 #include "hardware_topology/topology.h"
 
 #include <algorithm>
+#include <cmath>
 #include <queue>
+#include <limits>
 #include <unordered_map>
 
 namespace hardware_topology {
 
-void ComputeNode::add_neighbor(std::string_view neighbor) {
-    if (std::find(neighbors.begin(), neighbors.end(), neighbor) == neighbors.end()) {
-        neighbors.emplace_back(neighbor);
-        std::sort(neighbors.begin(), neighbors.end());
-    }
+void HardwareTopology::set_time_unit(std::string time_unit) {
+    time_unit_ = std::move(time_unit);
 }
 
-void HardwareTopology::add_node(ComputeNode node) {
-    nodes_.insert_or_assign(node.name, std::move(node));
+const std::string& HardwareTopology::time_unit() const {
+    return time_unit_;
+}
+
+void HardwareTopology::add_device(Device device) {
+    devices_.insert_or_assign(device.id, std::move(device));
 }
 
 void HardwareTopology::add_link(Link link) {
     if (link.id.empty()) {
-        const auto& a = link.src < link.dst ? link.src : link.dst;
-        const auto& b = link.src < link.dst ? link.dst : link.src;
-        link.id = "link_" + a + "_" + b;
-    }
-    const auto src_it = nodes_.find(link.src);
-    const auto dst_it = nodes_.find(link.dst);
-    if (src_it != nodes_.end()) {
-        src_it->second.add_neighbor(link.dst);
-    }
-    if (dst_it != nodes_.end()) {
-        dst_it->second.add_neighbor(link.src);
+        link.id = "link_" + link.src + "_to_" + link.dst;
     }
     links_.push_back(std::move(link));
 }
 
-const ComputeNode* HardwareTopology::node(std::string_view name) const {
-    const auto it = nodes_.find(std::string(name));
-    if (it == nodes_.end()) {
+const Device* HardwareTopology::device(std::string_view id) const {
+    const auto it = devices_.find(std::string(id));
+    if (it == devices_.end()) {
         return nullptr;
     }
     return &it->second;
 }
 
-std::vector<const ComputeNode*> HardwareTopology::nodes() const {
-    std::vector<const ComputeNode*> result;
-    result.reserve(nodes_.size());
-    for (const auto& kv : nodes_) {
+std::vector<const Device*> HardwareTopology::devices() const {
+    std::vector<const Device*> result;
+    result.reserve(devices_.size());
+    for (const auto& kv : devices_) {
         result.push_back(&kv.second);
     }
-    std::sort(result.begin(), result.end(), [](const ComputeNode* a, const ComputeNode* b) {
-        return a->name < b->name;
+    std::sort(result.begin(), result.end(), [](const Device* a, const Device* b) {
+        return a->id < b->id;
     });
     return result;
 }
@@ -60,19 +53,10 @@ std::vector<Link> HardwareTopology::links() const {
     return links;
 }
 
-std::vector<std::pair<std::string, std::string>> HardwareTopology::connected_pairs() const {
-    std::vector<std::pair<std::string, std::string>> pairs;
-    pairs.reserve(links_.size());
+std::optional<double> HardwareTopology::bw_gbps(std::string_view src, std::string_view dst) const {
     for (const auto& link : links_) {
-        pairs.emplace_back(link.src, link.dst);
-    }
-    return pairs;
-}
-
-std::optional<double> HardwareTopology::bandwidth(std::string_view src, std::string_view dst) const {
-    for (const auto& link : links_) {
-        if ((link.src == src && link.dst == dst) || (link.src == dst && link.dst == src)) {
-            return link.bandwidth_gbps;
+        if (link.src == src && link.dst == dst) {
+            return link.bw_gbps;
         }
     }
     return std::nullopt;
@@ -80,7 +64,7 @@ std::optional<double> HardwareTopology::bandwidth(std::string_view src, std::str
 
 std::optional<double> HardwareTopology::latency_ms(std::string_view src, std::string_view dst) const {
     for (const auto& link : links_) {
-        if ((link.src == src && link.dst == dst) || (link.src == dst && link.dst == src)) {
+        if (link.src == src && link.dst == dst) {
             return link.latency_ms;
         }
     }
@@ -89,7 +73,7 @@ std::optional<double> HardwareTopology::latency_ms(std::string_view src, std::st
 
 std::optional<std::string> HardwareTopology::link_id(std::string_view src, std::string_view dst) const {
     for (const auto& link : links_) {
-        if ((link.src == src && link.dst == dst) || (link.src == dst && link.dst == src)) {
+        if (link.src == src && link.dst == dst) {
             return link.id;
         }
     }
@@ -100,28 +84,40 @@ std::vector<std::string> HardwareTopology::shortest_route_link_ids(std::string_v
     if (src == dst) {
         return {};
     }
-    const auto* src_node = node(src);
-    const auto* dst_node = node(dst);
-    if (src_node == nullptr || dst_node == nullptr) {
+    const auto* src_dev = device(src);
+    const auto* dst_dev = device(dst);
+    if (src_dev == nullptr || dst_dev == nullptr) {
         return {};
+    }
+
+    // Build outgoing adjacency list once per call (kept simple for now).
+    std::unordered_map<std::string, std::vector<std::string>> outgoing;
+    outgoing.reserve(devices_.size());
+    for (const auto& link : links_) {
+        outgoing[link.src].push_back(link.dst);
+    }
+    for (auto& kv : outgoing) {
+        auto& neigh = kv.second;
+        std::sort(neigh.begin(), neigh.end());
+        neigh.erase(std::unique(neigh.begin(), neigh.end()), neigh.end());
     }
 
     std::queue<std::string> queue;
     std::unordered_map<std::string, std::string> parent;
-    parent.emplace(src_node->name, "");
-    queue.push(src_node->name);
+    parent.emplace(src_dev->id, "");
+    queue.push(src_dev->id);
 
     while (!queue.empty()) {
         const auto current = queue.front();
         queue.pop();
-        if (current == dst_node->name) {
+        if (current == dst_dev->id) {
             break;
         }
-        const auto* node_ptr = node(current);
-        if (node_ptr == nullptr) {
+        const auto it = outgoing.find(current);
+        if (it == outgoing.end()) {
             continue;
         }
-        for (const auto& neighbor : node_ptr->neighbors) {
+        for (const auto& neighbor : it->second) {
             if (parent.find(neighbor) != parent.end()) {
                 continue;
             }
@@ -130,12 +126,12 @@ std::vector<std::string> HardwareTopology::shortest_route_link_ids(std::string_v
         }
     }
 
-    if (parent.find(dst_node->name) == parent.end()) {
+    if (parent.find(dst_dev->id) == parent.end()) {
         return {};
     }
 
     std::vector<std::string> path_nodes;
-    for (std::string cur = dst_node->name; !cur.empty(); cur = parent.at(cur)) {
+    for (std::string cur = dst_dev->id; !cur.empty(); cur = parent.at(cur)) {
         path_nodes.push_back(cur);
     }
     std::reverse(path_nodes.begin(), path_nodes.end());
@@ -153,6 +149,32 @@ std::vector<std::string> HardwareTopology::shortest_route_link_ids(std::string_v
         route.push_back(*id);
     }
     return route;
+}
+
+double HardwareTopology::get_transfer_time(std::string_view src, std::string_view dst, size_t bytes) const {
+    if (src == dst || bytes == 0) {
+        return 0.0;
+    }
+    const auto route = shortest_route_link_ids(src, dst);
+    if (route.empty()) {
+        return std::numeric_limits<double>::infinity();
+    }
+
+    // Assumes store-and-forward: each hop pays fixed latency + serialization time.
+    // Uses GiB = 1024^3 for conversion from bytes.
+    const double gib = static_cast<double>(bytes) / (1024.0 * 1024.0 * 1024.0);
+    double total = 0.0;
+    for (const auto& link_id_val : route) {
+        const auto it = std::find_if(links_.begin(), links_.end(), [&link_id_val](const Link& link) {
+            return link.id == link_id_val;
+        });
+        if (it == links_.end() || it->bw_gbps <= 0.0) {
+            return std::numeric_limits<double>::infinity();
+        }
+        total += (it->latency_ms / 1000.0);
+        total += gib / it->bw_gbps;
+    }
+    return total;
 }
 
 }  // namespace hardware_topology

@@ -7,6 +7,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 add_library(mapper_lib
+  hardware_topology/json_io.cpp
   hardware_topology/topology.cpp
   mapping/graph.cpp
   mapping/mapper.cpp

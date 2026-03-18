@@ -11,28 +11,28 @@ const std::string& MappingPlan::node_for(const std::string& task_name) const {
 }
 
 MappingPlan GreedyMapper::map(const TaskGraph& graph, const hardware_topology::HardwareTopology& topology) const {
-    const auto nodes = topology.nodes();
-    if (nodes.empty()) {
-        throw std::runtime_error("Topology has no compute nodes");
+    const auto devices = topology.devices();
+    if (devices.empty()) {
+        throw std::runtime_error("Topology has no devices");
     }
 
     std::unordered_map<std::string, double> loads;
-    for (const auto* node : nodes) {
-        loads[node->name] = 0.0;
+    for (const auto* device : devices) {
+        loads[device->id] = 0.0;
     }
 
     MappingPlan plan;
     for (const auto& task : graph.topological_order()) {
         const auto* target = *std::min_element(
-            nodes.begin(),
-            nodes.end(),
-            [&loads](const hardware_topology::ComputeNode* a, const hardware_topology::ComputeNode* b) {
-                const double load_a = loads[a->name] / std::max(1.0, a->gflops);
-                const double load_b = loads[b->name] / std::max(1.0, b->gflops);
+            devices.begin(),
+            devices.end(),
+            [&loads](const hardware_topology::Device* a, const hardware_topology::Device* b) {
+                const double load_a = loads[a->id] / std::max(1.0, a->peak_gflops);
+                const double load_b = loads[b->id] / std::max(1.0, b->peak_gflops);
                 return load_a < load_b;
             });
-        plan.assignments[task.name] = target->name;
-        loads[target->name] += task.compute_flops;
+        plan.assignments[task.name] = target->id;
+        loads[target->id] += task.compute_flops;
     }
     return plan;
 }

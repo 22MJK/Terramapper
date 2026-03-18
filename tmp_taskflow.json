@@ -1,0 +1,45 @@
+{
+  "time_unit": "s",
+  "tasks": [
+    {
+      "id": 0,
+      "kind": "compute",
+      "name": "stage_0",
+      "flops": 50,
+      "bytes": 26843545600,
+      "device": "dev_0"
+    },
+    {
+      "id": 1,
+      "kind": "compute",
+      "name": "stage_1",
+      "flops": 75,
+      "bytes": 40265318400,
+      "device": "dev_1"
+    },
+    {
+      "id": 2,
+      "kind": "compute",
+      "name": "stage_2",
+      "flops": 113,
+      "bytes": 60397977600,
+      "device": "dev_0"
+    }
+  ],
+  "edges": [
+    {
+      "id": 0,
+      "src": 0,
+      "dst": 1,
+      "bytes": 7864320,
+      "route": ["link_dev_0_to_dev_1"]
+    },
+    {
+      "id": 1,
+      "src": 1,
+      "dst": 2,
+      "bytes": 11796480,
+      "route": ["link_dev_1_to_dev_0"]
+    }
+  ]
+}

@@ -4,6 +4,7 @@ CXXFLAGS ?= -std=c++20 -O2 -Wall -Wextra -Wpedantic -I.
 BUILD_DIR := build
 OBJ := \
 	$(BUILD_DIR)/topology.o \
+	$(BUILD_DIR)/json_io.o \
 	$(BUILD_DIR)/graph.o \
 	$(BUILD_DIR)/mapper.o \
 	$(BUILD_DIR)/strategies.o \
@@ -23,6 +24,9 @@ mapper_demo: $(OBJ)
 
 $(BUILD_DIR)/topology.o: hardware_topology/topology.cpp hardware_topology/topology.h | $(BUILD_DIR)
 	$(CXX) $(CXXFLAGS) -c -o $@ hardware_topology/topology.cpp
+
+$(BUILD_DIR)/json_io.o: hardware_topology/json_io.cpp hardware_topology/json_io.h hardware_topology/topology.h | $(BUILD_DIR)
+	$(CXX) $(CXXFLAGS) -c -o $@ hardware_topology/json_io.cpp
 
 $(BUILD_DIR)/graph.o: mapping/graph.cpp mapping/graph.h | $(BUILD_DIR)
 	$(CXX) $(CXXFLAGS) -c -o $@ mapping/graph.cpp

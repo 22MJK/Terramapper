@@ -65,6 +65,8 @@ Arguments:
 - `--parts=P`: if `P > 0`, partition tasks into `P` blocks before mapping (default: 0 = disabled)
 - `--time_unit=UNIT`: written to `taskflow.json` (default: `s`)
 - `--out=PATH`: output path for `taskflow.json` (default: `taskflow.json`)
+- `--hardware=PATH`: load hardware topology from JSON; if set, `--nodes` is ignored
+  - If `--time_unit` is not provided, it will use `time_unit` from the hardware JSON.
 
 Outputs:
 - `taskflow.json`: tasks and edges (no timestamps)
