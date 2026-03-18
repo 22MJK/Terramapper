@@ -1,15 +1,10 @@
 #include "hardware_topology/topology.h"
-#include "mapping/mapper.h"
-#include "mapping/strategies.h"
-#include "schedule/scheduler.h"
-#include "trace_generator/trace.h"
+#include "mapper/mapper.h"
 #include "workload/workload.h"
 
 #include <cstdlib>
 #include <iostream>
-#include <memory>
 #include <string>
-#include <vector>
 
 namespace {
 
@@ -19,6 +14,13 @@ int parse_int_arg(const std::string& arg, const std::string& prefix, int default
     }
     const auto value_str = arg.substr(prefix.size());
     return std::atoi(value_str.c_str());
+}
+
+std::string parse_string_arg(const std::string& arg, const std::string& prefix, const std::string& default_value) {
+    if (arg.rfind(prefix, 0) != 0) {
+        return default_value;
+    }
+    return arg.substr(prefix.size());
 }
 
 hardware_topology::HardwareTopology build_demo_topology(int node_count) {
@@ -54,14 +56,18 @@ int main(int argc, char** argv) {
     int node_count = 2;
     int depth = 6;
     int parts = 0;
+    std::string time_unit = "s";
+    std::string taskflow_path = "taskflow.json";
     for (int i = 1; i < argc; ++i) {
         const std::string arg(argv[i]);
         node_count = parse_int_arg(arg, "--nodes=", node_count);
         depth = parse_int_arg(arg, "--depth=", depth);
         parts = parse_int_arg(arg, "--parts=", parts);
+        time_unit = parse_string_arg(arg, "--time_unit=", time_unit);
+        taskflow_path = parse_string_arg(arg, "--out=", taskflow_path);
     }
     if (node_count <= 0 || depth <= 0) {
-        std::cerr << "Usage: mapper_demo [--nodes=N] [--depth=D] [--parts=P]\n";
+        std::cerr << "Usage: mapper_demo [--nodes=N] [--depth=D] [--parts=P] [--time_unit=UNIT] [--out=PATH]\n";
         return 2;
     }
 
@@ -69,39 +75,11 @@ int main(int argc, char** argv) {
 
     workload::WorkloadGenerator generator;
     const auto workload = generator.build("demo", depth);
-    const auto graph = workload.to_task_graph();
 
-    std::unique_ptr<mapping::Mapper> mapper;
-    if (parts > 0) {
-        mapping::LayerPartition partition;
-        const auto task_partitions = partition.partition(graph, parts);
-        std::vector<std::vector<std::string>> partitions;
-        partitions.reserve(task_partitions.size());
-        for (const auto& block : task_partitions) {
-            std::vector<std::string> names;
-            names.reserve(block.size());
-            for (const auto& task : block) {
-                names.push_back(task.name);
-            }
-            partitions.push_back(std::move(names));
-        }
-        mapper = std::make_unique<mapping::PartitionerMapper>(std::make_unique<mapping::GreedyMapper>(),
-                                                              std::move(partitions));
-    } else {
-        mapper = std::make_unique<mapping::GreedyMapper>();
-    }
-
-    const auto mapping_plan = mapper->map(graph, topology);
-
-    schedule::SimpleScheduler scheduler;
-    const auto schedule_plan = scheduler.schedule(graph, mapping_plan, topology);
-
-    trace_generator::TraceGenerator trace_generator;
-    const auto trace = trace_generator.generate(schedule_plan);
-    const auto lines = trace_generator::TraceWriter::to_lines(trace);
-    for (const auto& line : lines) {
-        std::cout << line << "\n";
-    }
+    mapper::Options options;
+    options.parts = parts;
+    options.time_unit = time_unit;
+    mapper::write_taskflow(topology, workload, taskflow_path, options);
+    std::cout << "Wrote " << taskflow_path << "\n";
     return 0;
 }
-

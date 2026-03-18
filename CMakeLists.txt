@@ -11,8 +11,9 @@ add_library(mapper_lib
   mapping/graph.cpp
   mapping/mapper.cpp
   mapping/strategies.cpp
-  schedule/scheduler.cpp
-  trace_generator/trace.cpp
+  mapper/mapper.cpp
+  taskflow/json.cpp
+  taskflow/taskflow.cpp
   workload/workload.cpp
 )
 

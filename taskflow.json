@@ -1,0 +1,150 @@
+{
+  "time_unit": "s",
+  "tasks": [
+    {
+      "id": 0,
+      "kind": "compute",
+      "name": "stage_0",
+      "flops": 50,
+      "bytes": 26843545600,
+      "device": "node_0"
+    },
+    {
+      "id": 1,
+      "kind": "compute",
+      "name": "stage_1",
+      "flops": 75,
+      "bytes": 40265318400,
+      "device": "node_1"
+    },
+    {
+      "id": 2,
+      "kind": "compute",
+      "name": "stage_2",
+      "flops": 113,
+      "bytes": 60397977600,
+      "device": "node_2"
+    },
+    {
+      "id": 3,
+      "kind": "compute",
+      "name": "stage_3",
+      "flops": 169,
+      "bytes": 90596966400,
+      "device": "node_3"
+    },
+    {
+      "id": 4,
+      "kind": "compute",
+      "name": "stage_4",
+      "flops": 253,
+      "bytes": 135895449600,
+      "device": "node_0"
+    },
+    {
+      "id": 5,
+      "kind": "compute",
+      "name": "stage_5",
+      "flops": 380,
+      "bytes": 203843174400,
+      "device": "node_1"
+    },
+    {
+      "id": 6,
+      "kind": "compute",
+      "name": "stage_6",
+      "flops": 570,
+      "bytes": 305764761600,
+      "device": "node_2"
+    },
+    {
+      "id": 7,
+      "kind": "compute",
+      "name": "stage_7",
+      "flops": 854,
+      "bytes": 458647142400,
+      "device": "node_3"
+    },
+    {
+      "id": 8,
+      "kind": "compute",
+      "name": "stage_8",
+      "flops": 1281,
+      "bytes": 687970713600,
+      "device": "node_0"
+    },
+    {
+      "id": 9,
+      "kind": "compute",
+      "name": "stage_9",
+      "flops": 1922,
+      "bytes": 1031956070400,
+      "device": "node_1"
+    }
+  ],
+  "edges": [
+    {
+      "id": 0,
+      "src": 0,
+      "dst": 1,
+      "bytes": 7864320,
+      "route": ["link_node_0_node_1"]
+    },
+    {
+      "id": 1,
+      "src": 1,
+      "dst": 2,
+      "bytes": 11796480,
+      "route": ["link_node_1_node_2"]
+    },
+    {
+      "id": 2,
+      "src": 2,
+      "dst": 3,
+      "bytes": 17694720,
+      "route": ["link_node_2_node_3"]
+    },
+    {
+      "id": 3,
+      "src": 3,
+      "dst": 4,
+      "bytes": 26542080,
+      "route": ["link_node_0_node_3"]
+    },
+    {
+      "id": 4,
+      "src": 4,
+      "dst": 5,
+      "bytes": 39813120,
+      "route": ["link_node_0_node_1"]
+    },
+    {
+      "id": 5,
+      "src": 5,
+      "dst": 6,
+      "bytes": 59719680,
+      "route": ["link_node_1_node_2"]
+    },
+    {
+      "id": 6,
+      "src": 6,
+      "dst": 7,
+      "bytes": 89579520,
+      "route": ["link_node_2_node_3"]
+    },
+    {
+      "id": 7,
+      "src": 7,
+      "dst": 8,
+      "bytes": 134369280,
+      "route": ["link_node_0_node_3"]
+    },
+    {
+      "id": 8,
+      "src": 8,
+      "dst": 9,
+      "bytes": 201553920,
+      "route": ["link_node_0_node_1"]
+    }
+  ]
+}

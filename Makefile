@@ -7,8 +7,9 @@ OBJ := \
 	$(BUILD_DIR)/graph.o \
 	$(BUILD_DIR)/mapper.o \
 	$(BUILD_DIR)/strategies.o \
-	$(BUILD_DIR)/scheduler.o \
-	$(BUILD_DIR)/trace.o \
+	$(BUILD_DIR)/json.o \
+	$(BUILD_DIR)/taskflow.o \
+	$(BUILD_DIR)/mapper_core.o \
 	$(BUILD_DIR)/workload.o \
 	$(BUILD_DIR)/main.o
 
@@ -32,11 +33,14 @@ $(BUILD_DIR)/mapper.o: mapping/mapper.cpp mapping/mapper.h mapping/graph.h hardw
 $(BUILD_DIR)/strategies.o: mapping/strategies.cpp mapping/strategies.h mapping/graph.h | $(BUILD_DIR)
 	$(CXX) $(CXXFLAGS) -c -o $@ mapping/strategies.cpp
 
-$(BUILD_DIR)/scheduler.o: schedule/scheduler.cpp schedule/scheduler.h mapping/graph.h mapping/mapper.h hardware_topology/topology.h | $(BUILD_DIR)
-	$(CXX) $(CXXFLAGS) -c -o $@ schedule/scheduler.cpp
+$(BUILD_DIR)/json.o: taskflow/json.cpp taskflow/json.h | $(BUILD_DIR)
+	$(CXX) $(CXXFLAGS) -c -o $@ taskflow/json.cpp
 
-$(BUILD_DIR)/trace.o: trace_generator/trace.cpp trace_generator/trace.h schedule/scheduler.h | $(BUILD_DIR)
-	$(CXX) $(CXXFLAGS) -c -o $@ trace_generator/trace.cpp
+$(BUILD_DIR)/taskflow.o: taskflow/taskflow.cpp taskflow/taskflow.h taskflow/json.h hardware_topology/topology.h mapping/graph.h mapping/mapper.h | $(BUILD_DIR)
+	$(CXX) $(CXXFLAGS) -c -o $@ taskflow/taskflow.cpp
+
+$(BUILD_DIR)/mapper_core.o: mapper/mapper.cpp mapper/mapper.h taskflow/taskflow.h mapping/mapper.h mapping/strategies.h workload/workload.h hardware_topology/topology.h | $(BUILD_DIR)
+	$(CXX) $(CXXFLAGS) -c -o $@ mapper/mapper.cpp
 
 $(BUILD_DIR)/workload.o: workload/workload.cpp workload/workload.h mapping/graph.h | $(BUILD_DIR)
 	$(CXX) $(CXXFLAGS) -c -o $@ workload/workload.cpp

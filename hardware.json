@@ -1,0 +1,62 @@
+{
+  "devices": [
+    {
+      "id": "node_0",
+      "name": "node_0",
+      "cores": 64,
+      "memory_bytes": 274877906944,
+      "gflops": 10000
+    },
+    {
+      "id": "node_1",
+      "name": "node_1",
+      "cores": 64,
+      "memory_bytes": 274877906944,
+      "gflops": 10000
+    },
+    {
+      "id": "node_2",
+      "name": "node_2",
+      "cores": 64,
+      "memory_bytes": 274877906944,
+      "gflops": 10000
+    },
+    {
+      "id": "node_3",
+      "name": "node_3",
+      "cores": 64,
+      "memory_bytes": 274877906944,
+      "gflops": 10000
+    }
+  ],
+  "links": [
+    {
+      "id": "link_node_0_node_1",
+      "src": "node_0",
+      "dst": "node_1",
+      "bandwidth_gbps": 200,
+      "latency_ms": 0.5
+    },
+    {
+      "id": "link_node_0_node_3",
+      "src": "node_3",
+      "dst": "node_0",
+      "bandwidth_gbps": 200,
+      "latency_ms": 0.5
+    },
+    {
+      "id": "link_node_1_node_2",
+      "src": "node_1",
+      "dst": "node_2",
+      "bandwidth_gbps": 200,
+      "latency_ms": 0.5
+    },
+    {
+      "id": "link_node_2_node_3",
+      "src": "node_2",
+      "dst": "node_3",
+      "bandwidth_gbps": 200,
+      "latency_ms": 0.5
+    }
+  ]
+}

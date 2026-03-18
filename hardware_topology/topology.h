@@ -11,6 +11,7 @@
 namespace hardware_topology {
 
 struct Link {
+    std::string id;
     std::string src;
     std::string dst;
     double bandwidth_gbps{0.0};
@@ -34,9 +35,12 @@ public:
     void add_link(Link link);
     const ComputeNode* node(std::string_view name) const;
     std::vector<const ComputeNode*> nodes() const;
+    std::vector<Link> links() const;
     std::vector<std::pair<std::string, std::string>> connected_pairs() const;
     std::optional<double> bandwidth(std::string_view src, std::string_view dst) const;
     std::optional<double> latency_ms(std::string_view src, std::string_view dst) const;
+    std::optional<std::string> link_id(std::string_view src, std::string_view dst) const;
+    std::vector<std::string> shortest_route_link_ids(std::string_view src, std::string_view dst) const;
 
 private:
     std::unordered_map<std::string, ComputeNode> nodes_;
