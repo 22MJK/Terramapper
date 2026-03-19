@@ -23,7 +23,7 @@
       "name": "stage_2",
       "flops": 113,
       "bytes": 60397977600,
-      "device": "dev_0"
+      "device": "dev_2"
     },
     {
       "id": 3,
@@ -31,7 +31,7 @@
       "name": "stage_3",
       "flops": 169,
       "bytes": 90596966400,
-      "device": "dev_1"
+      "device": "dev_3"
     },
     {
       "id": 4,
@@ -63,21 +63,21 @@
       "src": 1,
       "dst": 2,
       "bytes": 11796480,
-      "route": ["link_dev_1_to_dev_0"]
+      "route": ["link_dev_1_to_dev_2"]
     },
     {
       "id": 2,
       "src": 2,
       "dst": 3,
       "bytes": 17694720,
-      "route": ["link_dev_0_to_dev_1"]
+      "route": ["link_dev_2_to_dev_3"]
     },
     {
       "id": 3,
       "src": 3,
       "dst": 4,
       "bytes": 26542080,
-      "route": ["link_dev_1_to_dev_0"]
+      "route": ["link_dev_3_to_dev_0"]
     },
     {
       "id": 4,
