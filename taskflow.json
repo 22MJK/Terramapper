@@ -6,7 +6,7 @@
       "kind": "compute",
       "name": "stage_0",
       "flops": 50,
-      "bytes": 26843545600,
+      "bytes": 0,
       "device": "dev_0"
     },
     {
@@ -14,7 +14,7 @@
       "kind": "compute",
       "name": "stage_1",
       "flops": 75,
-      "bytes": 40265318400,
+      "bytes": 0,
       "device": "dev_1"
     },
     {
@@ -22,7 +22,7 @@
       "kind": "compute",
       "name": "stage_2",
       "flops": 113,
-      "bytes": 60397977600,
+      "bytes": 0,
       "device": "dev_2"
     },
     {
@@ -30,7 +30,7 @@
       "kind": "compute",
       "name": "stage_3",
       "flops": 169,
-      "bytes": 90596966400,
+      "bytes": 0,
       "device": "dev_3"
     },
     {
@@ -38,7 +38,7 @@
       "kind": "compute",
       "name": "stage_4",
       "flops": 253,
-      "bytes": 135895449600,
+      "bytes": 0,
       "device": "dev_0"
     },
     {
@@ -46,7 +46,7 @@
       "kind": "compute",
       "name": "stage_5",
       "flops": 380,
-      "bytes": 203843174400,
+      "bytes": 0,
       "device": "dev_1"
     }
   ],

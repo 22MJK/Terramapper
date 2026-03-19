@@ -9,6 +9,8 @@ Workload::Workload(std::string name, std::vector<WorkloadStage> stages, std::vec
 
 mapping::TaskGraph Workload::to_task_graph() const {
     mapping::TaskGraph graph;
+    std::unordered_map<int, std::string> id_to_name;
+    id_to_name.reserve(stages_.size());
     for (const auto& stage : stages_) {
         mapping::Task task;
         task.name = stage.name;
@@ -17,10 +19,16 @@ mapping::TaskGraph Workload::to_task_graph() const {
         task.compute_flops = stage.compute_flops;
         task.comm_bytes = stage.comm_bytes;
         graph.add_task(std::move(task));
+        id_to_name.emplace(stage.id, stage.name);
     }
     if (!edges_.empty()) {
         for (const auto& edge : edges_) {
-            graph.add_edge(edge.src, edge.dst, edge.tensor_bytes);
+            const auto src_it = id_to_name.find(edge.src);
+            const auto dst_it = id_to_name.find(edge.dst);
+            if (src_it == id_to_name.end() || dst_it == id_to_name.end()) {
+                throw std::runtime_error("Workload edge refers to unknown task id");
+            }
+            graph.add_edge(src_it->second, dst_it->second, edge.tensor_bytes);
         }
     } else {
         for (const auto& stage : stages_) {
@@ -28,7 +36,11 @@ mapping::TaskGraph Workload::to_task_graph() const {
                 const double tensor_bytes = stage.comm_bytes > 0.0
                                                 ? stage.comm_bytes
                                                 : (stage.compute_flops * 0.1 * 1024.0 * 1024.0);
-                graph.add_edge(dep, stage.name, tensor_bytes);
+                const auto dep_it = id_to_name.find(dep);
+                if (dep_it == id_to_name.end()) {
+                    throw std::runtime_error("Workload dependency refers to unknown task id");
+                }
+                graph.add_edge(dep_it->second, stage.name, tensor_bytes);
             }
         }
     }
@@ -53,8 +65,9 @@ Workload WorkloadGenerator::build(const std::string& name, int depth) const {
         stage.subtype = "";
         stage.compute_flops = compute;
         stage.comm_bytes = 0.0;
+        stage.id = index;
         if (index > 0) {
-            stage.dependencies.push_back("stage_" + std::to_string(index - 1));
+            stage.dependencies.push_back(index - 1);
         }
         stages.push_back(std::move(stage));
     }

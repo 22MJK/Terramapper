@@ -9,17 +9,18 @@
 namespace workload {
 
 struct WorkloadStage {
+    int id{0};
     std::string name;
     std::string type;
     std::string subtype;
     double compute_flops{0.0};
     double comm_bytes{0.0};
-    std::vector<std::string> dependencies;
+    std::vector<int> dependencies;
 };
 
 struct WorkloadEdge {
-    std::string src;
-    std::string dst;
+    int src{0};
+    int dst{0};
     double tensor_bytes{0.0};
 };
 

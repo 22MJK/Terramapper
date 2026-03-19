@@ -79,6 +79,7 @@ Outputs:
   "name": "demo",
   "tasks": [
     {
+      "id": 0,
       "name": "stage_0",
       "type": "compute",
       "subtype": "spmv",
@@ -89,8 +90,8 @@ Outputs:
   ],
   "edges": [
     {
-      "src": "stage_0",
-      "dst": "stage_1",
+      "src": 0,
+      "dst": 1,
       "bytes": 4194304
     }
   ]

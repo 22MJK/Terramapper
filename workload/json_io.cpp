@@ -326,6 +326,18 @@ std::optional<double> get_number(const JsonObject& obj, const std::string& key) 
     return std::nullopt;
 }
 
+std::optional<int> get_int(const JsonObject& obj, const std::string& key) {
+    const auto num = get_number(obj, key);
+    if (!num.has_value()) {
+        return std::nullopt;
+    }
+    if (*num < static_cast<double>(std::numeric_limits<int>::min()) ||
+        *num > static_cast<double>(std::numeric_limits<int>::max())) {
+        return std::nullopt;
+    }
+    return static_cast<int>(*num);
+}
+
 bool is_valid_type(const std::string& type) {
     return type == "compute" || type == "communication";
 }
@@ -346,7 +358,8 @@ bool parse_tasks(const JsonArray& tasks_array,
         const auto subtype = get_string(*task_obj, "subtype");
         const auto compute = get_number(*task_obj, "compute_flops");
         const auto comm_bytes = get_number(*task_obj, "comm_bytes");
-        if (!name || !type) {
+        const auto id = get_int(*task_obj, "id");
+        if (!id || !name || !type) {
             error = "Task entry missing required fields";
             return false;
         }
@@ -355,6 +368,7 @@ bool parse_tasks(const JsonArray& tasks_array,
             return false;
         }
         WorkloadStage stage;
+        stage.id = *id;
         stage.name = *name;
         stage.type = *type;
         stage.subtype = subtype.value_or("");
@@ -363,12 +377,12 @@ bool parse_tasks(const JsonArray& tasks_array,
 
         if (const auto* deps_val = get(*task_obj, "dependencies"); deps_val && deps_val->as_array()) {
             for (const auto& dep_item : *deps_val->as_array()) {
-                const auto* dep_name = dep_item.as_string();
-                if (!dep_name) {
-                    error = "Dependency entry must be a string";
+                const auto* dep_num = dep_item.as_number();
+                if (!dep_num) {
+                    error = "Dependency entry must be an integer id";
                     return false;
                 }
-                stage.dependencies.push_back(*dep_name);
+                stage.dependencies.push_back(static_cast<int>(*dep_num));
             }
         }
 
@@ -386,8 +400,8 @@ bool parse_edges(const JsonArray& edges_array, std::vector<WorkloadEdge>& edges,
             error = "Edge entry must be an object";
             return false;
         }
-        const auto src = get_string(*edge_obj, "src");
-        const auto dst = get_string(*edge_obj, "dst");
+        const auto src = get_int(*edge_obj, "src");
+        const auto dst = get_int(*edge_obj, "dst");
         const auto bytes = get_number(*edge_obj, "bytes");
         if (!src || !dst || !bytes) {
             error = "Edge entry missing required fields";
