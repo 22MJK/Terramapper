@@ -9,7 +9,7 @@ FlexFlow/AstraSim-style simulation stacks.
 
 Given:
 - a `workload::Workload` (converted internally to a `mapping::TaskGraph`), and
-- a `hardware_topology::HardwareTopology` (compute nodes + network links)
+- a `hardware_topology::HardwareTopology` (devices + directed links)
 
 the demo binary:
 1) generates a synthetic workload (a chain of stages),
@@ -19,7 +19,8 @@ the demo binary:
 ## Directory Layout
 
 - `hardware_topology/`:
-  - `topology.h/.cpp`: `ComputeNode`, `Link`, and `HardwareTopology` (bandwidth/latency queries).
+  - `topology.h/.cpp`: `Device`, `Link`, and `HardwareTopology` (bandwidth/latency queries + routing).
+  - `json_io.h/.cpp`: load `hardware.json` into `HardwareTopology`.
 - `mapping/`:
   - `graph.h/.cpp`: `Task`, `TaskEdge`, `TaskGraph` (topological order, deps/succ queries).
   - `mapper.h/.cpp`: `Mapper` interface, `GreedyMapper`, and `PartitionerMapper`.
@@ -31,6 +32,7 @@ the demo binary:
   - `json.h/.cpp`: minimal JSON utilities (no external deps).
 - `workload/`:
   - `workload.h/.cpp`: `WorkloadGenerator` and `Workload` -> `TaskGraph`.
+  - `json_io.h/.cpp`: load `workload.json` into `Workload`.
 - `main.cpp`: demo binary wiring everything end-to-end.
 
 ## Build
@@ -72,6 +74,36 @@ Arguments:
 Outputs:
 - `taskflow.json`: tasks and edges (no timestamps)
 
+## hardware.json schema (current)
+
+```json
+{
+  "time_unit": "s",
+  "devices": [
+    {
+      "id": "dev_0",
+      "name": "device_0",
+      "type": "gpu",
+      "peak_gflops": 10000,
+      "mem_bw_gbps": 900,
+      "max_concurrent": 4
+    }
+  ],
+  "links": [
+    {
+      "id": "link_dev_0_to_dev_1",
+      "src": "dev_0",
+      "dst": "dev_1",
+      "bw_gbps": 200,
+      "latency_ms": 0.5
+    }
+  ]
+}
+```
+
+Notes:
+- Links are directed. For bidirectional connectivity, include both directions.
+
 ## workload.json schema (current)
 
 ```json
@@ -111,15 +143,16 @@ Notes:
 - `time_unit`: string (metadata; mapper output does not include times)
 - `tasks[]`:
   - `id`: unique integer task ID
-  - `kind`: currently `"compute"`
+  - `kind`: `compute` or `communication`
+  - `subtype`: optional string (forwarded from workload)
   - `name`: task name
   - `flops`: compute amount (FLOPs)
-  - `bytes`: memory bytes (from `Task.memory_gb`)
+  - `bytes`: communication bytes (from `Task.comm_bytes`)
   - `device`: mapped device ID (must exist in your simulator's `hardware.json`)
 - `edges[]`:
   - `id`: unique integer edge ID
   - `src` / `dst`: task IDs (integers)
-  - `bytes`: communication bytes (from `TaskEdge.tensor_size_mb`)
+  - `bytes`: communication bytes (from `TaskEdge.tensor_bytes`)
   - `route`: array of link IDs (multi-hop allowed). If empty and `src/dst` are on different devices,
     the consumer can attempt a direct single-hop link.
 
