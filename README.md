@@ -12,8 +12,8 @@ Given:
 - a `hardware_topology::HardwareTopology` (devices + directed links)
 
 the demo binary:
-1) generates a synthetic workload (a chain of stages),
-2) maps tasks onto nodes (greedy load-balancing), optionally guided by partitions, and
+1) loads hardware and workload from JSON,
+2) maps tasks onto devices (greedy load-balancing), optionally guided by partitions, and
 3) exports a taskflow trace JSON without timestamps (mapper output).
 
 ## Directory Layout
