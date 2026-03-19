@@ -18,22 +18,15 @@ struct WorkloadStage {
     std::vector<int> dependencies;
 };
 
-struct WorkloadEdge {
-    int src{0};
-    int dst{0};
-    double tensor_bytes{0.0};
-};
-
 class Workload {
 public:
-    explicit Workload(std::string name, std::vector<WorkloadStage> stages, std::vector<WorkloadEdge> edges = {});
+    explicit Workload(std::string name, std::vector<WorkloadStage> stages);
     mapping::TaskGraph to_task_graph() const;
     const std::string& name() const;
 
 private:
     std::string name_;
     std::vector<WorkloadStage> stages_;
-    std::vector<WorkloadEdge> edges_;
 };
 
 class WorkloadGenerator {

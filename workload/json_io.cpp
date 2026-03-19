@@ -391,31 +391,6 @@ bool parse_tasks(const JsonArray& tasks_array,
     return true;
 }
 
-bool parse_edges(const JsonArray& edges_array, std::vector<WorkloadEdge>& edges, std::string& error) {
-    edges.clear();
-    edges.reserve(edges_array.size());
-    for (const auto& item : edges_array) {
-        const auto* edge_obj = item.as_object();
-        if (!edge_obj) {
-            error = "Edge entry must be an object";
-            return false;
-        }
-        const auto src = get_int(*edge_obj, "src");
-        const auto dst = get_int(*edge_obj, "dst");
-        const auto bytes = get_number(*edge_obj, "bytes");
-        if (!src || !dst || !bytes) {
-            error = "Edge entry missing required fields";
-            return false;
-        }
-        WorkloadEdge edge;
-        edge.src = *src;
-        edge.dst = *dst;
-        edge.tensor_bytes = *bytes;
-        edges.push_back(std::move(edge));
-    }
-    return true;
-}
-
 }  // namespace
 
 bool load_from_json(const std::string& path, Workload& out, std::string* error) {
@@ -464,22 +439,14 @@ bool load_from_json(const std::string& path, Workload& out, std::string* error) 
         return false;
     }
 
-    std::vector<WorkloadEdge> edges;
-    if (const auto* edges_val = get(*root_obj, "edges"); edges_val && edges_val->as_array()) {
-        if (!parse_edges(*edges_val->as_array(), edges, parse_error)) {
-            if (error) {
-                *error = parse_error;
-            }
-            return false;
-        }
-    } else if (get(*root_obj, "edges") != nullptr) {
+    if (get(*root_obj, "edges") != nullptr) {
         if (error) {
-            *error = "Invalid 'edges' array";
+            *error = "Edges are not supported; use task dependencies instead";
         }
         return false;
     }
 
-    out = Workload(name, std::move(stages), std::move(edges));
+    out = Workload(name, std::move(stages));
     return true;
 }
 

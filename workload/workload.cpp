@@ -4,8 +4,8 @@
 
 namespace workload {
 
-Workload::Workload(std::string name, std::vector<WorkloadStage> stages, std::vector<WorkloadEdge> edges)
-    : name_(std::move(name)), stages_(std::move(stages)), edges_(std::move(edges)) {}
+Workload::Workload(std::string name, std::vector<WorkloadStage> stages)
+    : name_(std::move(name)), stages_(std::move(stages)) {}
 
 mapping::TaskGraph Workload::to_task_graph() const {
     mapping::TaskGraph graph;
@@ -21,27 +21,14 @@ mapping::TaskGraph Workload::to_task_graph() const {
         graph.add_task(std::move(task));
         id_to_name.emplace(stage.id, stage.name);
     }
-    if (!edges_.empty()) {
-        for (const auto& edge : edges_) {
-            const auto src_it = id_to_name.find(edge.src);
-            const auto dst_it = id_to_name.find(edge.dst);
-            if (src_it == id_to_name.end() || dst_it == id_to_name.end()) {
-                throw std::runtime_error("Workload edge refers to unknown task id");
+    for (const auto& stage : stages_) {
+        for (const auto& dep : stage.dependencies) {
+            const double tensor_bytes = stage.comm_bytes > 0.0 ? stage.comm_bytes : 0.0;
+            const auto dep_it = id_to_name.find(dep);
+            if (dep_it == id_to_name.end()) {
+                throw std::runtime_error("Workload dependency refers to unknown task id");
             }
-            graph.add_edge(src_it->second, dst_it->second, edge.tensor_bytes);
-        }
-    } else {
-        for (const auto& stage : stages_) {
-            for (const auto& dep : stage.dependencies) {
-                const double tensor_bytes = stage.comm_bytes > 0.0
-                                                ? stage.comm_bytes
-                                                : (stage.compute_flops * 0.1 * 1024.0 * 1024.0);
-                const auto dep_it = id_to_name.find(dep);
-                if (dep_it == id_to_name.end()) {
-                    throw std::runtime_error("Workload dependency refers to unknown task id");
-                }
-                graph.add_edge(dep_it->second, stage.name, tensor_bytes);
-            }
+            graph.add_edge(dep_it->second, stage.name, tensor_bytes);
         }
     }
     return graph;

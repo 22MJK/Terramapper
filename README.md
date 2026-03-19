@@ -109,19 +109,21 @@ Notes:
   "tasks": [
     {
       "id": 0,
-      "name": "stage_0",
+      "name": "spmv_Ap",
       "type": "compute",
       "subtype": "spmv",
       "compute_flops": 50,
       "comm_bytes": 0,
       "dependencies": []
-    }
-  ],
-  "edges": [
+    },
     {
-      "src": 0,
-      "dst": 1,
-      "bytes": 4194304
+      "id": 1,
+      "name": "allreduce_alpha",
+      "type": "communication",
+      "subtype": "allreduce",
+      "compute_flops": 0,
+      "comm_bytes": 4096,
+      "dependencies": [0]
     }
   ]
 }
@@ -131,9 +133,10 @@ Notes:
 - `type` is required and must be `compute` or `communication`.
 - `subtype` is optional and free-form (e.g. `spmv`, `allreduce`).
 - `compute_flops` and `comm_bytes` are optional; if omitted they default to `0.0`.
-- `edges` is optional. If omitted, dependencies from each task are used and tensor size is derived from
-  `comm_bytes` (if > 0), otherwise `compute_flops * 0.1 * 1024 * 1024` bytes to preserve previous behavior.
-- If `edges` is present, it is used verbatim.
+- Use `dependencies` (task IDs) to express DAG edges; communication should be modeled explicitly as
+  `communication` tasks.
+- For each dependency edge, the mapper uses the dependent task's `comm_bytes` if it is non-zero;
+  otherwise the edge carries `0` bytes.
 
 ## taskflow.json schema (current)
 
