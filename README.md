@@ -56,20 +56,17 @@ make clean
 ## Run
 
 ```bash
-./mapper_demo
-./mapper_demo --nodes=4 --depth=10
-./mapper_demo --nodes=4 --depth=10 --parts=3
+./mapper_demo --hardware=hardware.json --workload=workload.json
+./mapper_demo --hardware=hardware.json --workload=workload.json --parts=3
 ```
 
 Arguments:
-- `--nodes=N`: number of compute nodes in the synthetic topology (default: 2)
-- `--depth=D`: number of stages in the synthetic workload (default: 6)
 - `--parts=P`: if `P > 0`, partition tasks into `P` blocks before mapping (default: 0 = disabled)
 - `--time_unit=UNIT`: written to `taskflow.json` (default: `s`)
 - `--out=PATH`: output path for `taskflow.json` (default: `taskflow.json`)
-- `--hardware=PATH`: load hardware topology from JSON; if set, `--nodes` is ignored
+- `--hardware=PATH`: required, load hardware topology from JSON
   - If `--time_unit` is not provided, it will use `time_unit` from the hardware JSON.
-- `--workload=PATH`: load workload DAG from JSON; if set, `--depth` is ignored
+- `--workload=PATH`: required, load workload DAG from JSON
 
 Outputs:
 - `taskflow.json`: tasks and edges (no timestamps)
