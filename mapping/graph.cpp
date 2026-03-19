@@ -11,14 +11,14 @@ void TaskGraph::add_task(Task task) {
     }
 }
 
-void TaskGraph::add_edge(const std::string& src, const std::string& dst, double tensor_size_mb) {
+void TaskGraph::add_edge(const std::string& src, const std::string& dst, double tensor_bytes) {
     if (!has_task(src)) {
         throw std::runtime_error("Source task " + src + " not known");
     }
     if (!has_task(dst)) {
         throw std::runtime_error("Destination task " + dst + " not known");
     }
-    TaskEdge edge{src, dst, tensor_size_mb};
+    TaskEdge edge{src, dst, tensor_bytes};
     edges_[src].push_back(edge);
     reverse_edges_[dst].push_back(edge);
 }

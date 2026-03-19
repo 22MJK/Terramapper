@@ -326,6 +326,10 @@ std::optional<double> get_number(const JsonObject& obj, const std::string& key) 
     return std::nullopt;
 }
 
+bool is_valid_type(const std::string& type) {
+    return type == "compute" || type == "communication";
+}
+
 bool parse_tasks(const JsonArray& tasks_array,
                  std::vector<WorkloadStage>& stages,
                  std::string& error) {
@@ -338,16 +342,24 @@ bool parse_tasks(const JsonArray& tasks_array,
             return false;
         }
         const auto name = get_string(*task_obj, "name");
+        const auto type = get_string(*task_obj, "type");
+        const auto subtype = get_string(*task_obj, "subtype");
         const auto compute = get_number(*task_obj, "compute_flops");
-        const auto memory = get_number(*task_obj, "memory_gb");
-        if (!name || !compute || !memory) {
+        const auto comm_bytes = get_number(*task_obj, "comm_bytes");
+        if (!name || !type) {
             error = "Task entry missing required fields";
+            return false;
+        }
+        if (!is_valid_type(*type)) {
+            error = "Task type must be 'compute' or 'communication'";
             return false;
         }
         WorkloadStage stage;
         stage.name = *name;
-        stage.compute_flops = *compute;
-        stage.memory_gb = *memory;
+        stage.type = *type;
+        stage.subtype = subtype.value_or("");
+        stage.compute_flops = compute.value_or(0.0);
+        stage.comm_bytes = comm_bytes.value_or(0.0);
 
         if (const auto* deps_val = get(*task_obj, "dependencies"); deps_val && deps_val->as_array()) {
             for (const auto& dep_item : *deps_val->as_array()) {
@@ -376,15 +388,15 @@ bool parse_edges(const JsonArray& edges_array, std::vector<WorkloadEdge>& edges,
         }
         const auto src = get_string(*edge_obj, "src");
         const auto dst = get_string(*edge_obj, "dst");
-        const auto tensor = get_number(*edge_obj, "tensor_size_mb");
-        if (!src || !dst || !tensor) {
+        const auto bytes = get_number(*edge_obj, "bytes");
+        if (!src || !dst || !bytes) {
             error = "Edge entry missing required fields";
             return false;
         }
         WorkloadEdge edge;
         edge.src = *src;
         edge.dst = *dst;
-        edge.tensor_size_mb = *tensor;
+        edge.tensor_bytes = *bytes;
         edges.push_back(std::move(edge));
     }
     return true;

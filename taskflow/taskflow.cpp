@@ -14,26 +14,8 @@
 namespace taskflow {
 namespace {
 
-std::uint64_t gb_to_bytes(double gb) {
-    if (!(gb >= 0.0)) {
-        return 0;
-    }
-    const long double bytes = static_cast<long double>(gb) * 1024.0L * 1024.0L * 1024.0L;
-    if (bytes <= 0.0L) {
-        return 0;
-    }
-    if (bytes >= static_cast<long double>(std::numeric_limits<std::uint64_t>::max())) {
-        return std::numeric_limits<std::uint64_t>::max();
-    }
-    return static_cast<std::uint64_t>(std::llround(bytes));
-}
-
-std::uint64_t mb_to_bytes(double mb) {
-    if (!(mb >= 0.0)) {
-        return 0;
-    }
-    const long double bytes = static_cast<long double>(mb) * 1024.0L * 1024.0L;
-    if (bytes <= 0.0L) {
+std::uint64_t bytes_to_uint64(double bytes) {
+    if (!(bytes >= 0.0)) {
         return 0;
     }
     if (bytes >= static_cast<long double>(std::numeric_limits<std::uint64_t>::max())) {
@@ -84,8 +66,17 @@ void TaskflowWriter::write(const std::string& path,
         json::write_uint64(out, i);
         out << ",\n";
         out << "      \"kind\": ";
-        json::write_string(out, "compute");
+        if (task.type.empty()) {
+            json::write_string(out, "compute");
+        } else {
+            json::write_string(out, task.type);
+        }
         out << ",\n";
+        if (!task.subtype.empty()) {
+            out << "      \"subtype\": ";
+            json::write_string(out, task.subtype);
+            out << ",\n";
+        }
         out << "      \"name\": ";
         json::write_string(out, task.name);
         out << ",\n";
@@ -93,7 +84,7 @@ void TaskflowWriter::write(const std::string& path,
         json::write_uint64(out, flops_to_uint64(task.compute_flops));
         out << ",\n";
         out << "      \"bytes\": ";
-        json::write_uint64(out, gb_to_bytes(task.memory_gb));
+        json::write_uint64(out, bytes_to_uint64(task.comm_bytes));
         out << ",\n";
         out << "      \"device\": ";
         json::write_string(out, mapping_plan.node_for(task.name));
@@ -124,7 +115,7 @@ void TaskflowWriter::write(const std::string& path,
             json::write_uint64(out, task_id.at(edge.dst));
             out << ",\n";
             out << "      \"bytes\": ";
-            json::write_uint64(out, mb_to_bytes(edge.tensor_size_mb));
+            json::write_uint64(out, bytes_to_uint64(edge.tensor_bytes));
             out << ",\n";
 
             const auto& src_device = mapping_plan.node_for(edge.src);

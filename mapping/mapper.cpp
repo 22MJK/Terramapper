@@ -48,7 +48,7 @@ MappingPlan PartitionerMapper::map(const TaskGraph& graph, const hardware_topolo
     }
     for (const auto& task : reordered_tasks) {
         for (const auto& edge : graph.successors(task.name)) {
-            reordered.add_edge(edge.src, edge.dst, edge.tensor_size_mb);
+            reordered.add_edge(edge.src, edge.dst, edge.tensor_bytes);
         }
     }
     return inner_->map(reordered, topology);

@@ -12,19 +12,23 @@ mapping::TaskGraph Workload::to_task_graph() const {
     for (const auto& stage : stages_) {
         mapping::Task task;
         task.name = stage.name;
+        task.type = stage.type;
+        task.subtype = stage.subtype;
         task.compute_flops = stage.compute_flops;
-        task.memory_gb = stage.memory_gb;
+        task.comm_bytes = stage.comm_bytes;
         graph.add_task(std::move(task));
     }
     if (!edges_.empty()) {
         for (const auto& edge : edges_) {
-            graph.add_edge(edge.src, edge.dst, edge.tensor_size_mb);
+            graph.add_edge(edge.src, edge.dst, edge.tensor_bytes);
         }
     } else {
         for (const auto& stage : stages_) {
             for (const auto& dep : stage.dependencies) {
-                const double tensor_size = stage.compute_flops * 0.1;
-                graph.add_edge(dep, stage.name, tensor_size);
+                const double tensor_bytes = stage.comm_bytes > 0.0
+                                                ? stage.comm_bytes
+                                                : (stage.compute_flops * 0.1 * 1024.0 * 1024.0);
+                graph.add_edge(dep, stage.name, tensor_bytes);
             }
         }
     }
@@ -45,8 +49,10 @@ Workload WorkloadGenerator::build(const std::string& name, int depth) const {
         const double compute = base_compute_ * std::pow(growth_, index);
         WorkloadStage stage;
         stage.name = "stage_" + std::to_string(index);
+        stage.type = "compute";
+        stage.subtype = "";
         stage.compute_flops = compute;
-        stage.memory_gb = compute * 0.5;
+        stage.comm_bytes = 0.0;
         if (index > 0) {
             stage.dependencies.push_back("stage_" + std::to_string(index - 1));
         }

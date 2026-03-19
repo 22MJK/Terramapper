@@ -80,8 +80,10 @@ Outputs:
   "tasks": [
     {
       "name": "stage_0",
+      "type": "compute",
+      "subtype": "spmv",
       "compute_flops": 50,
-      "memory_gb": 0.5,
+      "comm_bytes": 0,
       "dependencies": []
     }
   ],
@@ -89,15 +91,18 @@ Outputs:
     {
       "src": "stage_0",
       "dst": "stage_1",
-      "tensor_size_mb": 4.0
+      "bytes": 4194304
     }
   ]
 }
 ```
 
 Notes:
+- `type` is required and must be `compute` or `communication`.
+- `subtype` is optional and free-form (e.g. `spmv`, `allreduce`).
+- `compute_flops` and `comm_bytes` are optional; if omitted they default to `0.0`.
 - `edges` is optional. If omitted, dependencies from each task are used and tensor size is derived from
-  `compute_flops * 0.1` (MB) to preserve previous behavior.
+  `comm_bytes` (if > 0), otherwise `compute_flops * 0.1 * 1024 * 1024` bytes to preserve previous behavior.
 - If `edges` is present, it is used verbatim.
 
 ## taskflow.json schema (current)

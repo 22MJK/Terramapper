@@ -11,21 +11,23 @@ namespace mapping {
 
 struct Task {
     std::string name;
+    std::string type;
+    std::string subtype;
     double compute_flops{0.0};
-    double memory_gb{0.0};
+    double comm_bytes{0.0};
     std::unordered_set<std::string> tags;
 };
 
 struct TaskEdge {
     std::string src;
     std::string dst;
-    double tensor_size_mb{0.0};
+    double tensor_bytes{0.0};
 };
 
 class TaskGraph {
 public:
     void add_task(Task task);
-    void add_edge(const std::string& src, const std::string& dst, double tensor_size_mb = 0.0);
+    void add_edge(const std::string& src, const std::string& dst, double tensor_bytes = 0.0);
 
     std::vector<TaskEdge> dependencies(const std::string& name) const;
     std::vector<TaskEdge> successors(const std::string& name) const;
