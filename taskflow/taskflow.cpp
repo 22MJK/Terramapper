@@ -115,11 +115,12 @@ void TaskflowWriter::write(const std::string& path,
             json::write_uint64(out, task_id.at(edge.dst));
             out << ",\n";
             out << "      \"bytes\": ";
-            json::write_uint64(out, bytes_to_uint64(edge.tensor_bytes));
-            out << ",\n";
-
             const auto& src_device = mapping_plan.node_for(edge.src);
             const auto& dst_device = mapping_plan.node_for(edge.dst);
+            const double edge_bytes = (src_device == dst_device) ? 0.0 : edge.tensor_bytes;
+            json::write_uint64(out, bytes_to_uint64(edge_bytes));
+            out << ",\n";
+
             std::vector<std::string> route;
             if (src_device != dst_device) {
                 route = topology.shortest_route_link_ids(src_device, dst_device);

@@ -130,13 +130,15 @@ Notes:
 ```
 
 Notes:
-- `type` is required and must be `compute` or `communication`.
-- `subtype` is optional and free-form (e.g. `spmv`, `allreduce`).
+- `type` is required and must be `compute`. Communication tasks are inserted by the mapper.
+- `subtype` is optional and free-form (e.g. `spmv`).
+- Supported compute subtypes: `spmv`, `dot`, `axpy`, `scalar`.
 - `compute_flops` and `comm_bytes` are optional; if omitted they default to `0.0`.
-- Use `dependencies` (task IDs) to express DAG edges; communication should be modeled explicitly as
-  `communication` tasks.
+- Use `dependencies` (task IDs) to express DAG edges; communication is represented by taskflow
+  edges when a dependency crosses devices.
 - For each dependency edge, the mapper uses the dependent task's `comm_bytes` if it is non-zero;
-  otherwise the edge carries `0` bytes.
+  otherwise the edge carries `0` bytes. If the two tasks are mapped to the same device, the
+  resulting taskflow edge will have `bytes = 0` and an empty route.
 
 ## taskflow.json schema (current)
 
@@ -155,6 +157,18 @@ Notes:
   - `bytes`: communication bytes (from `TaskEdge.tensor_bytes`)
   - `route`: array of link IDs (multi-hop allowed). If empty and `src/dst` are on different devices,
     the consumer can attempt a direct single-hop link.
+
+## Visualization
+
+Use the Python visualizer to render `taskflow.json` as Mermaid or Graphviz DOT.
+
+```bash
+python3 visualize/taskflow_viz.py --input taskflow.json --format mermaid --output taskflow.mmd
+python3 visualize/taskflow_viz.py --input taskflow.json --format mermaid --group-by-device
+python3 visualize/taskflow_viz.py --input taskflow.json --format dot --output taskflow.dot
+python3 visualize/taskflow_viz.py --input taskflow.json --format dot --png taskflow.png
+python3 visualize/taskflow_viz.py --input taskflow.json --format png --output taskflow.png
+```
 
 ## Extending
 

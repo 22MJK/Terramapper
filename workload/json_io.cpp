@@ -339,7 +339,11 @@ std::optional<int> get_int(const JsonObject& obj, const std::string& key) {
 }
 
 bool is_valid_type(const std::string& type) {
-    return type == "compute" || type == "communication";
+    return type == "compute";
+}
+
+bool is_valid_compute_subtype(const std::string& subtype) {
+    return subtype.empty() || subtype == "spmv" || subtype == "dot" || subtype == "axpy" || subtype == "scalar";
 }
 
 bool parse_tasks(const JsonArray& tasks_array,
@@ -364,14 +368,19 @@ bool parse_tasks(const JsonArray& tasks_array,
             return false;
         }
         if (!is_valid_type(*type)) {
-            error = "Task type must be 'compute' or 'communication'";
+            error = "Task type must be 'compute' (communication tasks are inserted by mapper)";
+            return false;
+        }
+        const std::string subtype_value = subtype.value_or("");
+        if (!is_valid_compute_subtype(subtype_value)) {
+            error = "Unsupported compute subtype: " + subtype_value;
             return false;
         }
         WorkloadStage stage;
         stage.id = *id;
         stage.name = *name;
         stage.type = *type;
-        stage.subtype = subtype.value_or("");
+        stage.subtype = subtype_value;
         stage.compute_flops = compute.value_or(0.0);
         stage.comm_bytes = comm_bytes.value_or(0.0);
 

@@ -1,0 +1,35 @@
+{
+  "name": "cg_iteration_1",
+  "metadata": {
+    "matrix": {
+      "type": "sparse",
+      "format": "CSR",
+      "rows": 1048576,
+      "cols": 1048576,
+      "nnz_per_row": 27,
+      "distribution": "block_row"
+    },
+    "cg": {
+      "max_iterations": 100,
+      "tolerance": 1e-6,
+      "precision": "fp32",
+      "unrolled_iterations": 1
+    }
+  },
+  "tasks": [
+    { "id": 0, "name": "spmv_Ap", "type": "compute", "subtype": "spmv", "compute_flops": 56623104, "comm_bytes": 0, "dependencies": [] },
+    { "id": 1, "name": "dot_pAp", "type": "compute", "subtype": "dot", "compute_flops": 2097152, "comm_bytes": 0, "dependencies": [0] },
+    { "id": 2, "name": "rr_old", "type": "compute", "subtype": "scalar", "compute_flops": 0, "comm_bytes": 0, "dependencies": [] },
+
+    { "id": 3, "name": "compute_alpha", "type": "compute", "subtype": "scalar", "compute_flops": 32, "comm_bytes": 4, "dependencies": [1, 2] },
+
+    { "id": 4, "name": "axpy_x_update", "type": "compute", "subtype": "axpy", "compute_flops": 2097152, "comm_bytes": 0, "dependencies": [3] },
+    { "id": 5, "name": "axpy_r_update", "type": "compute", "subtype": "axpy", "compute_flops": 2097152, "comm_bytes": 0, "dependencies": [3] },
+
+    { "id": 6, "name": "dot_rr_new", "type": "compute", "subtype": "dot", "compute_flops": 2097152, "comm_bytes": 0, "dependencies": [5] },
+
+    { "id": 7, "name": "compute_beta", "type": "compute", "subtype": "scalar", "compute_flops": 32, "comm_bytes": 4, "dependencies": [6, 2] },
+
+    { "id": 8, "name": "axpy_p_update", "type": "compute", "subtype": "axpy", "compute_flops": 2097152, "comm_bytes": 0, "dependencies": [7, 5] }
+  ]
+}

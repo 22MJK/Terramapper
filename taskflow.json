@@ -1,90 +1,190 @@
 {
-  "time_unit": "s",
+  "time_unit": "ms",
   "tasks": [
     {
       "id": 0,
       "kind": "compute",
-      "name": "stage_0",
-      "flops": 50,
+      "subtype": "spmv",
+      "name": "spmv_Ap",
+      "flops": 56623104,
       "bytes": 0,
-      "device": "dev_0"
+      "device": "0"
     },
     {
       "id": 1,
       "kind": "compute",
-      "name": "stage_1",
-      "flops": 75,
+      "subtype": "scalar",
+      "name": "rr_old",
+      "flops": 0,
       "bytes": 0,
-      "device": "dev_1"
+      "device": "1"
     },
     {
       "id": 2,
       "kind": "compute",
-      "name": "stage_2",
-      "flops": 113,
+      "subtype": "dot",
+      "name": "dot_pAp",
+      "flops": 2097152,
       "bytes": 0,
-      "device": "dev_2"
+      "device": "1"
     },
     {
       "id": 3,
-      "kind": "compute",
-      "name": "stage_3",
-      "flops": 169,
-      "bytes": 0,
-      "device": "dev_3"
+      "kind": "communication",
+      "subtype": "allreduce",
+      "name": "allreduce_pAp",
+      "flops": 0,
+      "bytes": 4,
+      "device": "2"
     },
     {
       "id": 4,
       "kind": "compute",
-      "name": "stage_4",
-      "flops": 253,
+      "subtype": "scalar",
+      "name": "compute_alpha",
+      "flops": 32,
       "bytes": 0,
-      "device": "dev_0"
+      "device": "2"
     },
     {
       "id": 5,
       "kind": "compute",
-      "name": "stage_5",
-      "flops": 380,
+      "subtype": "axpy",
+      "name": "axpy_x_update",
+      "flops": 2097152,
       "bytes": 0,
-      "device": "dev_1"
+      "device": "3"
+    },
+    {
+      "id": 6,
+      "kind": "compute",
+      "subtype": "axpy",
+      "name": "axpy_r_update",
+      "flops": 2097152,
+      "bytes": 0,
+      "device": "4"
+    },
+    {
+      "id": 7,
+      "kind": "compute",
+      "subtype": "dot",
+      "name": "dot_rr_new",
+      "flops": 2097152,
+      "bytes": 0,
+      "device": "5"
+    },
+    {
+      "id": 8,
+      "kind": "communication",
+      "subtype": "allreduce",
+      "name": "allreduce_rr_new",
+      "flops": 0,
+      "bytes": 4,
+      "device": "6"
+    },
+    {
+      "id": 9,
+      "kind": "compute",
+      "subtype": "scalar",
+      "name": "compute_beta",
+      "flops": 32,
+      "bytes": 0,
+      "device": "6"
+    },
+    {
+      "id": 10,
+      "kind": "compute",
+      "subtype": "axpy",
+      "name": "axpy_p_update",
+      "flops": 2097152,
+      "bytes": 0,
+      "device": "7"
     }
   ],
   "edges": [
     {
       "id": 0,
       "src": 0,
-      "dst": 1,
-      "bytes": 7864320,
-      "route": ["link_dev_0_to_dev_1"]
+      "dst": 2,
+      "bytes": 0,
+      "route": ["nvlink_0_1"]
     },
     {
       "id": 1,
       "src": 1,
-      "dst": 2,
-      "bytes": 11796480,
-      "route": ["link_dev_1_to_dev_2"]
+      "dst": 4,
+      "bytes": 0,
+      "route": ["nvlink_1_2"]
     },
     {
       "id": 2,
-      "src": 2,
-      "dst": 3,
-      "bytes": 17694720,
-      "route": ["link_dev_2_to_dev_3"]
+      "src": 1,
+      "dst": 9,
+      "bytes": 0,
+      "route": ["inter_1_6"]
     },
     {
       "id": 3,
-      "src": 3,
-      "dst": 4,
-      "bytes": 26542080,
-      "route": ["link_dev_3_to_dev_0"]
+      "src": 2,
+      "dst": 3,
+      "bytes": 4,
+      "route": ["nvlink_1_2"]
     },
     {
       "id": 4,
+      "src": 3,
+      "dst": 4,
+      "bytes": 0,
+      "route": []
+    },
+    {
+      "id": 5,
       "src": 4,
       "dst": 5,
-      "bytes": 39813120,
-      "route": ["link_dev_0_to_dev_1"]
+      "bytes": 0,
+      "route": ["nvlink_2_3"]
+    },
+    {
+      "id": 6,
+      "src": 4,
+      "dst": 6,
+      "bytes": 0,
+      "route": ["inter_2_4"]
+    },
+    {
+      "id": 7,
+      "src": 6,
+      "dst": 7,
+      "bytes": 0,
+      "route": ["nvlink_4_5"]
+    },
+    {
+      "id": 8,
+      "src": 6,
+      "dst": 10,
+      "bytes": 0,
+      "route": ["nvlink_4_7"]
+    },
+    {
+      "id": 9,
+      "src": 7,
+      "dst": 8,
+      "bytes": 4,
+      "route": ["nvlink_5_6"]
+    },
+    {
+      "id": 10,
+      "src": 8,
+      "dst": 9,
+      "bytes": 0,
+      "route": []
+    },
+    {
+      "id": 11,
+      "src": 9,
+      "dst": 10,
+      "bytes": 0,
+      "route": ["nvlink_6_7"]
     }
   ]
 }
