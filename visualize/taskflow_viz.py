@@ -50,7 +50,10 @@ def to_mermaid(data, include_bytes=True, include_route=False, group_by_device=Fa
         bytes_val = e.get("bytes", 0)
         route = e.get("route", [])
         label_parts = []
-        if include_bytes:
+        kind = e.get("kind", "")
+        if kind:
+            label_parts.append(str(kind))
+        if include_bytes and bytes_val:
             label_parts.append(f"{bytes_val}B")
         if include_route and route:
             label_parts.append("route:" + ",".join(route))
@@ -75,7 +78,10 @@ def to_dot(data, include_bytes=True, include_route=False):
         bytes_val = e.get("bytes", 0)
         route = e.get("route", [])
         label_parts = []
-        if include_bytes:
+        kind = e.get("kind", "")
+        if kind:
+            label_parts.append(str(kind))
+        if include_bytes and bytes_val:
             label_parts.append(f"{bytes_val}B")
         if include_route and route:
             label_parts.append("route:" + ",".join(route))
@@ -93,7 +99,7 @@ def parse_args():
     p.add_argument("--output", help="Output file; if omitted, prints to stdout")
     p.add_argument("--format", choices=["mermaid", "dot", "png"], default="mermaid")
     p.add_argument("--png", help="Write PNG to this path (requires dot for --format=dot or mmdc for --format=mermaid)")
-    p.add_argument("--no-bytes", action="store_true", help="Do not label edges with bytes")
+    p.add_argument("--no-bytes", action="store_true", help="Do not label edges with bytes (zero bytes are hidden)")
     p.add_argument("--route", action="store_true", help="Include route list in edge labels")
     p.add_argument("--group-by-device", action="store_true", help="Group nodes into device subgraphs (mermaid only)")
     return p.parse_args()
@@ -283,7 +289,7 @@ def layout_levels(data):
         levels[lv].sort()
     return levels
 
-def to_png(data, output_path: Path):
+def to_png(data, output_path: Path, include_bytes=True):
     tasks = {t["id"]: t for t in data.get("tasks", [])}
     edges = data.get("edges", [])
     levels = layout_levels(data)
@@ -320,6 +326,18 @@ def to_png(data, output_path: Path):
         x1 = dx
         y1 = dy + node_h // 2
         draw_line(pixels, width, height, x0, y0, x1, y1, edge_color)
+
+        label_parts = []
+        kind = e.get("kind", "")
+        if kind:
+            label_parts.append(str(kind))
+        if include_bytes and e.get("bytes", 0):
+            label_parts.append(f"{e.get('bytes', 0)}B")
+        if label_parts:
+            label = " ".join(label_parts)
+            lx = (x0 + x1) // 2 + 6
+            ly = (y0 + y1) // 2 - 6
+            draw_text(pixels, width, height, lx, ly, label, (30, 30, 30), scale=1)
 
     # Draw nodes.
     for tid, task in tasks.items():
@@ -358,7 +376,7 @@ def main():
 
     if args.format == "png":
         output_path = Path(args.output) if args.output else Path("taskflow.png")
-        to_png(data, output_path)
+        to_png(data, output_path, include_bytes=include_bytes)
         return
 
     output = to_dot(data, include_bytes=include_bytes, include_route=args.route)

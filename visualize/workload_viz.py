@@ -47,7 +47,7 @@ def to_dot(data, include_bytes=True):
             if producer is None:
                 continue
             if include_bytes:
-                bytes_val = tensor.get("bytes", 0)
+                bytes_val = tensor.get("size_bytes", tensor.get("bytes", 0))
                 lines.append(f"  T{producer} -> T{dst} [label=\"{bytes_val}B\"]; ")
             else:
                 lines.append(f"  T{producer} -> T{dst}; ")
@@ -70,7 +70,7 @@ def parse_args():
     p.add_argument("--input", required=True, help="Path to workload.json")
     p.add_argument("--output", help="Output file; if omitted, prints to stdout")
     p.add_argument("--png", help="Write PNG to this path (requires dot)")
-    p.add_argument("--no-bytes", action="store_true", help="Do not label edges with comm_bytes (if present)")
+    p.add_argument("--no-bytes", action="store_true", help="Do not label edges with size_bytes")
     return p.parse_args()
 
 

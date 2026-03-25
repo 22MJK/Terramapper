@@ -106,7 +106,7 @@ Notes:
 ```json
 {
   "name": "demo",
-  "version": 1,
+  "version": 2,
   "device_groups": [
     { "id": "all_devices", "members": "all" }
   ],
@@ -116,7 +116,10 @@ Notes:
       "name": "A",
       "dtype": "fp32",
       "shape": [1048576, 1048576],
+      "num_elements": 28311552,
+      "size_bytes": 230686724,
       "distribution": { "kind": "block", "axis": 0, "group": "all_devices" },
+      "partition": { "type": "block", "axis": 0, "num_parts": 8 },
       "access_pattern": "sparse_csr",
       "producer": null
     }
@@ -128,7 +131,7 @@ Notes:
       "op": "spmv",
       "compute_flops": 50,
       "inputs": [
-        { "tensor": "A", "access": "row-wise" }
+        { "tensor": "A", "access": "local" }
       ],
       "outputs": [
         { "tensor": "Ap" }
@@ -142,9 +145,13 @@ Notes:
 Notes:
 - Workload contains only computation; communication is inferred by the mapper.
 - `tensors[]` define data semantics (shape, dtype, distribution, access patterns).
+- `size_bytes` is required; `num_elements` is optional.
+- `partition` describes the logical split used for local/global access.
 - `tasks[]` consume/produce tensors; dependencies are implied by tensor `producer` and task inputs.
 - `distribution.kind`: `none | replicated | block | cyclic`.
 - `access_pattern`: `dense | sparse_csr | row-wise | col-wise`.
+- `inputs[].access`: `local | global`. Use `role` to distinguish operands (e.g. dot).
+- `replication.mode`: `broadcast | cached` for replicated tensors.
 
 ## taskflow.json schema (current)
 
@@ -155,13 +162,12 @@ Notes:
   - `subtype`: optional string (forwarded from workload)
   - `name`: task name
   - `flops`: compute amount (FLOPs)
-  - `bytes`: communication bytes (always `0` for compute tasks)
   - `device`: mapped device ID (must exist in your simulator's `hardware.json`)
 - `edges[]`:
   - `id`: unique integer edge ID
   - `src` / `dst`: task IDs (integers)
   - `bytes`: inferred communication bytes (from tensor metadata)
-  - `kind`: optional communication kind (e.g. `allreduce`)
+  - `kind`: communication kind (`p2p` by default, or `allreduce` when specified)
   - `route`: array of link IDs (multi-hop allowed). If empty and `src/dst` are on different devices,
     the consumer can attempt a direct single-hop link.
 

@@ -22,8 +22,11 @@ std::size_t dtype_size(DType dtype) {
 }
 
 std::uint64_t tensor_bytes(const Tensor& tensor) {
-    if (tensor.bytes.has_value()) {
-        return *tensor.bytes;
+    if (tensor.size_bytes > 0) {
+        return tensor.size_bytes;
+    }
+    if (tensor.num_elements.has_value()) {
+        return static_cast<std::uint64_t>(*tensor.num_elements * dtype_size(tensor.dtype));
     }
     if (tensor.shape.empty()) {
         return static_cast<std::uint64_t>(dtype_size(tensor.dtype));
@@ -57,23 +60,42 @@ std::size_t group_size(const Distribution& dist,
     return it->second.size();
 }
 
+std::size_t partition_parts(const Tensor& tensor,
+                            const std::unordered_map<std::string, std::vector<std::string>>& groups) {
+    if (tensor.partition.has_value() && tensor.partition->num_parts > 0) {
+        return static_cast<std::size_t>(tensor.partition->num_parts);
+    }
+    return group_size(tensor.distribution, groups);
+}
+
 double estimate_transfer_bytes(const Tensor& tensor,
                                AccessKind access,
+                               AccessScope scope,
                                const std::unordered_map<std::string, std::vector<std::string>>& groups) {
     const auto total_bytes = static_cast<double>(tensor_bytes(tensor));
     if (total_bytes <= 0.0) {
         return 0.0;
     }
 
-    const std::size_t gsize = group_size(tensor.distribution, groups);
+    const std::size_t parts = partition_parts(tensor, groups);
     switch (tensor.distribution.kind) {
         case DistKind::REPLICATED:
+            if (tensor.replication.has_value() && tensor.replication->mode == "cached") {
+                return 0.0;
+            }
+            return total_bytes;
         case DistKind::NONE:
             return total_bytes;
         case DistKind::BLOCK:
         case DistKind::CYCLIC:
-            if (access == AccessKind::ROW_WISE || access == AccessKind::COL_WISE) {
-                return total_bytes / static_cast<double>(gsize);
+            if (scope == AccessScope::LOCAL) {
+                if (parts == 0) {
+                    return total_bytes;
+                }
+                if (access == AccessKind::ROW_WISE || access == AccessKind::COL_WISE) {
+                    return total_bytes / static_cast<double>(parts);
+                }
+                return total_bytes / static_cast<double>(parts);
             }
             return total_bytes;
     }
@@ -145,8 +167,8 @@ mapping::TaskGraph Workload::to_task_graph(const hardware_topology::HardwareTopo
             if (src_it == id_to_name.end()) {
                 throw std::runtime_error("Tensor producer task not found");
             }
-            const double bytes = estimate_transfer_bytes(tensor, input.access, group_members);
-            std::string comm_kind;
+            const double bytes = estimate_transfer_bytes(tensor, input.access, input.scope, group_members);
+            std::string comm_kind = "p2p";
             if (tensor.collective.has_value()) {
                 comm_kind = tensor.collective->type;
             }

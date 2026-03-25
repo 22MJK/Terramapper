@@ -389,6 +389,16 @@ std::optional<AccessKind> parse_access_kind(const std::string& value) {
     return std::nullopt;
 }
 
+std::optional<AccessScope> parse_access_scope(const std::string& value) {
+    if (value == "local") {
+        return AccessScope::LOCAL;
+    }
+    if (value == "global") {
+        return AccessScope::GLOBAL;
+    }
+    return std::nullopt;
+}
+
 bool parse_device_groups(const JsonArray& groups_array, std::vector<DeviceGroup>& groups, std::string& error) {
     groups.clear();
     groups.reserve(groups_array.size());
@@ -489,13 +499,37 @@ bool parse_tensors(const JsonArray& tensors_array, std::vector<Tensor>& tensors,
             }
         }
 
-        if (const auto bytes_val = get_number(*tensor_obj, "bytes")) {
-            if (*bytes_val < 0.0) {
-                error = "Tensor bytes must be non-negative";
+        if (const auto num_elements_val = get_number(*tensor_obj, "num_elements")) {
+            if (*num_elements_val < 0.0 || !std::isfinite(*num_elements_val)) {
+                error = "Tensor num_elements must be non-negative";
                 return false;
             }
-            tensor.bytes = static_cast<std::uint64_t>(*bytes_val);
+            double integral = 0.0;
+            if (std::modf(*num_elements_val, &integral) != 0.0) {
+                error = "Tensor num_elements must be integer";
+                return false;
+            }
+            tensor.num_elements = static_cast<std::uint64_t>(integral);
         }
+
+        std::optional<double> size_bytes_val = get_number(*tensor_obj, "size_bytes");
+        if (!size_bytes_val.has_value()) {
+            size_bytes_val = get_number(*tensor_obj, "bytes");  // legacy alias
+        }
+        if (!size_bytes_val.has_value()) {
+            error = "Tensor entry missing 'size_bytes'";
+            return false;
+        }
+        if (*size_bytes_val < 0.0 || !std::isfinite(*size_bytes_val)) {
+            error = "Tensor size_bytes must be non-negative";
+            return false;
+        }
+        double size_integral = 0.0;
+        if (std::modf(*size_bytes_val, &size_integral) != 0.0) {
+            error = "Tensor size_bytes must be integer";
+            return false;
+        }
+        tensor.size_bytes = static_cast<std::uint64_t>(size_integral);
 
         if (const auto* dist_val = get(*tensor_obj, "distribution"); dist_val && dist_val->as_object()) {
             const auto* dist_obj = dist_val->as_object();
@@ -515,6 +549,30 @@ bool parse_tensors(const JsonArray& tensors_array, std::vector<Tensor>& tensors,
             }
         }
 
+        if (const auto* part_val = get(*tensor_obj, "partition"); part_val && part_val->as_object()) {
+            const auto* part_obj = part_val->as_object();
+            Partition part;
+            if (const auto type_val = get_string(*part_obj, "type")) {
+                const auto kind = parse_dist_kind(*type_val);
+                if (!kind) {
+                    error = "Unsupported partition type: " + *type_val;
+                    return false;
+                }
+                part.type = *kind;
+            }
+            if (const auto axis_val = get_int(*part_obj, "axis")) {
+                part.axis = *axis_val;
+            }
+            if (const auto num_parts_val = get_int(*part_obj, "num_parts")) {
+                if (*num_parts_val <= 0) {
+                    error = "partition.num_parts must be > 0";
+                    return false;
+                }
+                part.num_parts = *num_parts_val;
+            }
+            tensor.partition = part;
+        }
+
         if (const auto access_val = get_string(*tensor_obj, "access_pattern")) {
             const auto access = parse_access_kind(*access_val);
             if (!access) {
@@ -522,6 +580,25 @@ bool parse_tensors(const JsonArray& tensors_array, std::vector<Tensor>& tensors,
                 return false;
             }
             tensor.access_pattern = *access;
+        }
+
+        if (const auto* repl_val = get(*tensor_obj, "replication"); repl_val && repl_val->as_object()) {
+            const auto* repl_obj = repl_val->as_object();
+            Replication repl;
+            if (const auto mode_val = get_string(*repl_obj, "mode")) {
+                if (*mode_val != "broadcast" && *mode_val != "cached") {
+                    error = "Unsupported replication mode: " + *mode_val;
+                    return false;
+                }
+                repl.mode = *mode_val;
+            }
+            if (!repl.mode.empty()) {
+                tensor.replication = repl;
+            }
+        } else if (tensor.distribution.kind == DistKind::REPLICATED) {
+            Replication repl;
+            repl.mode = "cached";
+            tensor.replication = repl;
         }
 
         if (const auto* collect_val = get(*tensor_obj, "collective_hint"); collect_val && collect_val->as_object()) {
@@ -597,13 +674,37 @@ bool parse_tasks(const JsonArray& tasks_array, std::vector<Task>& tasks, std::st
                 }
                 TensorUse use;
                 use.tensor_id = *tensor_id;
+                if (const auto role_val = get_string(*input_obj, "role")) {
+                    use.role = *role_val;
+                }
                 if (const auto access_val = get_string(*input_obj, "access")) {
-                    const auto access = parse_access_kind(*access_val);
-                    if (!access) {
-                        error = "Unsupported access: " + *access_val;
+                    const auto scope = parse_access_scope(*access_val);
+                    if (scope) {
+                        use.scope = *scope;
+                    } else {
+                        const auto access = parse_access_kind(*access_val);
+                        if (!access) {
+                            error = "Unsupported access: " + *access_val;
+                            return false;
+                        }
+                        use.access = *access;
+                    }
+                }
+                if (const auto scope_val = get_string(*input_obj, "scope")) {
+                    const auto scope = parse_access_scope(*scope_val);
+                    if (!scope) {
+                        error = "Unsupported access scope: " + *scope_val;
                         return false;
                     }
-                    use.access = *access;
+                    use.scope = *scope;
+                }
+                if (const auto pattern_val = get_string(*input_obj, "access_pattern")) {
+                    const auto pattern = parse_access_kind(*pattern_val);
+                    if (!pattern) {
+                        error = "Unsupported access_pattern: " + *pattern_val;
+                        return false;
+                    }
+                    use.access = *pattern;
                 }
                 task.inputs.push_back(std::move(use));
             }

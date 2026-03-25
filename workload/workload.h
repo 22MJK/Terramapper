@@ -12,11 +12,22 @@ namespace workload {
 enum class DType { FP32, FP64, INT32, INT64 };
 enum class DistKind { NONE, REPLICATED, BLOCK, CYCLIC };
 enum class AccessKind { DENSE, SPARSE_CSR, ROW_WISE, COL_WISE };
+enum class AccessScope { LOCAL, GLOBAL };
 
 struct Distribution {
     DistKind kind{DistKind::NONE};
     int axis{-1};
     std::string group;
+};
+
+struct Partition {
+    DistKind type{DistKind::NONE};
+    int axis{-1};
+    int num_parts{0};
+};
+
+struct Replication {
+    std::string mode;
 };
 
 struct CollectiveHint {
@@ -30,8 +41,11 @@ struct Tensor {
     std::string name;
     DType dtype{DType::FP32};
     std::vector<std::int64_t> shape;
-    std::optional<std::uint64_t> bytes;
+    std::uint64_t size_bytes{0};
+    std::optional<std::uint64_t> num_elements;
     Distribution distribution;
+    std::optional<Partition> partition;
+    std::optional<Replication> replication;
     AccessKind access_pattern{AccessKind::DENSE};
     std::optional<CollectiveHint> collective;
     std::optional<int> producer_task;
@@ -39,7 +53,9 @@ struct Tensor {
 
 struct TensorUse {
     std::string tensor_id;
+    std::string role;
     AccessKind access{AccessKind::DENSE};
+    AccessScope scope{AccessScope::LOCAL};
 };
 
 struct Task {

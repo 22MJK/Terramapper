@@ -83,9 +83,6 @@ void TaskflowWriter::write(const std::string& path,
         out << "      \"flops\": ";
         json::write_uint64(out, flops_to_uint64(task.compute_flops));
         out << ",\n";
-        out << "      \"bytes\": ";
-        json::write_uint64(out, bytes_to_uint64(task.comm_bytes));
-        out << ",\n";
         out << "      \"device\": ";
         json::write_string(out, mapping_plan.node_for(task.name));
         out << "\n";

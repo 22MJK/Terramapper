@@ -7,7 +7,6 @@
       "subtype": "spmv",
       "name": "spmv_Ap",
       "flops": 56623104,
-      "bytes": 0,
       "device": "0"
     },
     {
@@ -16,7 +15,6 @@
       "subtype": "dot",
       "name": "dot_pAp",
       "flops": 2097152,
-      "bytes": 0,
       "device": "1"
     },
     {
@@ -25,7 +23,6 @@
       "subtype": "scalar",
       "name": "compute_alpha",
       "flops": 32,
-      "bytes": 0,
       "device": "2"
     },
     {
@@ -34,7 +31,6 @@
       "subtype": "axpy",
       "name": "axpy_x_update",
       "flops": 2097152,
-      "bytes": 0,
       "device": "3"
     },
     {
@@ -43,7 +39,6 @@
       "subtype": "axpy",
       "name": "axpy_r_update",
       "flops": 2097152,
-      "bytes": 0,
       "device": "4"
     },
     {
@@ -52,7 +47,6 @@
       "subtype": "dot",
       "name": "dot_rr_new",
       "flops": 2097152,
-      "bytes": 0,
       "device": "5"
     },
     {
@@ -61,7 +55,6 @@
       "subtype": "scalar",
       "name": "compute_beta",
       "flops": 32,
-      "bytes": 0,
       "device": "6"
     },
     {
@@ -70,7 +63,6 @@
       "subtype": "axpy",
       "name": "axpy_p_update",
       "flops": 2097152,
-      "bytes": 0,
       "device": "7"
     }
   ],
@@ -79,14 +71,16 @@
       "id": 0,
       "src": 0,
       "dst": 1,
-      "bytes": 4194304,
+      "bytes": 524288,
+      "kind": "p2p",
       "route": ["nvlink_0_1"]
     },
     {
       "id": 1,
       "src": 0,
       "dst": 4,
-      "bytes": 4194304,
+      "bytes": 524288,
+      "kind": "p2p",
       "route": ["inter_0_4"]
     },
     {
@@ -102,6 +96,7 @@
       "src": 2,
       "dst": 3,
       "bytes": 4,
+      "kind": "p2p",
       "route": ["nvlink_2_3"]
     },
     {
@@ -109,24 +104,35 @@
       "src": 2,
       "dst": 4,
       "bytes": 4,
+      "kind": "p2p",
       "route": ["inter_2_4"]
     },
     {
       "id": 5,
       "src": 4,
       "dst": 5,
-      "bytes": 4194304,
+      "bytes": 524288,
+      "kind": "p2p",
       "route": ["nvlink_4_5"]
     },
     {
       "id": 6,
       "src": 4,
-      "dst": 7,
-      "bytes": 4194304,
-      "route": ["nvlink_4_7"]
+      "dst": 5,
+      "bytes": 524288,
+      "kind": "p2p",
+      "route": ["nvlink_4_5"]
     },
     {
       "id": 7,
+      "src": 4,
+      "dst": 7,
+      "bytes": 524288,
+      "kind": "p2p",
+      "route": ["nvlink_4_7"]
+    },
+    {
+      "id": 8,
       "src": 5,
       "dst": 6,
       "bytes": 4,
@@ -134,10 +140,11 @@
       "route": ["nvlink_5_6"]
     },
     {
-      "id": 8,
+      "id": 9,
       "src": 6,
       "dst": 7,
       "bytes": 4,
+      "kind": "p2p",
       "route": ["nvlink_6_7"]
     }
   ]

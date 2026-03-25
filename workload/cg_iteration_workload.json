@@ -1,6 +1,6 @@
 {
   "name": "cg_iteration_1",
-  "version": 1,
+  "version": 2,
   "device_groups": [
     { "id": "all_devices", "members": "all" }
   ],
@@ -10,7 +10,10 @@
       "name": "A",
       "dtype": "fp32",
       "shape": [1048576, 1048576],
+      "num_elements": 28311552,
+      "size_bytes": 230686724,
       "distribution": { "kind": "block", "axis": 0, "group": "all_devices" },
+      "partition": { "type": "block", "axis": 0, "num_parts": 8 },
       "access_pattern": "sparse_csr",
       "producer": null
     },
@@ -19,7 +22,10 @@
       "name": "p",
       "dtype": "fp32",
       "shape": [1048576],
+      "num_elements": 1048576,
+      "size_bytes": 4194304,
       "distribution": { "kind": "block", "axis": 0, "group": "all_devices" },
+      "partition": { "type": "block", "axis": 0, "num_parts": 8 },
       "access_pattern": "dense",
       "producer": null
     },
@@ -28,7 +34,10 @@
       "name": "Ap",
       "dtype": "fp32",
       "shape": [1048576],
+      "num_elements": 1048576,
+      "size_bytes": 4194304,
       "distribution": { "kind": "block", "axis": 0, "group": "all_devices" },
+      "partition": { "type": "block", "axis": 0, "num_parts": 8 },
       "access_pattern": "dense",
       "producer": 0
     },
@@ -37,7 +46,10 @@
       "name": "pAp",
       "dtype": "fp32",
       "shape": [],
+      "num_elements": 1,
+      "size_bytes": 4,
       "distribution": { "kind": "replicated", "group": "all_devices" },
+      "replication": { "mode": "broadcast" },
       "collective_hint": { "type": "allreduce", "op": "sum", "group": "all_devices" },
       "producer": 1
     },
@@ -46,7 +58,10 @@
       "name": "rr_old",
       "dtype": "fp32",
       "shape": [],
+      "num_elements": 1,
+      "size_bytes": 4,
       "distribution": { "kind": "replicated", "group": "all_devices" },
+      "replication": { "mode": "cached" },
       "producer": null
     },
     {
@@ -54,7 +69,10 @@
       "name": "alpha",
       "dtype": "fp32",
       "shape": [],
+      "num_elements": 1,
+      "size_bytes": 4,
       "distribution": { "kind": "replicated", "group": "all_devices" },
+      "replication": { "mode": "broadcast" },
       "producer": 2
     },
     {
@@ -62,7 +80,10 @@
       "name": "x",
       "dtype": "fp32",
       "shape": [1048576],
+      "num_elements": 1048576,
+      "size_bytes": 4194304,
       "distribution": { "kind": "block", "axis": 0, "group": "all_devices" },
+      "partition": { "type": "block", "axis": 0, "num_parts": 8 },
       "access_pattern": "dense",
       "producer": null
     },
@@ -71,7 +92,10 @@
       "name": "x_next",
       "dtype": "fp32",
       "shape": [1048576],
+      "num_elements": 1048576,
+      "size_bytes": 4194304,
       "distribution": { "kind": "block", "axis": 0, "group": "all_devices" },
+      "partition": { "type": "block", "axis": 0, "num_parts": 8 },
       "access_pattern": "dense",
       "producer": 3
     },
@@ -80,7 +104,10 @@
       "name": "r",
       "dtype": "fp32",
       "shape": [1048576],
+      "num_elements": 1048576,
+      "size_bytes": 4194304,
       "distribution": { "kind": "block", "axis": 0, "group": "all_devices" },
+      "partition": { "type": "block", "axis": 0, "num_parts": 8 },
       "access_pattern": "dense",
       "producer": null
     },
@@ -89,7 +116,10 @@
       "name": "r_next",
       "dtype": "fp32",
       "shape": [1048576],
+      "num_elements": 1048576,
+      "size_bytes": 4194304,
       "distribution": { "kind": "block", "axis": 0, "group": "all_devices" },
+      "partition": { "type": "block", "axis": 0, "num_parts": 8 },
       "access_pattern": "dense",
       "producer": 4
     },
@@ -98,7 +128,10 @@
       "name": "rr_new",
       "dtype": "fp32",
       "shape": [],
+      "num_elements": 1,
+      "size_bytes": 4,
       "distribution": { "kind": "replicated", "group": "all_devices" },
+      "replication": { "mode": "broadcast" },
       "collective_hint": { "type": "allreduce", "op": "sum", "group": "all_devices" },
       "producer": 5
     },
@@ -107,7 +140,10 @@
       "name": "beta",
       "dtype": "fp32",
       "shape": [],
+      "num_elements": 1,
+      "size_bytes": 4,
       "distribution": { "kind": "replicated", "group": "all_devices" },
+      "replication": { "mode": "broadcast" },
       "producer": 6
     },
     {
@@ -115,7 +151,10 @@
       "name": "p_next",
       "dtype": "fp32",
       "shape": [1048576],
+      "num_elements": 1048576,
+      "size_bytes": 4194304,
       "distribution": { "kind": "block", "axis": 0, "group": "all_devices" },
+      "partition": { "type": "block", "axis": 0, "num_parts": 8 },
       "access_pattern": "dense",
       "producer": 7
     }
@@ -127,13 +166,13 @@
       "op": "spmv",
       "compute_flops": 56623104,
       "inputs": [
-        { "tensor": "A", "access": "row-wise" },
-        { "tensor": "p", "access": "dense" }
+        { "tensor": "A", "access": "local" },
+        { "tensor": "p", "access": "global" }
       ],
       "outputs": [
         { "tensor": "Ap" }
       ],
-      "placement_hint": { "group": "all_devices" }
+      "placement_hint": { "group": "all_devices", "parallelism": "data_parallel" }
     },
     {
       "id": 1,
@@ -141,13 +180,13 @@
       "op": "dot",
       "compute_flops": 2097152,
       "inputs": [
-        { "tensor": "p", "access": "dense" },
-        { "tensor": "Ap", "access": "dense" }
+        { "tensor": "p", "role": "lhs", "access": "local" },
+        { "tensor": "Ap", "role": "rhs", "access": "local" }
       ],
       "outputs": [
         { "tensor": "pAp" }
       ],
-      "placement_hint": { "group": "all_devices" }
+      "placement_hint": { "group": "all_devices", "parallelism": "data_parallel" }
     },
     {
       "id": 2,
@@ -155,8 +194,8 @@
       "op": "scalar",
       "compute_flops": 32,
       "inputs": [
-        { "tensor": "pAp" },
-        { "tensor": "rr_old" }
+        { "tensor": "pAp", "access": "global" },
+        { "tensor": "rr_old", "access": "global" }
       ],
       "outputs": [
         { "tensor": "alpha" }
@@ -168,14 +207,14 @@
       "op": "axpy",
       "compute_flops": 2097152,
       "inputs": [
-        { "tensor": "x", "access": "dense" },
-        { "tensor": "p", "access": "dense" },
-        { "tensor": "alpha" }
+        { "tensor": "x", "access": "local" },
+        { "tensor": "p", "access": "local" },
+        { "tensor": "alpha", "access": "global" }
       ],
       "outputs": [
         { "tensor": "x_next" }
       ],
-      "placement_hint": { "group": "all_devices" }
+      "placement_hint": { "group": "all_devices", "parallelism": "data_parallel" }
     },
     {
       "id": 4,
@@ -183,14 +222,14 @@
       "op": "axpy",
       "compute_flops": 2097152,
       "inputs": [
-        { "tensor": "r", "access": "dense" },
-        { "tensor": "Ap", "access": "dense" },
-        { "tensor": "alpha" }
+        { "tensor": "r", "access": "local" },
+        { "tensor": "Ap", "access": "local" },
+        { "tensor": "alpha", "access": "global" }
       ],
       "outputs": [
         { "tensor": "r_next" }
       ],
-      "placement_hint": { "group": "all_devices" }
+      "placement_hint": { "group": "all_devices", "parallelism": "data_parallel" }
     },
     {
       "id": 5,
@@ -198,12 +237,13 @@
       "op": "dot",
       "compute_flops": 2097152,
       "inputs": [
-        { "tensor": "r_next", "access": "dense" }
+        { "tensor": "r_next", "role": "lhs", "access": "local" },
+        { "tensor": "r_next", "role": "rhs", "access": "local" }
       ],
       "outputs": [
         { "tensor": "rr_new" }
       ],
-      "placement_hint": { "group": "all_devices" }
+      "placement_hint": { "group": "all_devices", "parallelism": "data_parallel" }
     },
     {
       "id": 6,
@@ -211,8 +251,8 @@
       "op": "scalar",
       "compute_flops": 32,
       "inputs": [
-        { "tensor": "rr_new" },
-        { "tensor": "rr_old" }
+        { "tensor": "rr_new", "access": "global" },
+        { "tensor": "rr_old", "access": "global" }
       ],
       "outputs": [
         { "tensor": "beta" }
@@ -224,14 +264,14 @@
       "op": "axpy",
       "compute_flops": 2097152,
       "inputs": [
-        { "tensor": "r_next", "access": "dense" },
-        { "tensor": "p", "access": "dense" },
-        { "tensor": "beta" }
+        { "tensor": "r_next", "access": "local" },
+        { "tensor": "p", "access": "local" },
+        { "tensor": "beta", "access": "global" }
       ],
       "outputs": [
         { "tensor": "p_next" }
       ],
-      "placement_hint": { "group": "all_devices" }
+      "placement_hint": { "group": "all_devices", "parallelism": "data_parallel" }
     }
   ]
 }
