@@ -122,6 +122,11 @@ void TaskflowWriter::write(const std::string& path,
             out << "      \"bytes\": ";
             json::write_uint64(out, bytes_to_uint64(edge_bytes));
             out << ",\n";
+            if (!edge.comm_kind.empty()) {
+                out << "      \"kind\": ";
+                json::write_string(out, edge.comm_kind);
+                out << ",\n";
+            }
 
             std::vector<std::string> route;
             if (needs_transfer) {

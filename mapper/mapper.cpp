@@ -14,7 +14,7 @@ void write_taskflow(const hardware_topology::HardwareTopology& topology,
                     const workload::Workload& workload,
                     const std::string& taskflow_path,
                     const Options& options) {
-    const auto graph = workload.to_task_graph();
+    const auto graph = workload.to_task_graph(topology);
 
     std::unique_ptr<mapping::Mapper> mapper;
     if (options.parts > 0) {

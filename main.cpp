@@ -61,7 +61,7 @@ int main(int argc, char** argv) {
         time_unit = topology.time_unit();
     }
 
-    workload::Workload workload("workload", {});
+    workload::Workload workload("workload", {}, {}, {});
     if (!workload::load_from_json(workload_path, workload, &error)) {
         std::cerr << "Failed to load workload: " << error << "\n";
         return 2;

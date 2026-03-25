@@ -31,7 +31,7 @@ the demo binary:
   - `taskflow.h/.cpp`: writer for `taskflow.json`.
   - `json.h/.cpp`: minimal JSON utilities (no external deps).
 - `workload/`:
-  - `workload.h/.cpp`: `WorkloadGenerator` and `Workload` -> `TaskGraph`.
+  - `workload.h/.cpp`: `Workload` schema + tensor/task modeling -> `TaskGraph`.
   - `json_io.h/.cpp`: load `workload.json` into `Workload`.
 - `main.cpp`: demo binary wiring everything end-to-end.
 
@@ -106,41 +106,45 @@ Notes:
 ```json
 {
   "name": "demo",
+  "version": 1,
+  "device_groups": [
+    { "id": "all_devices", "members": "all" }
+  ],
+  "tensors": [
+    {
+      "id": "A",
+      "name": "A",
+      "dtype": "fp32",
+      "shape": [1048576, 1048576],
+      "distribution": { "kind": "block", "axis": 0, "group": "all_devices" },
+      "access_pattern": "sparse_csr",
+      "producer": null
+    }
+  ],
   "tasks": [
     {
       "id": 0,
       "name": "spmv_Ap",
-      "type": "compute",
-      "subtype": "spmv",
+      "op": "spmv",
       "compute_flops": 50,
-      "comm_bytes": 0,
-      "dependencies": []
-    },
-    {
-      "id": 1,
-      "name": "allreduce_alpha",
-      "type": "communication",
-      "subtype": "allreduce",
-      "compute_flops": 0,
-      "comm_bytes": 4096,
-      "dependencies": [0]
+      "inputs": [
+        { "tensor": "A", "access": "row-wise" }
+      ],
+      "outputs": [
+        { "tensor": "Ap" }
+      ],
+      "placement_hint": { "group": "all_devices" }
     }
   ]
 }
 ```
 
 Notes:
-- `type` is required and must be `compute`. Communication tasks are inserted by the mapper.
-- `subtype` is optional and free-form (e.g. `spmv`).
-- Supported compute subtypes: `spmv`, `dot`, `axpy`, `scalar`.
-- `compute_flops` and `comm_bytes` are optional; if omitted they default to `0.0`.
-- Use `dependencies` (task IDs) to express DAG edges; communication is represented by taskflow
-  edges when a dependency crosses devices.
-- For each dependency edge, the mapper uses the dependent task's `comm_bytes` if it is non-zero;
-  otherwise the edge carries `0` bytes. If a task depends on multiple parents, its `comm_bytes`
-  is divided evenly across those incoming edges. If the two tasks are mapped to the same device,
-  the resulting taskflow edge will have `bytes = 0` and an empty route. If the tasks are on
-  different devices, the edge will include a route even when `bytes = 0`.
+- Workload contains only computation; communication is inferred by the mapper.
+- `tensors[]` define data semantics (shape, dtype, distribution, access patterns).
+- `tasks[]` consume/produce tensors; dependencies are implied by tensor `producer` and task inputs.
+- `distribution.kind`: `none | replicated | block | cyclic`.
+- `access_pattern`: `dense | sparse_csr | row-wise | col-wise`.
 
 ## taskflow.json schema (current)
 
@@ -151,12 +155,13 @@ Notes:
   - `subtype`: optional string (forwarded from workload)
   - `name`: task name
   - `flops`: compute amount (FLOPs)
-  - `bytes`: communication bytes (from `Task.comm_bytes`)
+  - `bytes`: communication bytes (always `0` for compute tasks)
   - `device`: mapped device ID (must exist in your simulator's `hardware.json`)
 - `edges[]`:
   - `id`: unique integer edge ID
   - `src` / `dst`: task IDs (integers)
-  - `bytes`: communication bytes (from `TaskEdge.tensor_bytes`)
+  - `bytes`: inferred communication bytes (from tensor metadata)
+  - `kind`: optional communication kind (e.g. `allreduce`)
   - `route`: array of link IDs (multi-hop allowed). If empty and `src/dst` are on different devices,
     the consumer can attempt a direct single-hop link.
 
@@ -172,9 +177,16 @@ python3 visualize/taskflow_viz.py --input taskflow.json --format dot --png taskf
 python3 visualize/taskflow_viz.py --input taskflow.json --format png --output taskflow.png
 ```
 
+Render `workload.json` with Graphviz:
+
+```bash
+python3 visualize/workload_viz.py --input workload.json --output workload.dot
+python3 visualize/workload_viz.py --input workload.json --png workload.png
+```
+
 ## Extending
 
 Common extension points:
-- Add real DAG workloads (replace `workload::WorkloadGenerator` in `workload/workload.{h,cpp}`).
+- Add richer workload parsers (extend `workload/json_io.{h,cpp}`).
 - Implement additional `mapping::Mapper` strategies (e.g., comm-aware mapping).
 - Implement different taskflow export conventions (edit `taskflow/taskflow.{h,cpp}`).

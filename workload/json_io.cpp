@@ -10,6 +10,8 @@
 #include <optional>
 #include <sstream>
 #include <string>
+#include <unordered_map>
+#include <unordered_set>
 #include <utility>
 #include <variant>
 #include <vector>
@@ -339,19 +341,218 @@ std::optional<int> get_int(const JsonObject& obj, const std::string& key) {
     return static_cast<int>(*num);
 }
 
-bool is_valid_type(const std::string& type) {
-    return type == "compute";
+std::optional<DType> parse_dtype(const std::string& value) {
+    if (value == "fp32") {
+        return DType::FP32;
+    }
+    if (value == "fp64") {
+        return DType::FP64;
+    }
+    if (value == "int32") {
+        return DType::INT32;
+    }
+    if (value == "int64") {
+        return DType::INT64;
+    }
+    return std::nullopt;
 }
 
-bool is_valid_compute_subtype(const std::string& subtype) {
-    return subtype.empty() || subtype == "spmv" || subtype == "dot" || subtype == "axpy" || subtype == "scalar";
+std::optional<DistKind> parse_dist_kind(const std::string& value) {
+    if (value == "none") {
+        return DistKind::NONE;
+    }
+    if (value == "replicated") {
+        return DistKind::REPLICATED;
+    }
+    if (value == "block") {
+        return DistKind::BLOCK;
+    }
+    if (value == "cyclic") {
+        return DistKind::CYCLIC;
+    }
+    return std::nullopt;
 }
 
-bool parse_tasks(const JsonArray& tasks_array,
-                 std::vector<WorkloadStage>& stages,
-                 std::string& error) {
-    stages.clear();
-    stages.reserve(tasks_array.size());
+std::optional<AccessKind> parse_access_kind(const std::string& value) {
+    if (value == "dense") {
+        return AccessKind::DENSE;
+    }
+    if (value == "sparse_csr") {
+        return AccessKind::SPARSE_CSR;
+    }
+    if (value == "row-wise") {
+        return AccessKind::ROW_WISE;
+    }
+    if (value == "col-wise") {
+        return AccessKind::COL_WISE;
+    }
+    return std::nullopt;
+}
+
+bool parse_device_groups(const JsonArray& groups_array, std::vector<DeviceGroup>& groups, std::string& error) {
+    groups.clear();
+    groups.reserve(groups_array.size());
+    std::unordered_set<std::string> seen;
+    for (const auto& item : groups_array) {
+        const auto* group_obj = item.as_object();
+        if (!group_obj) {
+            error = "Device group entry must be an object";
+            return false;
+        }
+        const auto id = get_string(*group_obj, "id");
+        if (!id || id->empty()) {
+            error = "Device group missing 'id'";
+            return false;
+        }
+        if (!seen.insert(*id).second) {
+            error = "Duplicate device group id: " + *id;
+            return false;
+        }
+        DeviceGroup group;
+        group.id = *id;
+        if (const auto* members_val = get(*group_obj, "members")) {
+            if (const auto* members_str = members_val->as_string()) {
+                if (*members_str == "all") {
+                    group.members.push_back("all");
+                } else {
+                    error = "Device group 'members' string must be 'all'";
+                    return false;
+                }
+            } else if (const auto* members_arr = members_val->as_array()) {
+                for (const auto& member_item : *members_arr) {
+                    const auto* member_str = member_item.as_string();
+                    if (!member_str) {
+                        error = "Device group members must be strings";
+                        return false;
+                    }
+                    group.members.push_back(*member_str);
+                }
+            } else {
+                error = "Device group 'members' must be array or 'all'";
+                return false;
+            }
+        } else {
+            error = "Device group missing 'members'";
+            return false;
+        }
+        groups.push_back(std::move(group));
+    }
+    return true;
+}
+
+bool parse_tensors(const JsonArray& tensors_array, std::vector<Tensor>& tensors, std::string& error) {
+    tensors.clear();
+    tensors.reserve(tensors_array.size());
+    std::unordered_set<std::string> seen_ids;
+    for (const auto& item : tensors_array) {
+        const auto* tensor_obj = item.as_object();
+        if (!tensor_obj) {
+            error = "Tensor entry must be an object";
+            return false;
+        }
+        const auto id = get_string(*tensor_obj, "id");
+        if (!id || id->empty()) {
+            error = "Tensor entry missing 'id'";
+            return false;
+        }
+        if (!seen_ids.insert(*id).second) {
+            error = "Duplicate tensor id: " + *id;
+            return false;
+        }
+
+        Tensor tensor;
+        tensor.id = *id;
+        tensor.name = get_string(*tensor_obj, "name").value_or(*id);
+
+        if (const auto dtype_val = get_string(*tensor_obj, "dtype")) {
+            const auto dtype = parse_dtype(*dtype_val);
+            if (!dtype) {
+                error = "Unsupported dtype: " + *dtype_val;
+                return false;
+            }
+            tensor.dtype = *dtype;
+        }
+
+        if (const auto* shape_val = get(*tensor_obj, "shape"); shape_val && shape_val->as_array()) {
+            for (const auto& dim_item : *shape_val->as_array()) {
+                const auto* dim_num = dim_item.as_number();
+                if (!dim_num || !std::isfinite(*dim_num)) {
+                    error = "Tensor shape must be numeric";
+                    return false;
+                }
+                double integral = 0.0;
+                if (std::modf(*dim_num, &integral) != 0.0) {
+                    error = "Tensor shape must be integer";
+                    return false;
+                }
+                tensor.shape.push_back(static_cast<std::int64_t>(integral));
+            }
+        }
+
+        if (const auto bytes_val = get_number(*tensor_obj, "bytes")) {
+            if (*bytes_val < 0.0) {
+                error = "Tensor bytes must be non-negative";
+                return false;
+            }
+            tensor.bytes = static_cast<std::uint64_t>(*bytes_val);
+        }
+
+        if (const auto* dist_val = get(*tensor_obj, "distribution"); dist_val && dist_val->as_object()) {
+            const auto* dist_obj = dist_val->as_object();
+            if (const auto kind_val = get_string(*dist_obj, "kind")) {
+                const auto kind = parse_dist_kind(*kind_val);
+                if (!kind) {
+                    error = "Unsupported distribution kind: " + *kind_val;
+                    return false;
+                }
+                tensor.distribution.kind = *kind;
+            }
+            if (const auto axis_val = get_int(*dist_obj, "axis")) {
+                tensor.distribution.axis = *axis_val;
+            }
+            if (const auto group_val = get_string(*dist_obj, "group")) {
+                tensor.distribution.group = *group_val;
+            }
+        }
+
+        if (const auto access_val = get_string(*tensor_obj, "access_pattern")) {
+            const auto access = parse_access_kind(*access_val);
+            if (!access) {
+                error = "Unsupported access_pattern: " + *access_val;
+                return false;
+            }
+            tensor.access_pattern = *access;
+        }
+
+        if (const auto* collect_val = get(*tensor_obj, "collective_hint"); collect_val && collect_val->as_object()) {
+            const auto* collect_obj = collect_val->as_object();
+            CollectiveHint hint;
+            if (const auto type_val = get_string(*collect_obj, "type")) {
+                hint.type = *type_val;
+            }
+            if (const auto op_val = get_string(*collect_obj, "op")) {
+                hint.op = *op_val;
+            }
+            if (const auto group_val = get_string(*collect_obj, "group")) {
+                hint.group = *group_val;
+            }
+            if (!hint.type.empty()) {
+                tensor.collective = hint;
+            }
+        }
+
+        if (const auto producer_val = get_int(*tensor_obj, "producer")) {
+            tensor.producer_task = *producer_val;
+        }
+
+        tensors.push_back(std::move(tensor));
+    }
+    return true;
+}
+
+bool parse_tasks(const JsonArray& tasks_array, std::vector<Task>& tasks, std::string& error) {
+    tasks.clear();
+    tasks.reserve(tasks_array.size());
     std::unordered_set<int> seen_ids;
     std::unordered_set<std::string> seen_names;
     for (const auto& item : tasks_array) {
@@ -360,13 +561,10 @@ bool parse_tasks(const JsonArray& tasks_array,
             error = "Task entry must be an object";
             return false;
         }
-        const auto name = get_string(*task_obj, "name");
-        const auto type = get_string(*task_obj, "type");
-        const auto subtype = get_string(*task_obj, "subtype");
-        const auto compute = get_number(*task_obj, "compute_flops");
-        const auto comm_bytes = get_number(*task_obj, "comm_bytes");
         const auto id = get_int(*task_obj, "id");
-        if (!id || !name || !type) {
+        const auto name = get_string(*task_obj, "name");
+        const auto op = get_string(*task_obj, "op");
+        if (!id || !name || !op) {
             error = "Task entry missing required fields";
             return false;
         }
@@ -378,45 +576,66 @@ bool parse_tasks(const JsonArray& tasks_array,
             error = "Duplicate task name: " + *name;
             return false;
         }
-        if (!is_valid_type(*type)) {
-            error = "Task type must be 'compute' (communication tasks are inserted by mapper)";
-            return false;
-        }
-        const std::string subtype_value = subtype.value_or("");
-        if (!is_valid_compute_subtype(subtype_value)) {
-            error = "Unsupported compute subtype: " + subtype_value;
-            return false;
-        }
-        WorkloadStage stage;
-        stage.id = *id;
-        stage.name = *name;
-        stage.type = *type;
-        stage.subtype = subtype_value;
-        stage.compute_flops = compute.value_or(0.0);
-        stage.comm_bytes = comm_bytes.value_or(0.0);
 
-        if (const auto* deps_val = get(*task_obj, "dependencies"); deps_val && deps_val->as_array()) {
-            for (const auto& dep_item : *deps_val->as_array()) {
-                const auto* dep_num = dep_item.as_number();
-                if (!dep_num || !std::isfinite(*dep_num)) {
-                    error = "Dependency entry must be a finite integer id";
+        Task task;
+        task.id = *id;
+        task.name = *name;
+        task.op = *op;
+        task.compute_flops = get_number(*task_obj, "compute_flops").value_or(0.0);
+
+        if (const auto* inputs_val = get(*task_obj, "inputs"); inputs_val && inputs_val->as_array()) {
+            for (const auto& input_item : *inputs_val->as_array()) {
+                const auto* input_obj = input_item.as_object();
+                if (!input_obj) {
+                    error = "Task input entry must be an object";
                     return false;
                 }
-                double integral = 0.0;
-                if (std::modf(*dep_num, &integral) != 0.0) {
-                    error = "Dependency entry must be an integer id";
+                const auto tensor_id = get_string(*input_obj, "tensor");
+                if (!tensor_id) {
+                    error = "Task input missing 'tensor'";
                     return false;
                 }
-                if (integral < static_cast<double>(std::numeric_limits<int>::min()) ||
-                    integral > static_cast<double>(std::numeric_limits<int>::max())) {
-                    error = "Dependency entry out of range";
-                    return false;
+                TensorUse use;
+                use.tensor_id = *tensor_id;
+                if (const auto access_val = get_string(*input_obj, "access")) {
+                    const auto access = parse_access_kind(*access_val);
+                    if (!access) {
+                        error = "Unsupported access: " + *access_val;
+                        return false;
+                    }
+                    use.access = *access;
                 }
-                stage.dependencies.push_back(static_cast<int>(integral));
+                task.inputs.push_back(std::move(use));
             }
         }
 
-        stages.push_back(std::move(stage));
+        if (const auto* outputs_val = get(*task_obj, "outputs"); outputs_val && outputs_val->as_array()) {
+            for (const auto& output_item : *outputs_val->as_array()) {
+                if (const auto* output_str = output_item.as_string()) {
+                    task.outputs.push_back(*output_str);
+                    continue;
+                }
+                const auto* output_obj = output_item.as_object();
+                if (!output_obj) {
+                    error = "Task output entry must be a string or object";
+                    return false;
+                }
+                const auto tensor_id = get_string(*output_obj, "tensor");
+                if (!tensor_id) {
+                    error = "Task output missing 'tensor'";
+                    return false;
+                }
+                task.outputs.push_back(*tensor_id);
+            }
+        }
+
+        if (const auto* hint_val = get(*task_obj, "placement_hint"); hint_val && hint_val->as_object()) {
+            if (const auto group_val = get_string(*hint_val->as_object(), "group")) {
+                task.placement_group = *group_val;
+            }
+        }
+
+        tasks.push_back(std::move(task));
     }
     return true;
 }
@@ -454,6 +673,32 @@ bool load_from_json(const std::string& path, Workload& out, std::string* error) 
     }
 
     const auto name = get_string(*root_obj, "name").value_or("workload");
+
+    std::vector<DeviceGroup> groups;
+    if (const auto* groups_val = get(*root_obj, "device_groups"); groups_val && groups_val->as_array()) {
+        if (!parse_device_groups(*groups_val->as_array(), groups, parse_error)) {
+            if (error) {
+                *error = parse_error;
+            }
+            return false;
+        }
+    }
+
+    const auto* tensors_val = get(*root_obj, "tensors");
+    if (!tensors_val || !tensors_val->as_array()) {
+        if (error) {
+            *error = "Missing or invalid 'tensors' array";
+        }
+        return false;
+    }
+    std::vector<Tensor> tensors;
+    if (!parse_tensors(*tensors_val->as_array(), tensors, parse_error)) {
+        if (error) {
+            *error = parse_error;
+        }
+        return false;
+    }
+
     const auto* tasks_val = get(*root_obj, "tasks");
     if (!tasks_val || !tasks_val->as_array()) {
         if (error) {
@@ -461,8 +706,8 @@ bool load_from_json(const std::string& path, Workload& out, std::string* error) 
         }
         return false;
     }
-    std::vector<WorkloadStage> stages;
-    if (!parse_tasks(*tasks_val->as_array(), stages, parse_error)) {
+    std::vector<Task> tasks;
+    if (!parse_tasks(*tasks_val->as_array(), tasks, parse_error)) {
         if (error) {
             *error = parse_error;
         }
@@ -471,12 +716,12 @@ bool load_from_json(const std::string& path, Workload& out, std::string* error) 
 
     if (get(*root_obj, "edges") != nullptr) {
         if (error) {
-            *error = "Edges are not supported; use task dependencies instead";
+            *error = "Edges are not supported; use tensor producers and task inputs instead";
         }
         return false;
     }
 
-    out = Workload(name, std::move(stages));
+    out = Workload(name, std::move(tasks), std::move(tensors), std::move(groups));
     return true;
 }
 

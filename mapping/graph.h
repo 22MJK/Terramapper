@@ -22,12 +22,18 @@ struct TaskEdge {
     std::string src;
     std::string dst;
     double tensor_bytes{0.0};
+    std::string tensor_id;
+    std::string comm_kind;
 };
 
 class TaskGraph {
 public:
     void add_task(Task task);
-    void add_edge(const std::string& src, const std::string& dst, double tensor_bytes = 0.0);
+    void add_edge(const std::string& src,
+                  const std::string& dst,
+                  double tensor_bytes = 0.0,
+                  std::string tensor_id = {},
+                  std::string comm_kind = {});
 
     std::vector<TaskEdge> dependencies(const std::string& name) const;
     std::vector<TaskEdge> successors(const std::string& name) const;
