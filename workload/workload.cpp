@@ -22,8 +22,12 @@ mapping::TaskGraph Workload::to_task_graph() const {
         id_to_name.emplace(stage.id, stage.name);
     }
     for (const auto& stage : stages_) {
+        const double per_edge_bytes =
+            (stage.comm_bytes > 0.0 && !stage.dependencies.empty())
+                ? stage.comm_bytes / static_cast<double>(stage.dependencies.size())
+                : 0.0;
         for (const auto& dep : stage.dependencies) {
-            const double tensor_bytes = stage.comm_bytes > 0.0 ? stage.comm_bytes : 0.0;
+            const double tensor_bytes = per_edge_bytes;
             const auto dep_it = id_to_name.find(dep);
             if (dep_it == id_to_name.end()) {
                 throw std::runtime_error("Workload dependency refers to unknown task id");

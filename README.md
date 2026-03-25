@@ -137,8 +137,10 @@ Notes:
 - Use `dependencies` (task IDs) to express DAG edges; communication is represented by taskflow
   edges when a dependency crosses devices.
 - For each dependency edge, the mapper uses the dependent task's `comm_bytes` if it is non-zero;
-  otherwise the edge carries `0` bytes. If the two tasks are mapped to the same device, the
-  resulting taskflow edge will have `bytes = 0` and an empty route.
+  otherwise the edge carries `0` bytes. If a task depends on multiple parents, its `comm_bytes`
+  is divided evenly across those incoming edges. If the two tasks are mapped to the same device,
+  the resulting taskflow edge will have `bytes = 0` and an empty route. If the tasks are on
+  different devices, the edge will include a route even when `bytes = 0`.
 
 ## taskflow.json schema (current)
 

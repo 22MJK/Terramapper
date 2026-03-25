@@ -1,5 +1,5 @@
 {
-  "time_unit": "ms",
+  "time_unit": "s",
   "tasks": [
     {
       "id": 0,
@@ -8,7 +8,7 @@
       "name": "spmv_Ap",
       "flops": 56623104,
       "bytes": 0,
-      "device": "0"
+      "device": "dev_0"
     },
     {
       "id": 1,
@@ -17,7 +17,7 @@
       "name": "rr_old",
       "flops": 0,
       "bytes": 0,
-      "device": "1"
+      "device": "dev_1"
     },
     {
       "id": 2,
@@ -26,79 +26,61 @@
       "name": "dot_pAp",
       "flops": 2097152,
       "bytes": 0,
-      "device": "1"
+      "device": "dev_1"
     },
     {
       "id": 3,
-      "kind": "communication",
-      "subtype": "allreduce",
-      "name": "allreduce_pAp",
-      "flops": 0,
-      "bytes": 4,
-      "device": "2"
-    },
-    {
-      "id": 4,
       "kind": "compute",
       "subtype": "scalar",
       "name": "compute_alpha",
       "flops": 32,
-      "bytes": 0,
-      "device": "2"
+      "bytes": 4,
+      "device": "dev_2"
     },
     {
-      "id": 5,
+      "id": 4,
       "kind": "compute",
       "subtype": "axpy",
       "name": "axpy_x_update",
       "flops": 2097152,
       "bytes": 0,
-      "device": "3"
+      "device": "dev_3"
     },
     {
-      "id": 6,
+      "id": 5,
       "kind": "compute",
       "subtype": "axpy",
       "name": "axpy_r_update",
       "flops": 2097152,
       "bytes": 0,
-      "device": "4"
+      "device": "dev_2"
     },
     {
-      "id": 7,
+      "id": 6,
       "kind": "compute",
       "subtype": "dot",
       "name": "dot_rr_new",
       "flops": 2097152,
       "bytes": 0,
-      "device": "5"
+      "device": "dev_1"
     },
     {
-      "id": 8,
-      "kind": "communication",
-      "subtype": "allreduce",
-      "name": "allreduce_rr_new",
-      "flops": 0,
-      "bytes": 4,
-      "device": "6"
-    },
-    {
-      "id": 9,
+      "id": 7,
       "kind": "compute",
       "subtype": "scalar",
       "name": "compute_beta",
       "flops": 32,
-      "bytes": 0,
-      "device": "6"
+      "bytes": 4,
+      "device": "dev_3"
     },
     {
-      "id": 10,
+      "id": 8,
       "kind": "compute",
       "subtype": "axpy",
       "name": "axpy_p_update",
       "flops": 2097152,
       "bytes": 0,
-      "device": "7"
+      "device": "dev_2"
     }
   ],
   "edges": [
@@ -107,28 +89,28 @@
       "src": 0,
       "dst": 2,
       "bytes": 0,
-      "route": ["nvlink_0_1"]
+      "route": []
     },
     {
       "id": 1,
       "src": 1,
-      "dst": 4,
-      "bytes": 0,
-      "route": ["nvlink_1_2"]
+      "dst": 3,
+      "bytes": 2,
+      "route": ["link_dev_1_to_dev_2"]
     },
     {
       "id": 2,
       "src": 1,
-      "dst": 9,
-      "bytes": 0,
-      "route": ["inter_1_6"]
+      "dst": 7,
+      "bytes": 2,
+      "route": ["link_dev_1_to_dev_0", "link_dev_0_to_dev_3"]
     },
     {
       "id": 3,
       "src": 2,
       "dst": 3,
-      "bytes": 4,
-      "route": ["nvlink_1_2"]
+      "bytes": 2,
+      "route": ["link_dev_1_to_dev_2"]
     },
     {
       "id": 4,
@@ -139,52 +121,38 @@
     },
     {
       "id": 5,
-      "src": 4,
+      "src": 3,
       "dst": 5,
       "bytes": 0,
-      "route": ["nvlink_2_3"]
+      "route": []
     },
     {
       "id": 6,
-      "src": 4,
+      "src": 5,
       "dst": 6,
       "bytes": 0,
-      "route": ["inter_2_4"]
+      "route": []
     },
     {
       "id": 7,
-      "src": 6,
-      "dst": 7,
+      "src": 5,
+      "dst": 8,
       "bytes": 0,
-      "route": ["nvlink_4_5"]
+      "route": []
     },
     {
       "id": 8,
       "src": 6,
-      "dst": 10,
-      "bytes": 0,
-      "route": ["nvlink_4_7"]
+      "dst": 7,
+      "bytes": 2,
+      "route": ["link_dev_1_to_dev_0", "link_dev_0_to_dev_3"]
     },
     {
       "id": 9,
       "src": 7,
       "dst": 8,
-      "bytes": 4,
-      "route": ["nvlink_5_6"]
-    },
-    {
-      "id": 10,
-      "src": 8,
-      "dst": 9,
       "bytes": 0,
       "route": []
-    },
-    {
-      "id": 11,
-      "src": 9,
-      "dst": 10,
-      "bytes": 0,
-      "route": ["nvlink_6_7"]
     }
   ]
 }

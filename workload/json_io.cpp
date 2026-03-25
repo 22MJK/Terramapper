@@ -1,6 +1,7 @@
 #include "workload/json_io.h"
 
 #include <cctype>
+#include <cmath>
 #include <cstdlib>
 #include <cstring>
 #include <fstream>
@@ -351,6 +352,8 @@ bool parse_tasks(const JsonArray& tasks_array,
                  std::string& error) {
     stages.clear();
     stages.reserve(tasks_array.size());
+    std::unordered_set<int> seen_ids;
+    std::unordered_set<std::string> seen_names;
     for (const auto& item : tasks_array) {
         const auto* task_obj = item.as_object();
         if (!task_obj) {
@@ -365,6 +368,14 @@ bool parse_tasks(const JsonArray& tasks_array,
         const auto id = get_int(*task_obj, "id");
         if (!id || !name || !type) {
             error = "Task entry missing required fields";
+            return false;
+        }
+        if (!seen_ids.insert(*id).second) {
+            error = "Duplicate task id: " + std::to_string(*id);
+            return false;
+        }
+        if (!seen_names.insert(*name).second) {
+            error = "Duplicate task name: " + *name;
             return false;
         }
         if (!is_valid_type(*type)) {
@@ -387,11 +398,21 @@ bool parse_tasks(const JsonArray& tasks_array,
         if (const auto* deps_val = get(*task_obj, "dependencies"); deps_val && deps_val->as_array()) {
             for (const auto& dep_item : *deps_val->as_array()) {
                 const auto* dep_num = dep_item.as_number();
-                if (!dep_num) {
+                if (!dep_num || !std::isfinite(*dep_num)) {
+                    error = "Dependency entry must be a finite integer id";
+                    return false;
+                }
+                double integral = 0.0;
+                if (std::modf(*dep_num, &integral) != 0.0) {
                     error = "Dependency entry must be an integer id";
                     return false;
                 }
-                stage.dependencies.push_back(static_cast<int>(*dep_num));
+                if (integral < static_cast<double>(std::numeric_limits<int>::min()) ||
+                    integral > static_cast<double>(std::numeric_limits<int>::max())) {
+                    error = "Dependency entry out of range";
+                    return false;
+                }
+                stage.dependencies.push_back(static_cast<int>(integral));
             }
         }
 
