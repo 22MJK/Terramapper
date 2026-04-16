@@ -1,7 +1,6 @@
 #include "workload/workload.h"
 
-#include <cmath>
-#include <limits>
+#include <cctype>
 #include <stdexcept>
 #include <unordered_map>
 #include <unordered_set>
@@ -9,97 +8,40 @@
 namespace workload {
 namespace {
 
-std::size_t dtype_size(DType dtype) {
-    switch (dtype) {
-        case DType::FP32:
-        case DType::INT32:
-            return 4;
-        case DType::FP64:
-        case DType::INT64:
-            return 8;
+const char* access_kind_name(AccessKind access) {
+    switch (access) {
+        case AccessKind::DENSE:
+            return "dense";
+        case AccessKind::SPARSE_CSR:
+            return "sparse_csr";
+        case AccessKind::ROW_WISE:
+            return "row-wise";
+        case AccessKind::COL_WISE:
+            return "col-wise";
     }
-    return 4;
+    return "dense";
 }
 
-std::uint64_t tensor_bytes(const Tensor& tensor) {
-    if (tensor.size_bytes > 0) {
-        return tensor.size_bytes;
-    }
-    if (tensor.num_elements.has_value()) {
-        return static_cast<std::uint64_t>(*tensor.num_elements * dtype_size(tensor.dtype));
-    }
-    if (tensor.shape.empty()) {
-        return static_cast<std::uint64_t>(dtype_size(tensor.dtype));
-    }
-    long double total = 1.0L;
-    for (auto dim : tensor.shape) {
-        if (dim <= 0) {
-            return 0;
-        }
-        total *= static_cast<long double>(dim);
-        if (total > static_cast<long double>(std::numeric_limits<std::uint64_t>::max())) {
-            return std::numeric_limits<std::uint64_t>::max();
+std::string canonical_comm_kind(std::string value) {
+    for (char& ch : value) {
+        ch = static_cast<char>(std::tolower(static_cast<unsigned char>(ch)));
+        if (ch == '-' || ch == ' ') {
+            ch = '_';
         }
     }
-    total *= static_cast<long double>(dtype_size(tensor.dtype));
-    if (total > static_cast<long double>(std::numeric_limits<std::uint64_t>::max())) {
-        return std::numeric_limits<std::uint64_t>::max();
+    if (value == "all_reduce") {
+        return "allreduce";
     }
-    return static_cast<std::uint64_t>(total);
-}
-
-std::size_t group_size(const Distribution& dist,
-                       const std::unordered_map<std::string, std::vector<std::string>>& groups) {
-    if (dist.group.empty()) {
-        return 1;
+    if (value == "all_gather") {
+        return "allgather";
     }
-    const auto it = groups.find(dist.group);
-    if (it == groups.end() || it->second.empty()) {
-        return 1;
+    if (value == "reduce_scatter") {
+        return "reducescatter";
     }
-    return it->second.size();
-}
-
-std::size_t partition_parts(const Tensor& tensor,
-                            const std::unordered_map<std::string, std::vector<std::string>>& groups) {
-    if (tensor.partition.has_value() && tensor.partition->num_parts > 0) {
-        return static_cast<std::size_t>(tensor.partition->num_parts);
+    if (value == "all_to_all") {
+        return "alltoall";
     }
-    return group_size(tensor.distribution, groups);
-}
-
-double estimate_transfer_bytes(const Tensor& tensor,
-                               AccessKind access,
-                               AccessScope scope,
-                               const std::unordered_map<std::string, std::vector<std::string>>& groups) {
-    const auto total_bytes = static_cast<double>(tensor_bytes(tensor));
-    if (total_bytes <= 0.0) {
-        return 0.0;
-    }
-
-    const std::size_t parts = partition_parts(tensor, groups);
-    switch (tensor.distribution.kind) {
-        case DistKind::REPLICATED:
-            if (tensor.replication.has_value() && tensor.replication->mode == "cached") {
-                return 0.0;
-            }
-            return total_bytes;
-        case DistKind::NONE:
-            return total_bytes;
-        case DistKind::BLOCK:
-        case DistKind::CYCLIC:
-            if (scope == AccessScope::LOCAL) {
-                if (parts == 0) {
-                    return total_bytes;
-                }
-                if (access == AccessKind::ROW_WISE || access == AccessKind::COL_WISE) {
-                    return total_bytes / static_cast<double>(parts);
-                }
-                return total_bytes / static_cast<double>(parts);
-            }
-            return total_bytes;
-    }
-    return total_bytes;
+    return value;
 }
 
 }  // namespace
@@ -107,16 +49,27 @@ double estimate_transfer_bytes(const Tensor& tensor,
 Workload::Workload(std::string name,
                    std::vector<Task> tasks,
                    std::vector<Tensor> tensors,
-                   std::vector<DeviceGroup> device_groups)
+                   std::vector<DeviceGroup> device_groups,
+                   std::vector<std::string> iteration_inputs,
+                   std::vector<std::string> iteration_outputs)
     : name_(std::move(name)),
       tasks_(std::move(tasks)),
       tensors_(std::move(tensors)),
-      device_groups_(std::move(device_groups)) {}
+      device_groups_(std::move(device_groups)),
+      iteration_inputs_(std::move(iteration_inputs)),
+      iteration_outputs_(std::move(iteration_outputs)) {}
 
 mapping::TaskGraph Workload::to_task_graph(const hardware_topology::HardwareTopology& topology) const {
     mapping::TaskGraph graph;
     std::unordered_map<int, std::string> id_to_name;
     id_to_name.reserve(tasks_.size());
+    (void)topology;
+
+    std::unordered_map<std::string, Tensor> tensor_map;
+    tensor_map.reserve(tensors_.size());
+    for (const auto& tensor : tensors_) {
+        tensor_map.emplace(tensor.id, tensor);
+    }
 
     for (const auto& task : tasks_) {
         mapping::Task mapped;
@@ -125,28 +78,28 @@ mapping::TaskGraph Workload::to_task_graph(const hardware_topology::HardwareTopo
         mapped.subtype = task.op;
         mapped.compute_flops = task.compute_flops;
         mapped.comm_bytes = 0.0;
+
+        double estimated_memory_bytes = task.memory_bytes;
+        if (estimated_memory_bytes <= 0.0) {
+            for (const auto& input : task.inputs) {
+                const auto tensor_it = tensor_map.find(input.tensor_id);
+                if (tensor_it == tensor_map.end()) {
+                    throw std::runtime_error("Input tensor not found: " + input.tensor_id);
+                }
+                estimated_memory_bytes += static_cast<double>(tensor_it->second.size_bytes);
+            }
+            for (const auto& output_id : task.outputs) {
+                const auto tensor_it = tensor_map.find(output_id);
+                if (tensor_it == tensor_map.end()) {
+                    continue;
+                }
+                estimated_memory_bytes += static_cast<double>(tensor_it->second.size_bytes);
+            }
+        }
+        mapped.memory_bytes = estimated_memory_bytes;
+
         graph.add_task(std::move(mapped));
         id_to_name.emplace(task.id, task.name);
-    }
-
-    std::unordered_map<std::string, Tensor> tensor_map;
-    tensor_map.reserve(tensors_.size());
-    for (const auto& tensor : tensors_) {
-        tensor_map.emplace(tensor.id, tensor);
-    }
-
-    std::unordered_map<std::string, std::vector<std::string>> group_members;
-    group_members.reserve(device_groups_.size());
-    for (const auto& group : device_groups_) {
-        if (group.members.size() == 1 && group.members[0] == "all") {
-            std::vector<std::string> members;
-            for (const auto* device : topology.devices()) {
-                members.push_back(device->id);
-            }
-            group_members[group.id] = std::move(members);
-        } else {
-            group_members[group.id] = group.members;
-        }
     }
 
     for (const auto& task : tasks_) {
@@ -167,12 +120,15 @@ mapping::TaskGraph Workload::to_task_graph(const hardware_topology::HardwareTopo
             if (src_it == id_to_name.end()) {
                 throw std::runtime_error("Tensor producer task not found");
             }
-            const double bytes = estimate_transfer_bytes(tensor, input.access, input.scope, group_members);
             std::string comm_kind = "p2p";
             if (tensor.collective.has_value()) {
-                comm_kind = tensor.collective->type;
+                comm_kind = canonical_comm_kind(tensor.collective->type);
+                if (comm_kind.empty()) {
+                    comm_kind = "p2p";
+                }
             }
-            graph.add_edge(src_it->second, dst_it->second, bytes, tensor.id, comm_kind);
+            const std::string access_pattern = access_kind_name(input.access);
+            graph.add_edge(src_it->second, dst_it->second, 0.0, tensor.id, comm_kind, access_pattern);
         }
     }
 
@@ -181,6 +137,26 @@ mapping::TaskGraph Workload::to_task_graph(const hardware_topology::HardwareTopo
 
 const std::string& Workload::name() const {
     return name_;
+}
+
+const std::vector<Task>& Workload::tasks() const {
+    return tasks_;
+}
+
+const std::vector<Tensor>& Workload::tensors() const {
+    return tensors_;
+}
+
+const std::vector<DeviceGroup>& Workload::device_groups() const {
+    return device_groups_;
+}
+
+const std::vector<std::string>& Workload::iteration_inputs() const {
+    return iteration_inputs_;
+}
+
+const std::vector<std::string>& Workload::iteration_outputs() const {
+    return iteration_outputs_;
 }
 
 }  // namespace workload

@@ -12,7 +12,6 @@ namespace workload {
 enum class DType { FP32, FP64, INT32, INT64 };
 enum class DistKind { NONE, REPLICATED, BLOCK, CYCLIC };
 enum class AccessKind { DENSE, SPARSE_CSR, ROW_WISE, COL_WISE };
-enum class AccessScope { LOCAL, GLOBAL };
 
 struct Distribution {
     DistKind kind{DistKind::NONE};
@@ -55,7 +54,6 @@ struct TensorUse {
     std::string tensor_id;
     std::string role;
     AccessKind access{AccessKind::DENSE};
-    AccessScope scope{AccessScope::LOCAL};
 };
 
 struct Task {
@@ -63,9 +61,11 @@ struct Task {
     std::string name;
     std::string op;
     double compute_flops{0.0};
+    double memory_bytes{0.0};
     std::vector<TensorUse> inputs;
     std::vector<std::string> outputs;
     std::string placement_group;
+    std::string placement_parallelism;
 };
 
 struct DeviceGroup {
@@ -78,15 +78,24 @@ public:
     Workload(std::string name,
              std::vector<Task> tasks,
              std::vector<Tensor> tensors,
-             std::vector<DeviceGroup> device_groups);
+             std::vector<DeviceGroup> device_groups,
+             std::vector<std::string> iteration_inputs = {},
+             std::vector<std::string> iteration_outputs = {});
     mapping::TaskGraph to_task_graph(const hardware_topology::HardwareTopology& topology) const;
     const std::string& name() const;
+    const std::vector<Task>& tasks() const;
+    const std::vector<Tensor>& tensors() const;
+    const std::vector<DeviceGroup>& device_groups() const;
+    const std::vector<std::string>& iteration_inputs() const;
+    const std::vector<std::string>& iteration_outputs() const;
 
 private:
     std::string name_;
     std::vector<Task> tasks_;
     std::vector<Tensor> tensors_;
     std::vector<DeviceGroup> device_groups_;
+    std::vector<std::string> iteration_inputs_;
+    std::vector<std::string> iteration_outputs_;
 };
 
 }  // namespace workload

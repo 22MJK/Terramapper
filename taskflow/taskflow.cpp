@@ -3,6 +3,7 @@
 #include "taskflow/json.h"
 
 #include <cmath>
+#include <cctype>
 #include <cstdint>
 #include <fstream>
 #include <limits>
@@ -32,6 +33,33 @@ std::uint64_t flops_to_uint64(double flops) {
         return std::numeric_limits<std::uint64_t>::max();
     }
     return static_cast<std::uint64_t>(std::llround(flops));
+}
+
+std::string canonical_comm_kind(std::string value) {
+    for (char& ch : value) {
+        ch = static_cast<char>(std::tolower(static_cast<unsigned char>(ch)));
+        if (ch == '-' || ch == ' ') {
+            ch = '_';
+        }
+    }
+    if (value == "all_reduce") {
+        return "allreduce";
+    }
+    if (value == "all_gather") {
+        return "allgather";
+    }
+    if (value == "reduce_scatter") {
+        return "reducescatter";
+    }
+    if (value == "all_to_all") {
+        return "alltoall";
+    }
+    return value;
+}
+
+bool is_collective_kind(const std::string& kind) {
+    return kind == "allreduce" || kind == "allgather" || kind == "reducescatter" || kind == "broadcast" ||
+           kind == "reduce" || kind == "alltoall";
 }
 
 }  // namespace
@@ -113,21 +141,20 @@ void TaskflowWriter::write(const std::string& path,
             out << ",\n";
             const auto& src_device = mapping_plan.node_for(edge.src);
             const auto& dst_device = mapping_plan.node_for(edge.dst);
+            const std::string comm_kind = edge.comm_kind.empty() ? "p2p" : canonical_comm_kind(edge.comm_kind);
             const double raw_bytes = edge.tensor_bytes;
-            const bool needs_transfer = (src_device != dst_device);
+            const bool needs_transfer = (src_device != dst_device) || is_collective_kind(comm_kind);
             const double edge_bytes = needs_transfer ? raw_bytes : 0.0;
             out << "      \"bytes\": ";
             json::write_uint64(out, bytes_to_uint64(edge_bytes));
             out << ",\n";
-            if (!edge.comm_kind.empty()) {
-                out << "      \"kind\": ";
-                json::write_string(out, edge.comm_kind);
-                out << ",\n";
-            }
+            out << "      \"kind\": ";
+            json::write_string(out, comm_kind);
+            out << ",\n";
 
             std::vector<std::string> route;
-            if (needs_transfer) {
-                route = topology.shortest_route_link_ids(src_device, dst_device);
+            if (needs_transfer && !is_collective_kind(comm_kind)) {
+                route = topology.shortest_route_link_ids(src_device, dst_device, bytes_to_uint64(edge_bytes));
                 if (route.empty()) {
                     const auto direct = topology.link_id(src_device, dst_device);
                     if (direct.has_value()) {

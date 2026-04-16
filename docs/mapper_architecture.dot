@@ -1,0 +1,51 @@
+digraph mapper_architecture {
+  rankdir=LR;
+  fontname="Helvetica";
+  fontsize=18;
+  node [shape=box, style="rounded,filled", fontname="Helvetica", fontsize=14, margin="0.12,0.08"];
+  edge [color="#666666", arrowsize=0.8];
+
+  subgraph cluster_input {
+    label="Input";
+    color="#9ecae1";
+    style="rounded";
+    W [label="Workload JSON\n(tasks+tensors+deps)", fillcolor="#e8f4ff", color="#6baed6"];
+    H [label="Hardware JSON\n(devices+links)", fillcolor="#e8f4ff", color="#6baed6"];
+  }
+
+  subgraph cluster_processing {
+    label="Processing";
+    color="#c7e9c0";
+    style="rounded";
+    L [label="Workload Loader\n(workload/json_io.cpp)", fillcolor="#eef9ed", color="#74c476"];
+    T [label="Topology Loader\n(hardware_topology/json_io.cpp)", fillcolor="#eef9ed", color="#74c476"];
+    TG [label="TaskGraph\ncompute nodes + deps\n(no comm bytes)", fillcolor="#eef9ed", color="#74c476"];
+    DP [label="Data Parallel Expand\nexpand_data_parallel()", fillcolor="#eef9ed", color="#74c476"];
+    COMM [label="Comm Inference\nannotate_comm_bytes()\nedge.bytes", fillcolor="#fff6e6", color="#f0ad4e"];
+    MAP [label="Mapper\nHEFT / Greedy", fillcolor="#fff6e6", color="#f0ad4e"];
+    PLAN [label="MappingPlan\n(task→device)", fillcolor="#fff6e6", color="#f0ad4e"];
+    TF [label="Taskflow Writer\ntaskflow/taskflow.cpp", fillcolor="#eef9ed", color="#74c476"];
+  }
+
+  subgraph cluster_output {
+    label="Output";
+    color="#fdd0a2";
+    style="rounded";
+    OUT [label="taskflow.json\n(tasks + edges)", fillcolor="#fff3e6", color="#fdae6b"];
+    VIZ [label="taskflow.svg\n(graphviz)", fillcolor="#fff3e6", color="#fdae6b"];
+  }
+
+  W -> L;
+  H -> T;
+  L -> TG;
+  T -> TG;
+  TG -> DP;
+  DP -> COMM;
+  COMM -> MAP;
+  MAP -> PLAN;
+  COMM -> TF;
+  PLAN -> TF;
+  T -> TF;
+  TF -> OUT;
+  TF -> VIZ;
+}

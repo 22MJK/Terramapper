@@ -14,6 +14,7 @@ struct Task {
     std::string type;
     std::string subtype;
     double compute_flops{0.0};
+    double memory_bytes{0.0};
     double comm_bytes{0.0};
     std::unordered_set<std::string> tags;
 };
@@ -24,6 +25,7 @@ struct TaskEdge {
     double tensor_bytes{0.0};
     std::string tensor_id;
     std::string comm_kind;
+    std::string access_pattern;
 };
 
 class TaskGraph {
@@ -33,7 +35,8 @@ public:
                   const std::string& dst,
                   double tensor_bytes = 0.0,
                   std::string tensor_id = {},
-                  std::string comm_kind = {});
+                  std::string comm_kind = {},
+                  std::string access_pattern = {});
 
     std::vector<TaskEdge> dependencies(const std::string& name) const;
     std::vector<TaskEdge> successors(const std::string& name) const;

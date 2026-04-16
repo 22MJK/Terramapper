@@ -45,8 +45,12 @@ public:
     std::optional<double> latency_ms(std::string_view src, std::string_view dst) const;
     std::optional<std::string> link_id(std::string_view src, std::string_view dst) const;
 
-    // Returns route as link-id list; empty means "no route found" (or src==dst).
-    std::vector<std::string> shortest_route_link_ids(std::string_view src, std::string_view dst) const;
+    // Returns minimum-time route as link-id list via Dijkstra.
+    // Cost model per link: latency + serialization(bytes / bw).
+    // Empty means "no route found" (or src==dst).
+    std::vector<std::string> shortest_route_link_ids(std::string_view src,
+                                                     std::string_view dst,
+                                                     size_t bytes = 0) const;
 
     // Transfer time in seconds. If no route exists, returns +inf.
     double get_transfer_time(std::string_view src, std::string_view dst, size_t bytes) const;

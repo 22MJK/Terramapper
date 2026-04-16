@@ -13,8 +13,9 @@ Given:
 
 the demo binary:
 1) loads hardware and workload from JSON,
-2) maps tasks onto devices (greedy load-balancing), optionally guided by partitions, and
-3) exports a taskflow trace JSON without timestamps (mapper output).
+2) tries one or more parallelization modes (`none` / `hint` / `all`) and picks the best candidate by estimated makespan, then
+3) maps tasks onto devices (`heft` or `greedy`), optionally guided by partitions, and
+4) exports a taskflow trace JSON without timestamps (mapper output).
 
 ## Directory Layout
 
@@ -58,18 +59,37 @@ make clean
 ```bash
 ./mapper_demo --hardware=hardware.json --workload=workload.json
 ./mapper_demo --hardware=hardware.json --workload=workload.json --parts=3
+./mapper_demo --hardware=hardware.json --workload=workload.json --mapper=heft --parallel=auto
 ```
 
 Arguments:
 - `--parts=P`: if `P > 0`, partition tasks into `P` blocks before mapping (default: 0 = disabled)
 - `--time_unit=UNIT`: written to `taskflow.json` (default: `s`)
-- `--out=PATH`: output path for `taskflow.json` (default: `taskflow.json`)
+- `--out=PATH` / `--output=PATH`: output path for `taskflow.json` (default: `taskflow.json`)
 - `--hardware=PATH`: required, load hardware topology from JSON
   - If `--time_unit` is not provided, it will use `time_unit` from the hardware JSON.
 - `--workload=PATH`: required, load workload DAG from JSON
+- `--mapper=heft|greedy`: mapping backend (default: `heft`)
+- `--parallel=auto|none|hint|all`:
+  - `auto`: evaluate `hint`/`none`/`all` and pick the lowest estimated makespan (default)
+  - `none`: disable data-parallel expansion
+  - `hint`: only expand tasks with `placement_hint.parallelism = data_parallel`
+  - `all`: expand all tasks data-parallel across their target group (or all devices)
+  - expanded shards are not hard-pinned to a specific device; mapper selects eligible devices in the group
+- Visualization guardrails (enabled by default):
+  - `--no-viz`: disable auto rendering entirely
+  - `--viz-max-tasks=N`: skip rendering if task count exceeds `N` (default: `2500`, `<=0` disables this check)
+  - `--viz-max-edges=N`: skip rendering if edge count exceeds `N` (default: `10000`, `<=0` disables this check)
+  - `--viz-force`: force rendering even if graph is over thresholds
+  - `--viz-summary=PATH`: optionally write visualizer text summary when rendering is skipped
 
 Outputs:
 - `taskflow.json`: tasks and edges (no timestamps)
+- terminal schedule summary after each run:
+  - graph shape (`tasks`, `edges`, `dag_depth`, `sources`, `sinks`)
+  - communication totals (`transfer_bytes`, `cross_device_transfer_bytes`, cross-device ratio)
+  - top task subtypes, tasks per device, top communication kinds by bytes
+  - suggested abstraction commands for large/sparse-readable schedule views
 
 ## hardware.json schema (current)
 
@@ -117,7 +137,7 @@ Notes:
       "dtype": "fp32",
       "shape": [1048576, 1048576],
       "num_elements": 28311552,
-      "size_bytes": 230686724,
+      "size_bytes": 113246208,
       "distribution": { "kind": "block", "axis": 0, "group": "all_devices" },
       "partition": { "type": "block", "axis": 0, "num_parts": 8 },
       "access_pattern": "sparse_csr",
@@ -131,7 +151,7 @@ Notes:
       "op": "spmv",
       "compute_flops": 50,
       "inputs": [
-        { "tensor": "A", "access": "local" }
+        { "tensor": "A", "access": "dense" }
       ],
       "outputs": [
         { "tensor": "Ap" }
@@ -150,8 +170,12 @@ Notes:
 - `tasks[]` consume/produce tensors; dependencies are implied by tensor `producer` and task inputs.
 - `distribution.kind`: `none | replicated | block | cyclic`.
 - `access_pattern`: `dense | sparse_csr | row-wise | col-wise`.
-- `inputs[].access`: `local | global`. Use `role` to distinguish operands (e.g. dot).
+- `inputs[].access`: `dense | sparse_csr | row-wise | col-wise`. Use `role` to distinguish operands (e.g. dot).
 - `replication.mode`: `broadcast | cached` for replicated tensors.
+- `collective_hint.type`: `allreduce | allgather | reducescatter | broadcast | reduce | alltoall`.
+- Data-parallel expansion can infer merge/fanout collectives on edges (`allgather` / `broadcast` / `alltoall`) when hints are absent.
+- Collective cost is charged once per logical tensor event (including merge/fanout), then shared by dependent edges.
+- Data-parallel split ratio is inferred from heterogeneous device capability (compute + memory bandwidth), not uniform-only split.
 
 ## taskflow.json schema (current)
 
@@ -167,7 +191,7 @@ Notes:
   - `id`: unique integer edge ID
   - `src` / `dst`: task IDs (integers)
   - `bytes`: inferred communication bytes (from tensor metadata)
-  - `kind`: communication kind (`p2p` by default, or `allreduce` when specified)
+  - `kind`: communication primitive (`p2p`, `allreduce`, `allgather`, `reducescatter`, `broadcast`, `reduce`, `alltoall`)
   - `route`: array of link IDs (multi-hop allowed). If empty and `src/dst` are on different devices,
     the consumer can attempt a direct single-hop link.
 
@@ -182,6 +206,17 @@ python3 visualize/taskflow_viz.py --input taskflow.json --format dot --output ta
 python3 visualize/taskflow_viz.py --input taskflow.json --format dot --png taskflow.png
 python3 visualize/taskflow_viz.py --input taskflow.json --format png --output taskflow.png
 ```
+
+For large graphs, the visualizer now auto-skips rendering by default and prints a schedule summary + suggested abstraction commands.
+You can control this behavior directly:
+
+```bash
+python3 visualize/taskflow_viz.py --input taskflow.json --max-nodes 2500 --max-edges 10000 --summary taskflow.schedule_summary.txt
+python3 visualize/taskflow_viz.py --input taskflow.json --max-nodes 2500 --max-edges 10000 --quiet-skip-summary
+python3 visualize/taskflow_viz.py --input taskflow.json --force-render --output taskflow.svg
+```
+
+`--quiet-skip-summary` is useful when another component (for example `mapper_demo`) already prints a run summary and you only want the skip warning.
 
 Render `workload.json` with Graphviz:
 

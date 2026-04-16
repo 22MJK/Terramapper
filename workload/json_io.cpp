@@ -389,15 +389,33 @@ std::optional<AccessKind> parse_access_kind(const std::string& value) {
     return std::nullopt;
 }
 
-std::optional<AccessScope> parse_access_scope(const std::string& value) {
-    if (value == "local") {
-        return AccessScope::LOCAL;
+std::string canonical_comm_kind(std::string value) {
+    for (char& ch : value) {
+        ch = static_cast<char>(std::tolower(static_cast<unsigned char>(ch)));
+        if (ch == '-' || ch == ' ') {
+            ch = '_';
+        }
     }
-    if (value == "global") {
-        return AccessScope::GLOBAL;
+    if (value == "all_reduce") {
+        return "allreduce";
     }
-    return std::nullopt;
+    if (value == "all_gather") {
+        return "allgather";
+    }
+    if (value == "reduce_scatter") {
+        return "reducescatter";
+    }
+    if (value == "all_to_all") {
+        return "alltoall";
+    }
+    return value;
 }
+
+bool is_supported_comm_kind(const std::string& value) {
+    return value == "p2p" || value == "broadcast" || value == "reduce" || value == "allreduce" ||
+           value == "allgather" || value == "reducescatter" || value == "alltoall";
+}
+
 
 bool parse_device_groups(const JsonArray& groups_array, std::vector<DeviceGroup>& groups, std::string& error) {
     groups.clear();
@@ -605,15 +623,21 @@ bool parse_tensors(const JsonArray& tensors_array, std::vector<Tensor>& tensors,
             const auto* collect_obj = collect_val->as_object();
             CollectiveHint hint;
             if (const auto type_val = get_string(*collect_obj, "type")) {
-                hint.type = *type_val;
+                hint.type = canonical_comm_kind(*type_val);
             }
             if (const auto op_val = get_string(*collect_obj, "op")) {
-                hint.op = *op_val;
+                hint.op = canonical_comm_kind(*op_val);
             }
             if (const auto group_val = get_string(*collect_obj, "group")) {
                 hint.group = *group_val;
             }
-            if (!hint.type.empty()) {
+            const std::string effective_type = !hint.type.empty() ? hint.type : hint.op;
+            if (!effective_type.empty()) {
+                if (!is_supported_comm_kind(effective_type) || effective_type == "p2p") {
+                    error = "Unsupported collective_hint type/op: " + effective_type;
+                    return false;
+                }
+                hint.type = effective_type;
                 tensor.collective = hint;
             }
         }
@@ -659,6 +683,7 @@ bool parse_tasks(const JsonArray& tasks_array, std::vector<Task>& tasks, std::st
         task.name = *name;
         task.op = *op;
         task.compute_flops = get_number(*task_obj, "compute_flops").value_or(0.0);
+        task.memory_bytes = get_number(*task_obj, "memory_bytes").value_or(0.0);
 
         if (const auto* inputs_val = get(*task_obj, "inputs"); inputs_val && inputs_val->as_array()) {
             for (const auto& input_item : *inputs_val->as_array()) {
@@ -678,25 +703,12 @@ bool parse_tasks(const JsonArray& tasks_array, std::vector<Task>& tasks, std::st
                     use.role = *role_val;
                 }
                 if (const auto access_val = get_string(*input_obj, "access")) {
-                    const auto scope = parse_access_scope(*access_val);
-                    if (scope) {
-                        use.scope = *scope;
-                    } else {
-                        const auto access = parse_access_kind(*access_val);
-                        if (!access) {
-                            error = "Unsupported access: " + *access_val;
-                            return false;
-                        }
-                        use.access = *access;
-                    }
-                }
-                if (const auto scope_val = get_string(*input_obj, "scope")) {
-                    const auto scope = parse_access_scope(*scope_val);
-                    if (!scope) {
-                        error = "Unsupported access scope: " + *scope_val;
+                    const auto access = parse_access_kind(*access_val);
+                    if (!access) {
+                        error = "Unsupported access: " + *access_val;
                         return false;
                     }
-                    use.scope = *scope;
+                    use.access = *access;
                 }
                 if (const auto pattern_val = get_string(*input_obj, "access_pattern")) {
                     const auto pattern = parse_access_kind(*pattern_val);
@@ -734,9 +746,25 @@ bool parse_tasks(const JsonArray& tasks_array, std::vector<Task>& tasks, std::st
             if (const auto group_val = get_string(*hint_val->as_object(), "group")) {
                 task.placement_group = *group_val;
             }
+            if (const auto par_val = get_string(*hint_val->as_object(), "parallelism")) {
+                task.placement_parallelism = *par_val;
+            }
         }
 
         tasks.push_back(std::move(task));
+    }
+    return true;
+}
+
+bool parse_string_list(const JsonArray& arr, std::vector<std::string>& out, std::string& error) {
+    out.clear();
+    for (const auto& item : arr) {
+        const auto* str = item.as_string();
+        if (!str) {
+            error = "List entry must be a string";
+            return false;
+        }
+        out.push_back(*str);
     }
     return true;
 }
@@ -815,6 +843,36 @@ bool load_from_json(const std::string& path, Workload& out, std::string* error) 
         return false;
     }
 
+    std::vector<std::string> iteration_inputs;
+    if (const auto* inputs_val = get(*root_obj, "iteration_inputs"); inputs_val && inputs_val->as_array()) {
+        if (!parse_string_list(*inputs_val->as_array(), iteration_inputs, parse_error)) {
+            if (error) {
+                *error = parse_error;
+            }
+            return false;
+        }
+    } else if (get(*root_obj, "iteration_inputs") != nullptr) {
+        if (error) {
+            *error = "Invalid 'iteration_inputs' array";
+        }
+        return false;
+    }
+
+    std::vector<std::string> iteration_outputs;
+    if (const auto* outputs_val = get(*root_obj, "iteration_outputs"); outputs_val && outputs_val->as_array()) {
+        if (!parse_string_list(*outputs_val->as_array(), iteration_outputs, parse_error)) {
+            if (error) {
+                *error = parse_error;
+            }
+            return false;
+        }
+    } else if (get(*root_obj, "iteration_outputs") != nullptr) {
+        if (error) {
+            *error = "Invalid 'iteration_outputs' array";
+        }
+        return false;
+    }
+
     if (get(*root_obj, "edges") != nullptr) {
         if (error) {
             *error = "Edges are not supported; use tensor producers and task inputs instead";
@@ -822,7 +880,12 @@ bool load_from_json(const std::string& path, Workload& out, std::string* error) 
         return false;
     }
 
-    out = Workload(name, std::move(tasks), std::move(tensors), std::move(groups));
+    out = Workload(name,
+                   std::move(tasks),
+                   std::move(tensors),
+                   std::move(groups),
+                   std::move(iteration_inputs),
+                   std::move(iteration_outputs));
     return true;
 }
 

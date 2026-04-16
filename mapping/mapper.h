@@ -26,6 +26,11 @@ public:
     MappingPlan map(const TaskGraph& graph, const hardware_topology::HardwareTopology& topology) const override;
 };
 
+class HeftMapper : public Mapper {
+public:
+    MappingPlan map(const TaskGraph& graph, const hardware_topology::HardwareTopology& topology) const override;
+};
+
 class PartitionerMapper : public Mapper {
 public:
     PartitionerMapper(std::unique_ptr<Mapper> inner, std::vector<std::vector<std::string>> partitions);

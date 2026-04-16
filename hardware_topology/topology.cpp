@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <cmath>
+#include <functional>
 #include <queue>
 #include <limits>
 #include <unordered_map>
@@ -80,7 +81,9 @@ std::optional<std::string> HardwareTopology::link_id(std::string_view src, std::
     return std::nullopt;
 }
 
-std::vector<std::string> HardwareTopology::shortest_route_link_ids(std::string_view src, std::string_view dst) const {
+std::vector<std::string> HardwareTopology::shortest_route_link_ids(std::string_view src,
+                                                                    std::string_view dst,
+                                                                    size_t bytes) const {
     if (src == dst) {
         return {};
     }
@@ -90,64 +93,96 @@ std::vector<std::string> HardwareTopology::shortest_route_link_ids(std::string_v
         return {};
     }
 
-    // Build outgoing adjacency list once per call (kept simple for now).
-    std::unordered_map<std::string, std::vector<std::string>> outgoing;
+    // Build outgoing adjacency list once per call.
+    std::unordered_map<std::string, std::vector<const Link*>> outgoing;
     outgoing.reserve(devices_.size());
     for (const auto& link : links_) {
-        outgoing[link.src].push_back(link.dst);
+        if (link.bw_gbps <= 0.0) {
+            continue;
+        }
+        outgoing[link.src].push_back(&link);
     }
     for (auto& kv : outgoing) {
-        auto& neigh = kv.second;
-        std::sort(neigh.begin(), neigh.end());
-        neigh.erase(std::unique(neigh.begin(), neigh.end()), neigh.end());
+        auto& links = kv.second;
+        std::sort(links.begin(), links.end(), [](const Link* a, const Link* b) {
+            if (a->dst == b->dst) {
+                return a->id < b->id;
+            }
+            return a->dst < b->dst;
+        });
     }
 
-    std::queue<std::string> queue;
-    std::unordered_map<std::string, std::string> parent;
-    parent.emplace(src_dev->id, "");
-    queue.push(src_dev->id);
+    const auto link_cost_seconds = [bytes](const Link& link) {
+        const double latency_s = link.latency_ms / 1000.0;
+        const double serialize_s = (bytes == 0) ? 0.0 : (static_cast<double>(bytes) / (link.bw_gbps * 1e9));
+        return latency_s + serialize_s;
+    };
 
-    while (!queue.empty()) {
-        const auto current = queue.front();
-        queue.pop();
+    const double kInf = std::numeric_limits<double>::infinity();
+    std::unordered_map<std::string, double> dist;
+    std::unordered_map<std::string, std::string> parent_node;
+    std::unordered_map<std::string, std::string> parent_link;
+    dist.reserve(devices_.size());
+    parent_node.reserve(devices_.size());
+    parent_link.reserve(devices_.size());
+    for (const auto& kv : devices_) {
+        dist.emplace(kv.first, kInf);
+    }
+    dist[src_dev->id] = 0.0;
+
+    using QueueItem = std::pair<double, std::string>;
+    std::priority_queue<QueueItem, std::vector<QueueItem>, std::greater<QueueItem>> pq;
+    pq.push({0.0, src_dev->id});
+
+    while (!pq.empty()) {
+        const auto [d, current] = pq.top();
+        pq.pop();
+        if (d > dist[current]) {
+            continue;
+        }
         if (current == dst_dev->id) {
             break;
         }
-        const auto it = outgoing.find(current);
-        if (it == outgoing.end()) {
+        const auto out_it = outgoing.find(current);
+        if (out_it == outgoing.end()) {
             continue;
         }
-        for (const auto& neighbor : it->second) {
-            if (parent.find(neighbor) != parent.end()) {
+        for (const auto* link : out_it->second) {
+            const double weight = link_cost_seconds(*link);
+            const double candidate = d + weight;
+            const auto next_it = dist.find(link->dst);
+            if (next_it == dist.end()) {
                 continue;
             }
-            parent.emplace(neighbor, current);
-            queue.push(neighbor);
+            const double old = next_it->second;
+            const bool better = candidate < old;
+            const bool tie_break = (candidate == old &&
+                                    parent_link.find(link->dst) != parent_link.end() &&
+                                    link->id < parent_link[link->dst]);
+            if (better || tie_break) {
+                next_it->second = candidate;
+                parent_node[link->dst] = current;
+                parent_link[link->dst] = link->id;
+                pq.push({candidate, link->dst});
+            }
         }
     }
 
-    if (parent.find(dst_dev->id) == parent.end()) {
-        return {};
-    }
-
-    std::vector<std::string> path_nodes;
-    for (std::string cur = dst_dev->id; !cur.empty(); cur = parent.at(cur)) {
-        path_nodes.push_back(cur);
-    }
-    std::reverse(path_nodes.begin(), path_nodes.end());
-    if (path_nodes.size() < 2) {
+    if (parent_node.find(dst_dev->id) == parent_node.end()) {
         return {};
     }
 
     std::vector<std::string> route;
-    route.reserve(path_nodes.size() - 1);
-    for (size_t i = 0; i + 1 < path_nodes.size(); ++i) {
-        const auto id = link_id(path_nodes[i], path_nodes[i + 1]);
-        if (!id.has_value()) {
+    for (std::string cur = dst_dev->id; cur != src_dev->id;) {
+        const auto link_it = parent_link.find(cur);
+        const auto node_it = parent_node.find(cur);
+        if (link_it == parent_link.end() || node_it == parent_node.end()) {
             return {};
         }
-        route.push_back(*id);
+        route.push_back(link_it->second);
+        cur = node_it->second;
     }
+    std::reverse(route.begin(), route.end());
     return route;
 }
 
@@ -155,14 +190,14 @@ double HardwareTopology::get_transfer_time(std::string_view src, std::string_vie
     if (src == dst || bytes == 0) {
         return 0.0;
     }
-    const auto route = shortest_route_link_ids(src, dst);
+    const auto route = shortest_route_link_ids(src, dst, bytes);
     if (route.empty()) {
         return std::numeric_limits<double>::infinity();
     }
 
     // Assumes store-and-forward: each hop pays fixed latency + serialization time.
-    // Uses GiB = 1024^3 for conversion from bytes.
-    const double gib = static_cast<double>(bytes) / (1024.0 * 1024.0 * 1024.0);
+    // Uses GB/s (1e9 bytes/s) for bw_gbps.
+    const double gb = static_cast<double>(bytes) / 1e9;
     double total = 0.0;
     for (const auto& link_id_val : route) {
         const auto it = std::find_if(links_.begin(), links_.end(), [&link_id_val](const Link& link) {
@@ -172,7 +207,7 @@ double HardwareTopology::get_transfer_time(std::string_view src, std::string_vie
             return std::numeric_limits<double>::infinity();
         }
         total += (it->latency_ms / 1000.0);
-        total += gib / it->bw_gbps;
+        total += gb / it->bw_gbps;
     }
     return total;
 }

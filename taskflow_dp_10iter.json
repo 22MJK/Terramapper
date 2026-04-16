@@ -1,0 +1,7271 @@
+{
+  "time_unit": "ms",
+  "tasks": [
+    {
+      "id": 0,
+      "kind": "compute",
+      "subtype": "spmv",
+      "name": "spmv_Ap_0@0",
+      "flops": 14155776,
+      "device": "0"
+    },
+    {
+      "id": 1,
+      "kind": "compute",
+      "subtype": "spmv",
+      "name": "spmv_Ap_0@1",
+      "flops": 14155776,
+      "device": "1"
+    },
+    {
+      "id": 2,
+      "kind": "compute",
+      "subtype": "spmv",
+      "name": "spmv_Ap_0@2",
+      "flops": 14155776,
+      "device": "2"
+    },
+    {
+      "id": 3,
+      "kind": "compute",
+      "subtype": "spmv",
+      "name": "spmv_Ap_0@3",
+      "flops": 14155776,
+      "device": "3"
+    },
+    {
+      "id": 4,
+      "kind": "compute",
+      "subtype": "dot",
+      "name": "dot_pAp_0@0",
+      "flops": 524288,
+      "device": "0"
+    },
+    {
+      "id": 5,
+      "kind": "compute",
+      "subtype": "dot",
+      "name": "dot_pAp_0@1",
+      "flops": 524288,
+      "device": "1"
+    },
+    {
+      "id": 6,
+      "kind": "compute",
+      "subtype": "dot",
+      "name": "dot_pAp_0@2",
+      "flops": 524288,
+      "device": "2"
+    },
+    {
+      "id": 7,
+      "kind": "compute",
+      "subtype": "dot",
+      "name": "dot_pAp_0@3",
+      "flops": 524288,
+      "device": "3"
+    },
+    {
+      "id": 8,
+      "kind": "compute",
+      "subtype": "scalar",
+      "name": "compute_alpha_0",
+      "flops": 32,
+      "device": "0"
+    },
+    {
+      "id": 9,
+      "kind": "compute",
+      "subtype": "axpy",
+      "name": "axpy_x_update_0@3",
+      "flops": 524288,
+      "device": "3"
+    },
+    {
+      "id": 10,
+      "kind": "compute",
+      "subtype": "axpy",
+      "name": "axpy_x_update_0@2",
+      "flops": 524288,
+      "device": "2"
+    },
+    {
+      "id": 11,
+      "kind": "compute",
+      "subtype": "axpy",
+      "name": "axpy_x_update_0@1",
+      "flops": 524288,
+      "device": "1"
+    },
+    {
+      "id": 12,
+      "kind": "compute",
+      "subtype": "axpy",
+      "name": "axpy_x_update_0@0",
+      "flops": 524288,
+      "device": "0"
+    },
+    {
+      "id": 13,
+      "kind": "compute",
+      "subtype": "axpy",
+      "name": "axpy_r_update_0@3",
+      "flops": 524288,
+      "device": "3"
+    },
+    {
+      "id": 14,
+      "kind": "compute",
+      "subtype": "axpy",
+      "name": "axpy_r_update_0@2",
+      "flops": 524288,
+      "device": "2"
+    },
+    {
+      "id": 15,
+      "kind": "compute",
+      "subtype": "axpy",
+      "name": "axpy_r_update_0@1",
+      "flops": 524288,
+      "device": "1"
+    },
+    {
+      "id": 16,
+      "kind": "compute",
+      "subtype": "axpy",
+      "name": "axpy_r_update_0@0",
+      "flops": 524288,
+      "device": "0"
+    },
+    {
+      "id": 17,
+      "kind": "compute",
+      "subtype": "dot",
+      "name": "dot_rr_new_0@3",
+      "flops": 524288,
+      "device": "3"
+    },
+    {
+      "id": 18,
+      "kind": "compute",
+      "subtype": "dot",
+      "name": "dot_rr_new_0@2",
+      "flops": 524288,
+      "device": "2"
+    },
+    {
+      "id": 19,
+      "kind": "compute",
+      "subtype": "dot",
+      "name": "dot_rr_new_0@1",
+      "flops": 524288,
+      "device": "1"
+    },
+    {
+      "id": 20,
+      "kind": "compute",
+      "subtype": "dot",
+      "name": "dot_rr_new_0@0",
+      "flops": 524288,
+      "device": "0"
+    },
+    {
+      "id": 21,
+      "kind": "compute",
+      "subtype": "scalar",
+      "name": "compute_beta_0",
+      "flops": 32,
+      "device": "0"
+    },
+    {
+      "id": 22,
+      "kind": "compute",
+      "subtype": "axpy",
+      "name": "axpy_p_update_0@3",
+      "flops": 524288,
+      "device": "3"
+    },
+    {
+      "id": 23,
+      "kind": "compute",
+      "subtype": "axpy",
+      "name": "axpy_p_update_0@2",
+      "flops": 524288,
+      "device": "2"
+    },
+    {
+      "id": 24,
+      "kind": "compute",
+      "subtype": "axpy",
+      "name": "axpy_p_update_0@1",
+      "flops": 524288,
+      "device": "1"
+    },
+    {
+      "id": 25,
+      "kind": "compute",
+      "subtype": "axpy",
+      "name": "axpy_p_update_0@0",
+      "flops": 524288,
+      "device": "0"
+    },
+    {
+      "id": 26,
+      "kind": "compute",
+      "subtype": "spmv",
+      "name": "spmv_Ap_1@3",
+      "flops": 14155776,
+      "device": "3"
+    },
+    {
+      "id": 27,
+      "kind": "compute",
+      "subtype": "spmv",
+      "name": "spmv_Ap_1@2",
+      "flops": 14155776,
+      "device": "2"
+    },
+    {
+      "id": 28,
+      "kind": "compute",
+      "subtype": "spmv",
+      "name": "spmv_Ap_1@1",
+      "flops": 14155776,
+      "device": "1"
+    },
+    {
+      "id": 29,
+      "kind": "compute",
+      "subtype": "spmv",
+      "name": "spmv_Ap_1@0",
+      "flops": 14155776,
+      "device": "0"
+    },
+    {
+      "id": 30,
+      "kind": "compute",
+      "subtype": "dot",
+      "name": "dot_pAp_1@3",
+      "flops": 524288,
+      "device": "3"
+    },
+    {
+      "id": 31,
+      "kind": "compute",
+      "subtype": "dot",
+      "name": "dot_pAp_1@2",
+      "flops": 524288,
+      "device": "2"
+    },
+    {
+      "id": 32,
+      "kind": "compute",
+      "subtype": "dot",
+      "name": "dot_pAp_1@1",
+      "flops": 524288,
+      "device": "1"
+    },
+    {
+      "id": 33,
+      "kind": "compute",
+      "subtype": "dot",
+      "name": "dot_pAp_1@0",
+      "flops": 524288,
+      "device": "0"
+    },
+    {
+      "id": 34,
+      "kind": "compute",
+      "subtype": "scalar",
+      "name": "compute_alpha_1",
+      "flops": 32,
+      "device": "0"
+    },
+    {
+      "id": 35,
+      "kind": "compute",
+      "subtype": "axpy",
+      "name": "axpy_x_update_1@3",
+      "flops": 524288,
+      "device": "3"
+    },
+    {
+      "id": 36,
+      "kind": "compute",
+      "subtype": "axpy",
+      "name": "axpy_x_update_1@2",
+      "flops": 524288,
+      "device": "2"
+    },
+    {
+      "id": 37,
+      "kind": "compute",
+      "subtype": "axpy",
+      "name": "axpy_x_update_1@1",
+      "flops": 524288,
+      "device": "1"
+    },
+    {
+      "id": 38,
+      "kind": "compute",
+      "subtype": "axpy",
+      "name": "axpy_x_update_1@0",
+      "flops": 524288,
+      "device": "0"
+    },
+    {
+      "id": 39,
+      "kind": "compute",
+      "subtype": "axpy",
+      "name": "axpy_r_update_1@3",
+      "flops": 524288,
+      "device": "3"
+    },
+    {
+      "id": 40,
+      "kind": "compute",
+      "subtype": "axpy",
+      "name": "axpy_r_update_1@2",
+      "flops": 524288,
+      "device": "2"
+    },
+    {
+      "id": 41,
+      "kind": "compute",
+      "subtype": "axpy",
+      "name": "axpy_r_update_1@1",
+      "flops": 524288,
+      "device": "1"
+    },
+    {
+      "id": 42,
+      "kind": "compute",
+      "subtype": "axpy",
+      "name": "axpy_r_update_1@0",
+      "flops": 524288,
+      "device": "0"
+    },
+    {
+      "id": 43,
+      "kind": "compute",
+      "subtype": "dot",
+      "name": "dot_rr_new_1@3",
+      "flops": 524288,
+      "device": "3"
+    },
+    {
+      "id": 44,
+      "kind": "compute",
+      "subtype": "dot",
+      "name": "dot_rr_new_1@2",
+      "flops": 524288,
+      "device": "2"
+    },
+    {
+      "id": 45,
+      "kind": "compute",
+      "subtype": "dot",
+      "name": "dot_rr_new_1@1",
+      "flops": 524288,
+      "device": "1"
+    },
+    {
+      "id": 46,
+      "kind": "compute",
+      "subtype": "dot",
+      "name": "dot_rr_new_1@0",
+      "flops": 524288,
+      "device": "0"
+    },
+    {
+      "id": 47,
+      "kind": "compute",
+      "subtype": "scalar",
+      "name": "compute_beta_1",
+      "flops": 32,
+      "device": "0"
+    },
+    {
+      "id": 48,
+      "kind": "compute",
+      "subtype": "axpy",
+      "name": "axpy_p_update_1@3",
+      "flops": 524288,
+      "device": "3"
+    },
+    {
+      "id": 49,
+      "kind": "compute",
+      "subtype": "axpy",
+      "name": "axpy_p_update_1@2",
+      "flops": 524288,
+      "device": "2"
+    },
+    {
+      "id": 50,
+      "kind": "compute",
+      "subtype": "axpy",
+      "name": "axpy_p_update_1@1",
+      "flops": 524288,
+      "device": "1"
+    },
+    {
+      "id": 51,
+      "kind": "compute",
+      "subtype": "axpy",
+      "name": "axpy_p_update_1@0",
+      "flops": 524288,
+      "device": "0"
+    },
+    {
+      "id": 52,
+      "kind": "compute",
+      "subtype": "spmv",
+      "name": "spmv_Ap_2@3",
+      "flops": 14155776,
+      "device": "3"
+    },
+    {
+      "id": 53,
+      "kind": "compute",
+      "subtype": "spmv",
+      "name": "spmv_Ap_2@2",
+      "flops": 14155776,
+      "device": "2"
+    },
+    {
+      "id": 54,
+      "kind": "compute",
+      "subtype": "spmv",
+      "name": "spmv_Ap_2@1",
+      "flops": 14155776,
+      "device": "1"
+    },
+    {
+      "id": 55,
+      "kind": "compute",
+      "subtype": "spmv",
+      "name": "spmv_Ap_2@0",
+      "flops": 14155776,
+      "device": "0"
+    },
+    {
+      "id": 56,
+      "kind": "compute",
+      "subtype": "dot",
+      "name": "dot_pAp_2@3",
+      "flops": 524288,
+      "device": "3"
+    },
+    {
+      "id": 57,
+      "kind": "compute",
+      "subtype": "dot",
+      "name": "dot_pAp_2@2",
+      "flops": 524288,
+      "device": "2"
+    },
+    {
+      "id": 58,
+      "kind": "compute",
+      "subtype": "dot",
+      "name": "dot_pAp_2@1",
+      "flops": 524288,
+      "device": "1"
+    },
+    {
+      "id": 59,
+      "kind": "compute",
+      "subtype": "dot",
+      "name": "dot_pAp_2@0",
+      "flops": 524288,
+      "device": "0"
+    },
+    {
+      "id": 60,
+      "kind": "compute",
+      "subtype": "scalar",
+      "name": "compute_alpha_2",
+      "flops": 32,
+      "device": "0"
+    },
+    {
+      "id": 61,
+      "kind": "compute",
+      "subtype": "axpy",
+      "name": "axpy_x_update_2@3",
+      "flops": 524288,
+      "device": "3"
+    },
+    {
+      "id": 62,
+      "kind": "compute",
+      "subtype": "axpy",
+      "name": "axpy_x_update_2@2",
+      "flops": 524288,
+      "device": "2"
+    },
+    {
+      "id": 63,
+      "kind": "compute",
+      "subtype": "axpy",
+      "name": "axpy_x_update_2@1",
+      "flops": 524288,
+      "device": "1"
+    },
+    {
+      "id": 64,
+      "kind": "compute",
+      "subtype": "axpy",
+      "name": "axpy_x_update_2@0",
+      "flops": 524288,
+      "device": "0"
+    },
+    {
+      "id": 65,
+      "kind": "compute",
+      "subtype": "axpy",
+      "name": "axpy_r_update_2@3",
+      "flops": 524288,
+      "device": "3"
+    },
+    {
+      "id": 66,
+      "kind": "compute",
+      "subtype": "axpy",
+      "name": "axpy_r_update_2@2",
+      "flops": 524288,
+      "device": "2"
+    },
+    {
+      "id": 67,
+      "kind": "compute",
+      "subtype": "axpy",
+      "name": "axpy_r_update_2@1",
+      "flops": 524288,
+      "device": "1"
+    },
+    {
+      "id": 68,
+      "kind": "compute",
+      "subtype": "axpy",
+      "name": "axpy_r_update_2@0",
+      "flops": 524288,
+      "device": "0"
+    },
+    {
+      "id": 69,
+      "kind": "compute",
+      "subtype": "dot",
+      "name": "dot_rr_new_2@3",
+      "flops": 524288,
+      "device": "3"
+    },
+    {
+      "id": 70,
+      "kind": "compute",
+      "subtype": "dot",
+      "name": "dot_rr_new_2@2",
+      "flops": 524288,
+      "device": "2"
+    },
+    {
+      "id": 71,
+      "kind": "compute",
+      "subtype": "dot",
+      "name": "dot_rr_new_2@1",
+      "flops": 524288,
+      "device": "1"
+    },
+    {
+      "id": 72,
+      "kind": "compute",
+      "subtype": "dot",
+      "name": "dot_rr_new_2@0",
+      "flops": 524288,
+      "device": "0"
+    },
+    {
+      "id": 73,
+      "kind": "compute",
+      "subtype": "scalar",
+      "name": "compute_beta_2",
+      "flops": 32,
+      "device": "0"
+    },
+    {
+      "id": 74,
+      "kind": "compute",
+      "subtype": "axpy",
+      "name": "axpy_p_update_2@3",
+      "flops": 524288,
+      "device": "3"
+    },
+    {
+      "id": 75,
+      "kind": "compute",
+      "subtype": "axpy",
+      "name": "axpy_p_update_2@2",
+      "flops": 524288,
+      "device": "2"
+    },
+    {
+      "id": 76,
+      "kind": "compute",
+      "subtype": "axpy",
+      "name": "axpy_p_update_2@1",
+      "flops": 524288,
+      "device": "1"
+    },
+    {
+      "id": 77,
+      "kind": "compute",
+      "subtype": "axpy",
+      "name": "axpy_p_update_2@0",
+      "flops": 524288,
+      "device": "0"
+    },
+    {
+      "id": 78,
+      "kind": "compute",
+      "subtype": "spmv",
+      "name": "spmv_Ap_3@3",
+      "flops": 14155776,
+      "device": "3"
+    },
+    {
+      "id": 79,
+      "kind": "compute",
+      "subtype": "spmv",
+      "name": "spmv_Ap_3@2",
+      "flops": 14155776,
+      "device": "2"
+    },
+    {
+      "id": 80,
+      "kind": "compute",
+      "subtype": "spmv",
+      "name": "spmv_Ap_3@1",
+      "flops": 14155776,
+      "device": "1"
+    },
+    {
+      "id": 81,
+      "kind": "compute",
+      "subtype": "spmv",
+      "name": "spmv_Ap_3@0",
+      "flops": 14155776,
+      "device": "0"
+    },
+    {
+      "id": 82,
+      "kind": "compute",
+      "subtype": "dot",
+      "name": "dot_pAp_3@3",
+      "flops": 524288,
+      "device": "3"
+    },
+    {
+      "id": 83,
+      "kind": "compute",
+      "subtype": "dot",
+      "name": "dot_pAp_3@2",
+      "flops": 524288,
+      "device": "2"
+    },
+    {
+      "id": 84,
+      "kind": "compute",
+      "subtype": "dot",
+      "name": "dot_pAp_3@1",
+      "flops": 524288,
+      "device": "1"
+    },
+    {
+      "id": 85,
+      "kind": "compute",
+      "subtype": "dot",
+      "name": "dot_pAp_3@0",
+      "flops": 524288,
+      "device": "0"
+    },
+    {
+      "id": 86,
+      "kind": "compute",
+      "subtype": "scalar",
+      "name": "compute_alpha_3",
+      "flops": 32,
+      "device": "0"
+    },
+    {
+      "id": 87,
+      "kind": "compute",
+      "subtype": "axpy",
+      "name": "axpy_x_update_3@3",
+      "flops": 524288,
+      "device": "3"
+    },
+    {
+      "id": 88,
+      "kind": "compute",
+      "subtype": "axpy",
+      "name": "axpy_x_update_3@2",
+      "flops": 524288,
+      "device": "2"
+    },
+    {
+      "id": 89,
+      "kind": "compute",
+      "subtype": "axpy",
+      "name": "axpy_x_update_3@1",
+      "flops": 524288,
+      "device": "1"
+    },
+    {
+      "id": 90,
+      "kind": "compute",
+      "subtype": "axpy",
+      "name": "axpy_x_update_3@0",
+      "flops": 524288,
+      "device": "0"
+    },
+    {
+      "id": 91,
+      "kind": "compute",
+      "subtype": "axpy",
+      "name": "axpy_r_update_3@3",
+      "flops": 524288,
+      "device": "3"
+    },
+    {
+      "id": 92,
+      "kind": "compute",
+      "subtype": "axpy",
+      "name": "axpy_r_update_3@2",
+      "flops": 524288,
+      "device": "2"
+    },
+    {
+      "id": 93,
+      "kind": "compute",
+      "subtype": "axpy",
+      "name": "axpy_r_update_3@1",
+      "flops": 524288,
+      "device": "1"
+    },
+    {
+      "id": 94,
+      "kind": "compute",
+      "subtype": "axpy",
+      "name": "axpy_r_update_3@0",
+      "flops": 524288,
+      "device": "0"
+    },
+    {
+      "id": 95,
+      "kind": "compute",
+      "subtype": "dot",
+      "name": "dot_rr_new_3@3",
+      "flops": 524288,
+      "device": "3"
+    },
+    {
+      "id": 96,
+      "kind": "compute",
+      "subtype": "dot",
+      "name": "dot_rr_new_3@2",
+      "flops": 524288,
+      "device": "2"
+    },
+    {
+      "id": 97,
+      "kind": "compute",
+      "subtype": "dot",
+      "name": "dot_rr_new_3@1",
+      "flops": 524288,
+      "device": "1"
+    },
+    {
+      "id": 98,
+      "kind": "compute",
+      "subtype": "dot",
+      "name": "dot_rr_new_3@0",
+      "flops": 524288,
+      "device": "0"
+    },
+    {
+      "id": 99,
+      "kind": "compute",
+      "subtype": "scalar",
+      "name": "compute_beta_3",
+      "flops": 32,
+      "device": "0"
+    },
+    {
+      "id": 100,
+      "kind": "compute",
+      "subtype": "axpy",
+      "name": "axpy_p_update_3@3",
+      "flops": 524288,
+      "device": "3"
+    },
+    {
+      "id": 101,
+      "kind": "compute",
+      "subtype": "axpy",
+      "name": "axpy_p_update_3@2",
+      "flops": 524288,
+      "device": "2"
+    },
+    {
+      "id": 102,
+      "kind": "compute",
+      "subtype": "axpy",
+      "name": "axpy_p_update_3@1",
+      "flops": 524288,
+      "device": "1"
+    },
+    {
+      "id": 103,
+      "kind": "compute",
+      "subtype": "axpy",
+      "name": "axpy_p_update_3@0",
+      "flops": 524288,
+      "device": "0"
+    },
+    {
+      "id": 104,
+      "kind": "compute",
+      "subtype": "spmv",
+      "name": "spmv_Ap_4@3",
+      "flops": 14155776,
+      "device": "3"
+    },
+    {
+      "id": 105,
+      "kind": "compute",
+      "subtype": "spmv",
+      "name": "spmv_Ap_4@2",
+      "flops": 14155776,
+      "device": "2"
+    },
+    {
+      "id": 106,
+      "kind": "compute",
+      "subtype": "spmv",
+      "name": "spmv_Ap_4@1",
+      "flops": 14155776,
+      "device": "1"
+    },
+    {
+      "id": 107,
+      "kind": "compute",
+      "subtype": "spmv",
+      "name": "spmv_Ap_4@0",
+      "flops": 14155776,
+      "device": "0"
+    },
+    {
+      "id": 108,
+      "kind": "compute",
+      "subtype": "dot",
+      "name": "dot_pAp_4@3",
+      "flops": 524288,
+      "device": "3"
+    },
+    {
+      "id": 109,
+      "kind": "compute",
+      "subtype": "dot",
+      "name": "dot_pAp_4@2",
+      "flops": 524288,
+      "device": "2"
+    },
+    {
+      "id": 110,
+      "kind": "compute",
+      "subtype": "dot",
+      "name": "dot_pAp_4@1",
+      "flops": 524288,
+      "device": "1"
+    },
+    {
+      "id": 111,
+      "kind": "compute",
+      "subtype": "dot",
+      "name": "dot_pAp_4@0",
+      "flops": 524288,
+      "device": "0"
+    },
+    {
+      "id": 112,
+      "kind": "compute",
+      "subtype": "scalar",
+      "name": "compute_alpha_4",
+      "flops": 32,
+      "device": "0"
+    },
+    {
+      "id": 113,
+      "kind": "compute",
+      "subtype": "axpy",
+      "name": "axpy_x_update_4@3",
+      "flops": 524288,
+      "device": "3"
+    },
+    {
+      "id": 114,
+      "kind": "compute",
+      "subtype": "axpy",
+      "name": "axpy_x_update_4@2",
+      "flops": 524288,
+      "device": "2"
+    },
+    {
+      "id": 115,
+      "kind": "compute",
+      "subtype": "axpy",
+      "name": "axpy_x_update_4@1",
+      "flops": 524288,
+      "device": "1"
+    },
+    {
+      "id": 116,
+      "kind": "compute",
+      "subtype": "axpy",
+      "name": "axpy_x_update_4@0",
+      "flops": 524288,
+      "device": "0"
+    },
+    {
+      "id": 117,
+      "kind": "compute",
+      "subtype": "axpy",
+      "name": "axpy_r_update_4@3",
+      "flops": 524288,
+      "device": "3"
+    },
+    {
+      "id": 118,
+      "kind": "compute",
+      "subtype": "axpy",
+      "name": "axpy_r_update_4@2",
+      "flops": 524288,
+      "device": "2"
+    },
+    {
+      "id": 119,
+      "kind": "compute",
+      "subtype": "axpy",
+      "name": "axpy_r_update_4@1",
+      "flops": 524288,
+      "device": "1"
+    },
+    {
+      "id": 120,
+      "kind": "compute",
+      "subtype": "axpy",
+      "name": "axpy_r_update_4@0",
+      "flops": 524288,
+      "device": "0"
+    },
+    {
+      "id": 121,
+      "kind": "compute",
+      "subtype": "dot",
+      "name": "dot_rr_new_4@3",
+      "flops": 524288,
+      "device": "3"
+    },
+    {
+      "id": 122,
+      "kind": "compute",
+      "subtype": "dot",
+      "name": "dot_rr_new_4@2",
+      "flops": 524288,
+      "device": "2"
+    },
+    {
+      "id": 123,
+      "kind": "compute",
+      "subtype": "dot",
+      "name": "dot_rr_new_4@1",
+      "flops": 524288,
+      "device": "1"
+    },
+    {
+      "id": 124,
+      "kind": "compute",
+      "subtype": "dot",
+      "name": "dot_rr_new_4@0",
+      "flops": 524288,
+      "device": "0"
+    },
+    {
+      "id": 125,
+      "kind": "compute",
+      "subtype": "scalar",
+      "name": "compute_beta_4",
+      "flops": 32,
+      "device": "0"
+    },
+    {
+      "id": 126,
+      "kind": "compute",
+      "subtype": "axpy",
+      "name": "axpy_p_update_4@3",
+      "flops": 524288,
+      "device": "3"
+    },
+    {
+      "id": 127,
+      "kind": "compute",
+      "subtype": "axpy",
+      "name": "axpy_p_update_4@2",
+      "flops": 524288,
+      "device": "2"
+    },
+    {
+      "id": 128,
+      "kind": "compute",
+      "subtype": "axpy",
+      "name": "axpy_p_update_4@1",
+      "flops": 524288,
+      "device": "1"
+    },
+    {
+      "id": 129,
+      "kind": "compute",
+      "subtype": "axpy",
+      "name": "axpy_p_update_4@0",
+      "flops": 524288,
+      "device": "0"
+    },
+    {
+      "id": 130,
+      "kind": "compute",
+      "subtype": "spmv",
+      "name": "spmv_Ap_5@3",
+      "flops": 14155776,
+      "device": "3"
+    },
+    {
+      "id": 131,
+      "kind": "compute",
+      "subtype": "spmv",
+      "name": "spmv_Ap_5@2",
+      "flops": 14155776,
+      "device": "2"
+    },
+    {
+      "id": 132,
+      "kind": "compute",
+      "subtype": "spmv",
+      "name": "spmv_Ap_5@1",
+      "flops": 14155776,
+      "device": "1"
+    },
+    {
+      "id": 133,
+      "kind": "compute",
+      "subtype": "spmv",
+      "name": "spmv_Ap_5@0",
+      "flops": 14155776,
+      "device": "0"
+    },
+    {
+      "id": 134,
+      "kind": "compute",
+      "subtype": "dot",
+      "name": "dot_pAp_5@3",
+      "flops": 524288,
+      "device": "3"
+    },
+    {
+      "id": 135,
+      "kind": "compute",
+      "subtype": "dot",
+      "name": "dot_pAp_5@2",
+      "flops": 524288,
+      "device": "2"
+    },
+    {
+      "id": 136,
+      "kind": "compute",
+      "subtype": "dot",
+      "name": "dot_pAp_5@1",
+      "flops": 524288,
+      "device": "1"
+    },
+    {
+      "id": 137,
+      "kind": "compute",
+      "subtype": "dot",
+      "name": "dot_pAp_5@0",
+      "flops": 524288,
+      "device": "0"
+    },
+    {
+      "id": 138,
+      "kind": "compute",
+      "subtype": "scalar",
+      "name": "compute_alpha_5",
+      "flops": 32,
+      "device": "0"
+    },
+    {
+      "id": 139,
+      "kind": "compute",
+      "subtype": "axpy",
+      "name": "axpy_x_update_5@3",
+      "flops": 524288,
+      "device": "3"
+    },
+    {
+      "id": 140,
+      "kind": "compute",
+      "subtype": "axpy",
+      "name": "axpy_x_update_5@2",
+      "flops": 524288,
+      "device": "2"
+    },
+    {
+      "id": 141,
+      "kind": "compute",
+      "subtype": "axpy",
+      "name": "axpy_x_update_5@1",
+      "flops": 524288,
+      "device": "1"
+    },
+    {
+      "id": 142,
+      "kind": "compute",
+      "subtype": "axpy",
+      "name": "axpy_x_update_5@0",
+      "flops": 524288,
+      "device": "0"
+    },
+    {
+      "id": 143,
+      "kind": "compute",
+      "subtype": "axpy",
+      "name": "axpy_r_update_5@3",
+      "flops": 524288,
+      "device": "3"
+    },
+    {
+      "id": 144,
+      "kind": "compute",
+      "subtype": "axpy",
+      "name": "axpy_r_update_5@2",
+      "flops": 524288,
+      "device": "2"
+    },
+    {
+      "id": 145,
+      "kind": "compute",
+      "subtype": "axpy",
+      "name": "axpy_r_update_5@1",
+      "flops": 524288,
+      "device": "1"
+    },
+    {
+      "id": 146,
+      "kind": "compute",
+      "subtype": "axpy",
+      "name": "axpy_r_update_5@0",
+      "flops": 524288,
+      "device": "0"
+    },
+    {
+      "id": 147,
+      "kind": "compute",
+      "subtype": "dot",
+      "name": "dot_rr_new_5@3",
+      "flops": 524288,
+      "device": "3"
+    },
+    {
+      "id": 148,
+      "kind": "compute",
+      "subtype": "dot",
+      "name": "dot_rr_new_5@2",
+      "flops": 524288,
+      "device": "2"
+    },
+    {
+      "id": 149,
+      "kind": "compute",
+      "subtype": "dot",
+      "name": "dot_rr_new_5@1",
+      "flops": 524288,
+      "device": "1"
+    },
+    {
+      "id": 150,
+      "kind": "compute",
+      "subtype": "dot",
+      "name": "dot_rr_new_5@0",
+      "flops": 524288,
+      "device": "0"
+    },
+    {
+      "id": 151,
+      "kind": "compute",
+      "subtype": "scalar",
+      "name": "compute_beta_5",
+      "flops": 32,
+      "device": "0"
+    },
+    {
+      "id": 152,
+      "kind": "compute",
+      "subtype": "axpy",
+      "name": "axpy_p_update_5@3",
+      "flops": 524288,
+      "device": "3"
+    },
+    {
+      "id": 153,
+      "kind": "compute",
+      "subtype": "axpy",
+      "name": "axpy_p_update_5@2",
+      "flops": 524288,
+      "device": "2"
+    },
+    {
+      "id": 154,
+      "kind": "compute",
+      "subtype": "axpy",
+      "name": "axpy_p_update_5@1",
+      "flops": 524288,
+      "device": "1"
+    },
+    {
+      "id": 155,
+      "kind": "compute",
+      "subtype": "axpy",
+      "name": "axpy_p_update_5@0",
+      "flops": 524288,
+      "device": "0"
+    },
+    {
+      "id": 156,
+      "kind": "compute",
+      "subtype": "spmv",
+      "name": "spmv_Ap_6@3",
+      "flops": 14155776,
+      "device": "3"
+    },
+    {
+      "id": 157,
+      "kind": "compute",
+      "subtype": "spmv",
+      "name": "spmv_Ap_6@2",
+      "flops": 14155776,
+      "device": "2"
+    },
+    {
+      "id": 158,
+      "kind": "compute",
+      "subtype": "spmv",
+      "name": "spmv_Ap_6@1",
+      "flops": 14155776,
+      "device": "1"
+    },
+    {
+      "id": 159,
+      "kind": "compute",
+      "subtype": "spmv",
+      "name": "spmv_Ap_6@0",
+      "flops": 14155776,
+      "device": "0"
+    },
+    {
+      "id": 160,
+      "kind": "compute",
+      "subtype": "dot",
+      "name": "dot_pAp_6@3",
+      "flops": 524288,
+      "device": "3"
+    },
+    {
+      "id": 161,
+      "kind": "compute",
+      "subtype": "dot",
+      "name": "dot_pAp_6@2",
+      "flops": 524288,
+      "device": "2"
+    },
+    {
+      "id": 162,
+      "kind": "compute",
+      "subtype": "dot",
+      "name": "dot_pAp_6@1",
+      "flops": 524288,
+      "device": "1"
+    },
+    {
+      "id": 163,
+      "kind": "compute",
+      "subtype": "dot",
+      "name": "dot_pAp_6@0",
+      "flops": 524288,
+      "device": "0"
+    },
+    {
+      "id": 164,
+      "kind": "compute",
+      "subtype": "scalar",
+      "name": "compute_alpha_6",
+      "flops": 32,
+      "device": "0"
+    },
+    {
+      "id": 165,
+      "kind": "compute",
+      "subtype": "axpy",
+      "name": "axpy_x_update_6@3",
+      "flops": 524288,
+      "device": "3"
+    },
+    {
+      "id": 166,
+      "kind": "compute",
+      "subtype": "axpy",
+      "name": "axpy_x_update_6@2",
+      "flops": 524288,
+      "device": "2"
+    },
+    {
+      "id": 167,
+      "kind": "compute",
+      "subtype": "axpy",
+      "name": "axpy_x_update_6@1",
+      "flops": 524288,
+      "device": "1"
+    },
+    {
+      "id": 168,
+      "kind": "compute",
+      "subtype": "axpy",
+      "name": "axpy_x_update_6@0",
+      "flops": 524288,
+      "device": "0"
+    },
+    {
+      "id": 169,
+      "kind": "compute",
+      "subtype": "axpy",
+      "name": "axpy_r_update_6@3",
+      "flops": 524288,
+      "device": "3"
+    },
+    {
+      "id": 170,
+      "kind": "compute",
+      "subtype": "axpy",
+      "name": "axpy_r_update_6@2",
+      "flops": 524288,
+      "device": "2"
+    },
+    {
+      "id": 171,
+      "kind": "compute",
+      "subtype": "axpy",
+      "name": "axpy_r_update_6@1",
+      "flops": 524288,
+      "device": "1"
+    },
+    {
+      "id": 172,
+      "kind": "compute",
+      "subtype": "axpy",
+      "name": "axpy_r_update_6@0",
+      "flops": 524288,
+      "device": "0"
+    },
+    {
+      "id": 173,
+      "kind": "compute",
+      "subtype": "dot",
+      "name": "dot_rr_new_6@3",
+      "flops": 524288,
+      "device": "3"
+    },
+    {
+      "id": 174,
+      "kind": "compute",
+      "subtype": "dot",
+      "name": "dot_rr_new_6@2",
+      "flops": 524288,
+      "device": "2"
+    },
+    {
+      "id": 175,
+      "kind": "compute",
+      "subtype": "dot",
+      "name": "dot_rr_new_6@1",
+      "flops": 524288,
+      "device": "1"
+    },
+    {
+      "id": 176,
+      "kind": "compute",
+      "subtype": "dot",
+      "name": "dot_rr_new_6@0",
+      "flops": 524288,
+      "device": "0"
+    },
+    {
+      "id": 177,
+      "kind": "compute",
+      "subtype": "scalar",
+      "name": "compute_beta_6",
+      "flops": 32,
+      "device": "0"
+    },
+    {
+      "id": 178,
+      "kind": "compute",
+      "subtype": "axpy",
+      "name": "axpy_p_update_6@3",
+      "flops": 524288,
+      "device": "3"
+    },
+    {
+      "id": 179,
+      "kind": "compute",
+      "subtype": "axpy",
+      "name": "axpy_p_update_6@2",
+      "flops": 524288,
+      "device": "2"
+    },
+    {
+      "id": 180,
+      "kind": "compute",
+      "subtype": "axpy",
+      "name": "axpy_p_update_6@1",
+      "flops": 524288,
+      "device": "1"
+    },
+    {
+      "id": 181,
+      "kind": "compute",
+      "subtype": "axpy",
+      "name": "axpy_p_update_6@0",
+      "flops": 524288,
+      "device": "0"
+    },
+    {
+      "id": 182,
+      "kind": "compute",
+      "subtype": "spmv",
+      "name": "spmv_Ap_7@3",
+      "flops": 14155776,
+      "device": "3"
+    },
+    {
+      "id": 183,
+      "kind": "compute",
+      "subtype": "spmv",
+      "name": "spmv_Ap_7@2",
+      "flops": 14155776,
+      "device": "2"
+    },
+    {
+      "id": 184,
+      "kind": "compute",
+      "subtype": "spmv",
+      "name": "spmv_Ap_7@1",
+      "flops": 14155776,
+      "device": "1"
+    },
+    {
+      "id": 185,
+      "kind": "compute",
+      "subtype": "spmv",
+      "name": "spmv_Ap_7@0",
+      "flops": 14155776,
+      "device": "0"
+    },
+    {
+      "id": 186,
+      "kind": "compute",
+      "subtype": "dot",
+      "name": "dot_pAp_7@3",
+      "flops": 524288,
+      "device": "3"
+    },
+    {
+      "id": 187,
+      "kind": "compute",
+      "subtype": "dot",
+      "name": "dot_pAp_7@2",
+      "flops": 524288,
+      "device": "2"
+    },
+    {
+      "id": 188,
+      "kind": "compute",
+      "subtype": "dot",
+      "name": "dot_pAp_7@1",
+      "flops": 524288,
+      "device": "1"
+    },
+    {
+      "id": 189,
+      "kind": "compute",
+      "subtype": "dot",
+      "name": "dot_pAp_7@0",
+      "flops": 524288,
+      "device": "0"
+    },
+    {
+      "id": 190,
+      "kind": "compute",
+      "subtype": "scalar",
+      "name": "compute_alpha_7",
+      "flops": 32,
+      "device": "0"
+    },
+    {
+      "id": 191,
+      "kind": "compute",
+      "subtype": "axpy",
+      "name": "axpy_x_update_7@3",
+      "flops": 524288,
+      "device": "3"
+    },
+    {
+      "id": 192,
+      "kind": "compute",
+      "subtype": "axpy",
+      "name": "axpy_x_update_7@2",
+      "flops": 524288,
+      "device": "2"
+    },
+    {
+      "id": 193,
+      "kind": "compute",
+      "subtype": "axpy",
+      "name": "axpy_x_update_7@1",
+      "flops": 524288,
+      "device": "1"
+    },
+    {
+      "id": 194,
+      "kind": "compute",
+      "subtype": "axpy",
+      "name": "axpy_x_update_7@0",
+      "flops": 524288,
+      "device": "0"
+    },
+    {
+      "id": 195,
+      "kind": "compute",
+      "subtype": "axpy",
+      "name": "axpy_r_update_7@3",
+      "flops": 524288,
+      "device": "3"
+    },
+    {
+      "id": 196,
+      "kind": "compute",
+      "subtype": "axpy",
+      "name": "axpy_r_update_7@2",
+      "flops": 524288,
+      "device": "2"
+    },
+    {
+      "id": 197,
+      "kind": "compute",
+      "subtype": "axpy",
+      "name": "axpy_r_update_7@1",
+      "flops": 524288,
+      "device": "1"
+    },
+    {
+      "id": 198,
+      "kind": "compute",
+      "subtype": "axpy",
+      "name": "axpy_r_update_7@0",
+      "flops": 524288,
+      "device": "0"
+    },
+    {
+      "id": 199,
+      "kind": "compute",
+      "subtype": "dot",
+      "name": "dot_rr_new_7@3",
+      "flops": 524288,
+      "device": "3"
+    },
+    {
+      "id": 200,
+      "kind": "compute",
+      "subtype": "dot",
+      "name": "dot_rr_new_7@2",
+      "flops": 524288,
+      "device": "2"
+    },
+    {
+      "id": 201,
+      "kind": "compute",
+      "subtype": "dot",
+      "name": "dot_rr_new_7@1",
+      "flops": 524288,
+      "device": "1"
+    },
+    {
+      "id": 202,
+      "kind": "compute",
+      "subtype": "dot",
+      "name": "dot_rr_new_7@0",
+      "flops": 524288,
+      "device": "0"
+    },
+    {
+      "id": 203,
+      "kind": "compute",
+      "subtype": "scalar",
+      "name": "compute_beta_7",
+      "flops": 32,
+      "device": "0"
+    },
+    {
+      "id": 204,
+      "kind": "compute",
+      "subtype": "axpy",
+      "name": "axpy_p_update_7@3",
+      "flops": 524288,
+      "device": "3"
+    },
+    {
+      "id": 205,
+      "kind": "compute",
+      "subtype": "axpy",
+      "name": "axpy_p_update_7@2",
+      "flops": 524288,
+      "device": "2"
+    },
+    {
+      "id": 206,
+      "kind": "compute",
+      "subtype": "axpy",
+      "name": "axpy_p_update_7@1",
+      "flops": 524288,
+      "device": "1"
+    },
+    {
+      "id": 207,
+      "kind": "compute",
+      "subtype": "axpy",
+      "name": "axpy_p_update_7@0",
+      "flops": 524288,
+      "device": "0"
+    },
+    {
+      "id": 208,
+      "kind": "compute",
+      "subtype": "spmv",
+      "name": "spmv_Ap_8@3",
+      "flops": 14155776,
+      "device": "3"
+    },
+    {
+      "id": 209,
+      "kind": "compute",
+      "subtype": "spmv",
+      "name": "spmv_Ap_8@2",
+      "flops": 14155776,
+      "device": "2"
+    },
+    {
+      "id": 210,
+      "kind": "compute",
+      "subtype": "spmv",
+      "name": "spmv_Ap_8@1",
+      "flops": 14155776,
+      "device": "1"
+    },
+    {
+      "id": 211,
+      "kind": "compute",
+      "subtype": "spmv",
+      "name": "spmv_Ap_8@0",
+      "flops": 14155776,
+      "device": "0"
+    },
+    {
+      "id": 212,
+      "kind": "compute",
+      "subtype": "dot",
+      "name": "dot_pAp_8@3",
+      "flops": 524288,
+      "device": "3"
+    },
+    {
+      "id": 213,
+      "kind": "compute",
+      "subtype": "dot",
+      "name": "dot_pAp_8@2",
+      "flops": 524288,
+      "device": "2"
+    },
+    {
+      "id": 214,
+      "kind": "compute",
+      "subtype": "dot",
+      "name": "dot_pAp_8@1",
+      "flops": 524288,
+      "device": "1"
+    },
+    {
+      "id": 215,
+      "kind": "compute",
+      "subtype": "dot",
+      "name": "dot_pAp_8@0",
+      "flops": 524288,
+      "device": "0"
+    },
+    {
+      "id": 216,
+      "kind": "compute",
+      "subtype": "scalar",
+      "name": "compute_alpha_8",
+      "flops": 32,
+      "device": "0"
+    },
+    {
+      "id": 217,
+      "kind": "compute",
+      "subtype": "axpy",
+      "name": "axpy_x_update_8@3",
+      "flops": 524288,
+      "device": "3"
+    },
+    {
+      "id": 218,
+      "kind": "compute",
+      "subtype": "axpy",
+      "name": "axpy_x_update_8@2",
+      "flops": 524288,
+      "device": "2"
+    },
+    {
+      "id": 219,
+      "kind": "compute",
+      "subtype": "axpy",
+      "name": "axpy_x_update_8@1",
+      "flops": 524288,
+      "device": "1"
+    },
+    {
+      "id": 220,
+      "kind": "compute",
+      "subtype": "axpy",
+      "name": "axpy_x_update_8@0",
+      "flops": 524288,
+      "device": "0"
+    },
+    {
+      "id": 221,
+      "kind": "compute",
+      "subtype": "axpy",
+      "name": "axpy_r_update_8@3",
+      "flops": 524288,
+      "device": "3"
+    },
+    {
+      "id": 222,
+      "kind": "compute",
+      "subtype": "axpy",
+      "name": "axpy_r_update_8@2",
+      "flops": 524288,
+      "device": "2"
+    },
+    {
+      "id": 223,
+      "kind": "compute",
+      "subtype": "axpy",
+      "name": "axpy_r_update_8@1",
+      "flops": 524288,
+      "device": "1"
+    },
+    {
+      "id": 224,
+      "kind": "compute",
+      "subtype": "axpy",
+      "name": "axpy_r_update_8@0",
+      "flops": 524288,
+      "device": "0"
+    },
+    {
+      "id": 225,
+      "kind": "compute",
+      "subtype": "dot",
+      "name": "dot_rr_new_8@3",
+      "flops": 524288,
+      "device": "3"
+    },
+    {
+      "id": 226,
+      "kind": "compute",
+      "subtype": "dot",
+      "name": "dot_rr_new_8@2",
+      "flops": 524288,
+      "device": "2"
+    },
+    {
+      "id": 227,
+      "kind": "compute",
+      "subtype": "dot",
+      "name": "dot_rr_new_8@1",
+      "flops": 524288,
+      "device": "1"
+    },
+    {
+      "id": 228,
+      "kind": "compute",
+      "subtype": "dot",
+      "name": "dot_rr_new_8@0",
+      "flops": 524288,
+      "device": "0"
+    },
+    {
+      "id": 229,
+      "kind": "compute",
+      "subtype": "scalar",
+      "name": "compute_beta_8",
+      "flops": 32,
+      "device": "0"
+    },
+    {
+      "id": 230,
+      "kind": "compute",
+      "subtype": "axpy",
+      "name": "axpy_p_update_8@3",
+      "flops": 524288,
+      "device": "3"
+    },
+    {
+      "id": 231,
+      "kind": "compute",
+      "subtype": "axpy",
+      "name": "axpy_p_update_8@2",
+      "flops": 524288,
+      "device": "2"
+    },
+    {
+      "id": 232,
+      "kind": "compute",
+      "subtype": "axpy",
+      "name": "axpy_p_update_8@1",
+      "flops": 524288,
+      "device": "1"
+    },
+    {
+      "id": 233,
+      "kind": "compute",
+      "subtype": "axpy",
+      "name": "axpy_p_update_8@0",
+      "flops": 524288,
+      "device": "0"
+    },
+    {
+      "id": 234,
+      "kind": "compute",
+      "subtype": "spmv",
+      "name": "spmv_Ap_9@3",
+      "flops": 14155776,
+      "device": "3"
+    },
+    {
+      "id": 235,
+      "kind": "compute",
+      "subtype": "spmv",
+      "name": "spmv_Ap_9@2",
+      "flops": 14155776,
+      "device": "2"
+    },
+    {
+      "id": 236,
+      "kind": "compute",
+      "subtype": "spmv",
+      "name": "spmv_Ap_9@1",
+      "flops": 14155776,
+      "device": "1"
+    },
+    {
+      "id": 237,
+      "kind": "compute",
+      "subtype": "spmv",
+      "name": "spmv_Ap_9@0",
+      "flops": 14155776,
+      "device": "0"
+    },
+    {
+      "id": 238,
+      "kind": "compute",
+      "subtype": "dot",
+      "name": "dot_pAp_9@3",
+      "flops": 524288,
+      "device": "3"
+    },
+    {
+      "id": 239,
+      "kind": "compute",
+      "subtype": "dot",
+      "name": "dot_pAp_9@2",
+      "flops": 524288,
+      "device": "2"
+    },
+    {
+      "id": 240,
+      "kind": "compute",
+      "subtype": "dot",
+      "name": "dot_pAp_9@1",
+      "flops": 524288,
+      "device": "1"
+    },
+    {
+      "id": 241,
+      "kind": "compute",
+      "subtype": "dot",
+      "name": "dot_pAp_9@0",
+      "flops": 524288,
+      "device": "0"
+    },
+    {
+      "id": 242,
+      "kind": "compute",
+      "subtype": "scalar",
+      "name": "compute_alpha_9",
+      "flops": 32,
+      "device": "0"
+    },
+    {
+      "id": 243,
+      "kind": "compute",
+      "subtype": "axpy",
+      "name": "axpy_x_update_9@3",
+      "flops": 524288,
+      "device": "3"
+    },
+    {
+      "id": 244,
+      "kind": "compute",
+      "subtype": "axpy",
+      "name": "axpy_x_update_9@2",
+      "flops": 524288,
+      "device": "2"
+    },
+    {
+      "id": 245,
+      "kind": "compute",
+      "subtype": "axpy",
+      "name": "axpy_x_update_9@1",
+      "flops": 524288,
+      "device": "1"
+    },
+    {
+      "id": 246,
+      "kind": "compute",
+      "subtype": "axpy",
+      "name": "axpy_x_update_9@0",
+      "flops": 524288,
+      "device": "0"
+    },
+    {
+      "id": 247,
+      "kind": "compute",
+      "subtype": "axpy",
+      "name": "axpy_r_update_9@3",
+      "flops": 524288,
+      "device": "3"
+    },
+    {
+      "id": 248,
+      "kind": "compute",
+      "subtype": "axpy",
+      "name": "axpy_r_update_9@2",
+      "flops": 524288,
+      "device": "2"
+    },
+    {
+      "id": 249,
+      "kind": "compute",
+      "subtype": "axpy",
+      "name": "axpy_r_update_9@1",
+      "flops": 524288,
+      "device": "1"
+    },
+    {
+      "id": 250,
+      "kind": "compute",
+      "subtype": "axpy",
+      "name": "axpy_r_update_9@0",
+      "flops": 524288,
+      "device": "0"
+    },
+    {
+      "id": 251,
+      "kind": "compute",
+      "subtype": "dot",
+      "name": "dot_rr_new_9@3",
+      "flops": 524288,
+      "device": "3"
+    },
+    {
+      "id": 252,
+      "kind": "compute",
+      "subtype": "dot",
+      "name": "dot_rr_new_9@2",
+      "flops": 524288,
+      "device": "2"
+    },
+    {
+      "id": 253,
+      "kind": "compute",
+      "subtype": "dot",
+      "name": "dot_rr_new_9@1",
+      "flops": 524288,
+      "device": "1"
+    },
+    {
+      "id": 254,
+      "kind": "compute",
+      "subtype": "dot",
+      "name": "dot_rr_new_9@0",
+      "flops": 524288,
+      "device": "0"
+    },
+    {
+      "id": 255,
+      "kind": "compute",
+      "subtype": "scalar",
+      "name": "compute_beta_9",
+      "flops": 32,
+      "device": "0"
+    },
+    {
+      "id": 256,
+      "kind": "compute",
+      "subtype": "axpy",
+      "name": "axpy_p_update_9@3",
+      "flops": 524288,
+      "device": "3"
+    },
+    {
+      "id": 257,
+      "kind": "compute",
+      "subtype": "axpy",
+      "name": "axpy_p_update_9@2",
+      "flops": 524288,
+      "device": "2"
+    },
+    {
+      "id": 258,
+      "kind": "compute",
+      "subtype": "axpy",
+      "name": "axpy_p_update_9@1",
+      "flops": 524288,
+      "device": "1"
+    },
+    {
+      "id": 259,
+      "kind": "compute",
+      "subtype": "axpy",
+      "name": "axpy_p_update_9@0",
+      "flops": 524288,
+      "device": "0"
+    }
+  ],
+  "edges": [
+    {
+      "id": 0,
+      "src": 0,
+      "dst": 4,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 1,
+      "src": 0,
+      "dst": 16,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 2,
+      "src": 1,
+      "dst": 5,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 3,
+      "src": 1,
+      "dst": 15,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 4,
+      "src": 2,
+      "dst": 6,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 5,
+      "src": 2,
+      "dst": 14,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 6,
+      "src": 3,
+      "dst": 7,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 7,
+      "src": 3,
+      "dst": 13,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 8,
+      "src": 4,
+      "dst": 8,
+      "bytes": 0,
+      "kind": "allreduce",
+      "route": []
+    },
+    {
+      "id": 9,
+      "src": 5,
+      "dst": 8,
+      "bytes": 4,
+      "kind": "allreduce",
+      "route": ["nvlink_1_0"]
+    },
+    {
+      "id": 10,
+      "src": 6,
+      "dst": 8,
+      "bytes": 4,
+      "kind": "allreduce",
+      "route": ["nvlink_2_0"]
+    },
+    {
+      "id": 11,
+      "src": 7,
+      "dst": 8,
+      "bytes": 4,
+      "kind": "allreduce",
+      "route": ["nvlink_3_0"]
+    },
+    {
+      "id": 12,
+      "src": 8,
+      "dst": 9,
+      "bytes": 4,
+      "kind": "p2p",
+      "route": ["nvlink_0_3"]
+    },
+    {
+      "id": 13,
+      "src": 8,
+      "dst": 10,
+      "bytes": 4,
+      "kind": "p2p",
+      "route": ["nvlink_0_2"]
+    },
+    {
+      "id": 14,
+      "src": 8,
+      "dst": 11,
+      "bytes": 4,
+      "kind": "p2p",
+      "route": ["nvlink_0_1"]
+    },
+    {
+      "id": 15,
+      "src": 8,
+      "dst": 12,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 16,
+      "src": 8,
+      "dst": 13,
+      "bytes": 4,
+      "kind": "p2p",
+      "route": ["nvlink_0_3"]
+    },
+    {
+      "id": 17,
+      "src": 8,
+      "dst": 14,
+      "bytes": 4,
+      "kind": "p2p",
+      "route": ["nvlink_0_2"]
+    },
+    {
+      "id": 18,
+      "src": 8,
+      "dst": 15,
+      "bytes": 4,
+      "kind": "p2p",
+      "route": ["nvlink_0_1"]
+    },
+    {
+      "id": 19,
+      "src": 8,
+      "dst": 16,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 20,
+      "src": 9,
+      "dst": 35,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 21,
+      "src": 10,
+      "dst": 36,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 22,
+      "src": 11,
+      "dst": 37,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 23,
+      "src": 12,
+      "dst": 38,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 24,
+      "src": 13,
+      "dst": 17,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 25,
+      "src": 13,
+      "dst": 22,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 26,
+      "src": 13,
+      "dst": 39,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 27,
+      "src": 14,
+      "dst": 18,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 28,
+      "src": 14,
+      "dst": 23,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 29,
+      "src": 14,
+      "dst": 40,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 30,
+      "src": 15,
+      "dst": 19,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 31,
+      "src": 15,
+      "dst": 24,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 32,
+      "src": 15,
+      "dst": 41,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 33,
+      "src": 16,
+      "dst": 20,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 34,
+      "src": 16,
+      "dst": 25,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 35,
+      "src": 16,
+      "dst": 42,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 36,
+      "src": 17,
+      "dst": 21,
+      "bytes": 4,
+      "kind": "allreduce",
+      "route": ["nvlink_3_0"]
+    },
+    {
+      "id": 37,
+      "src": 17,
+      "dst": 34,
+      "bytes": 4,
+      "kind": "allreduce",
+      "route": ["nvlink_3_0"]
+    },
+    {
+      "id": 38,
+      "src": 17,
+      "dst": 47,
+      "bytes": 4,
+      "kind": "allreduce",
+      "route": ["nvlink_3_0"]
+    },
+    {
+      "id": 39,
+      "src": 18,
+      "dst": 21,
+      "bytes": 4,
+      "kind": "allreduce",
+      "route": ["nvlink_2_0"]
+    },
+    {
+      "id": 40,
+      "src": 18,
+      "dst": 34,
+      "bytes": 4,
+      "kind": "allreduce",
+      "route": ["nvlink_2_0"]
+    },
+    {
+      "id": 41,
+      "src": 18,
+      "dst": 47,
+      "bytes": 4,
+      "kind": "allreduce",
+      "route": ["nvlink_2_0"]
+    },
+    {
+      "id": 42,
+      "src": 19,
+      "dst": 21,
+      "bytes": 4,
+      "kind": "allreduce",
+      "route": ["nvlink_1_0"]
+    },
+    {
+      "id": 43,
+      "src": 19,
+      "dst": 34,
+      "bytes": 4,
+      "kind": "allreduce",
+      "route": ["nvlink_1_0"]
+    },
+    {
+      "id": 44,
+      "src": 19,
+      "dst": 47,
+      "bytes": 4,
+      "kind": "allreduce",
+      "route": ["nvlink_1_0"]
+    },
+    {
+      "id": 45,
+      "src": 20,
+      "dst": 21,
+      "bytes": 0,
+      "kind": "allreduce",
+      "route": []
+    },
+    {
+      "id": 46,
+      "src": 20,
+      "dst": 34,
+      "bytes": 0,
+      "kind": "allreduce",
+      "route": []
+    },
+    {
+      "id": 47,
+      "src": 20,
+      "dst": 47,
+      "bytes": 0,
+      "kind": "allreduce",
+      "route": []
+    },
+    {
+      "id": 48,
+      "src": 21,
+      "dst": 22,
+      "bytes": 4,
+      "kind": "p2p",
+      "route": ["nvlink_0_3"]
+    },
+    {
+      "id": 49,
+      "src": 21,
+      "dst": 23,
+      "bytes": 4,
+      "kind": "p2p",
+      "route": ["nvlink_0_2"]
+    },
+    {
+      "id": 50,
+      "src": 21,
+      "dst": 24,
+      "bytes": 4,
+      "kind": "p2p",
+      "route": ["nvlink_0_1"]
+    },
+    {
+      "id": 51,
+      "src": 21,
+      "dst": 25,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 52,
+      "src": 22,
+      "dst": 26,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 53,
+      "src": 22,
+      "dst": 30,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 54,
+      "src": 22,
+      "dst": 35,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 55,
+      "src": 22,
+      "dst": 48,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 56,
+      "src": 23,
+      "dst": 27,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 57,
+      "src": 23,
+      "dst": 31,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 58,
+      "src": 23,
+      "dst": 36,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 59,
+      "src": 23,
+      "dst": 49,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 60,
+      "src": 24,
+      "dst": 28,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 61,
+      "src": 24,
+      "dst": 32,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 62,
+      "src": 24,
+      "dst": 37,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 63,
+      "src": 24,
+      "dst": 50,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 64,
+      "src": 25,
+      "dst": 29,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 65,
+      "src": 25,
+      "dst": 33,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 66,
+      "src": 25,
+      "dst": 38,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 67,
+      "src": 25,
+      "dst": 51,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 68,
+      "src": 26,
+      "dst": 30,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 69,
+      "src": 26,
+      "dst": 39,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 70,
+      "src": 27,
+      "dst": 31,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 71,
+      "src": 27,
+      "dst": 40,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 72,
+      "src": 28,
+      "dst": 32,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 73,
+      "src": 28,
+      "dst": 41,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 74,
+      "src": 29,
+      "dst": 33,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 75,
+      "src": 29,
+      "dst": 42,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 76,
+      "src": 30,
+      "dst": 34,
+      "bytes": 4,
+      "kind": "allreduce",
+      "route": ["nvlink_3_0"]
+    },
+    {
+      "id": 77,
+      "src": 31,
+      "dst": 34,
+      "bytes": 4,
+      "kind": "allreduce",
+      "route": ["nvlink_2_0"]
+    },
+    {
+      "id": 78,
+      "src": 32,
+      "dst": 34,
+      "bytes": 4,
+      "kind": "allreduce",
+      "route": ["nvlink_1_0"]
+    },
+    {
+      "id": 79,
+      "src": 33,
+      "dst": 34,
+      "bytes": 0,
+      "kind": "allreduce",
+      "route": []
+    },
+    {
+      "id": 80,
+      "src": 34,
+      "dst": 35,
+      "bytes": 4,
+      "kind": "p2p",
+      "route": ["nvlink_0_3"]
+    },
+    {
+      "id": 81,
+      "src": 34,
+      "dst": 36,
+      "bytes": 4,
+      "kind": "p2p",
+      "route": ["nvlink_0_2"]
+    },
+    {
+      "id": 82,
+      "src": 34,
+      "dst": 37,
+      "bytes": 4,
+      "kind": "p2p",
+      "route": ["nvlink_0_1"]
+    },
+    {
+      "id": 83,
+      "src": 34,
+      "dst": 38,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 84,
+      "src": 34,
+      "dst": 39,
+      "bytes": 4,
+      "kind": "p2p",
+      "route": ["nvlink_0_3"]
+    },
+    {
+      "id": 85,
+      "src": 34,
+      "dst": 40,
+      "bytes": 4,
+      "kind": "p2p",
+      "route": ["nvlink_0_2"]
+    },
+    {
+      "id": 86,
+      "src": 34,
+      "dst": 41,
+      "bytes": 4,
+      "kind": "p2p",
+      "route": ["nvlink_0_1"]
+    },
+    {
+      "id": 87,
+      "src": 34,
+      "dst": 42,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 88,
+      "src": 35,
+      "dst": 61,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 89,
+      "src": 36,
+      "dst": 62,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 90,
+      "src": 37,
+      "dst": 63,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 91,
+      "src": 38,
+      "dst": 64,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 92,
+      "src": 39,
+      "dst": 43,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 93,
+      "src": 39,
+      "dst": 48,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 94,
+      "src": 39,
+      "dst": 65,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 95,
+      "src": 40,
+      "dst": 44,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 96,
+      "src": 40,
+      "dst": 49,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 97,
+      "src": 40,
+      "dst": 66,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 98,
+      "src": 41,
+      "dst": 45,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 99,
+      "src": 41,
+      "dst": 50,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 100,
+      "src": 41,
+      "dst": 67,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 101,
+      "src": 42,
+      "dst": 46,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 102,
+      "src": 42,
+      "dst": 51,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 103,
+      "src": 42,
+      "dst": 68,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 104,
+      "src": 43,
+      "dst": 47,
+      "bytes": 4,
+      "kind": "allreduce",
+      "route": ["nvlink_3_0"]
+    },
+    {
+      "id": 105,
+      "src": 43,
+      "dst": 60,
+      "bytes": 4,
+      "kind": "allreduce",
+      "route": ["nvlink_3_0"]
+    },
+    {
+      "id": 106,
+      "src": 43,
+      "dst": 73,
+      "bytes": 4,
+      "kind": "allreduce",
+      "route": ["nvlink_3_0"]
+    },
+    {
+      "id": 107,
+      "src": 44,
+      "dst": 47,
+      "bytes": 4,
+      "kind": "allreduce",
+      "route": ["nvlink_2_0"]
+    },
+    {
+      "id": 108,
+      "src": 44,
+      "dst": 60,
+      "bytes": 4,
+      "kind": "allreduce",
+      "route": ["nvlink_2_0"]
+    },
+    {
+      "id": 109,
+      "src": 44,
+      "dst": 73,
+      "bytes": 4,
+      "kind": "allreduce",
+      "route": ["nvlink_2_0"]
+    },
+    {
+      "id": 110,
+      "src": 45,
+      "dst": 47,
+      "bytes": 4,
+      "kind": "allreduce",
+      "route": ["nvlink_1_0"]
+    },
+    {
+      "id": 111,
+      "src": 45,
+      "dst": 60,
+      "bytes": 4,
+      "kind": "allreduce",
+      "route": ["nvlink_1_0"]
+    },
+    {
+      "id": 112,
+      "src": 45,
+      "dst": 73,
+      "bytes": 4,
+      "kind": "allreduce",
+      "route": ["nvlink_1_0"]
+    },
+    {
+      "id": 113,
+      "src": 46,
+      "dst": 47,
+      "bytes": 0,
+      "kind": "allreduce",
+      "route": []
+    },
+    {
+      "id": 114,
+      "src": 46,
+      "dst": 60,
+      "bytes": 0,
+      "kind": "allreduce",
+      "route": []
+    },
+    {
+      "id": 115,
+      "src": 46,
+      "dst": 73,
+      "bytes": 0,
+      "kind": "allreduce",
+      "route": []
+    },
+    {
+      "id": 116,
+      "src": 47,
+      "dst": 48,
+      "bytes": 4,
+      "kind": "p2p",
+      "route": ["nvlink_0_3"]
+    },
+    {
+      "id": 117,
+      "src": 47,
+      "dst": 49,
+      "bytes": 4,
+      "kind": "p2p",
+      "route": ["nvlink_0_2"]
+    },
+    {
+      "id": 118,
+      "src": 47,
+      "dst": 50,
+      "bytes": 4,
+      "kind": "p2p",
+      "route": ["nvlink_0_1"]
+    },
+    {
+      "id": 119,
+      "src": 47,
+      "dst": 51,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 120,
+      "src": 48,
+      "dst": 52,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 121,
+      "src": 48,
+      "dst": 56,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 122,
+      "src": 48,
+      "dst": 61,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 123,
+      "src": 48,
+      "dst": 74,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 124,
+      "src": 49,
+      "dst": 53,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 125,
+      "src": 49,
+      "dst": 57,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 126,
+      "src": 49,
+      "dst": 62,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 127,
+      "src": 49,
+      "dst": 75,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 128,
+      "src": 50,
+      "dst": 54,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 129,
+      "src": 50,
+      "dst": 58,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 130,
+      "src": 50,
+      "dst": 63,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 131,
+      "src": 50,
+      "dst": 76,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 132,
+      "src": 51,
+      "dst": 55,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 133,
+      "src": 51,
+      "dst": 59,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 134,
+      "src": 51,
+      "dst": 64,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 135,
+      "src": 51,
+      "dst": 77,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 136,
+      "src": 52,
+      "dst": 56,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 137,
+      "src": 52,
+      "dst": 65,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 138,
+      "src": 53,
+      "dst": 57,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 139,
+      "src": 53,
+      "dst": 66,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 140,
+      "src": 54,
+      "dst": 58,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 141,
+      "src": 54,
+      "dst": 67,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 142,
+      "src": 55,
+      "dst": 59,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 143,
+      "src": 55,
+      "dst": 68,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 144,
+      "src": 56,
+      "dst": 60,
+      "bytes": 4,
+      "kind": "allreduce",
+      "route": ["nvlink_3_0"]
+    },
+    {
+      "id": 145,
+      "src": 57,
+      "dst": 60,
+      "bytes": 4,
+      "kind": "allreduce",
+      "route": ["nvlink_2_0"]
+    },
+    {
+      "id": 146,
+      "src": 58,
+      "dst": 60,
+      "bytes": 4,
+      "kind": "allreduce",
+      "route": ["nvlink_1_0"]
+    },
+    {
+      "id": 147,
+      "src": 59,
+      "dst": 60,
+      "bytes": 0,
+      "kind": "allreduce",
+      "route": []
+    },
+    {
+      "id": 148,
+      "src": 60,
+      "dst": 61,
+      "bytes": 4,
+      "kind": "p2p",
+      "route": ["nvlink_0_3"]
+    },
+    {
+      "id": 149,
+      "src": 60,
+      "dst": 62,
+      "bytes": 4,
+      "kind": "p2p",
+      "route": ["nvlink_0_2"]
+    },
+    {
+      "id": 150,
+      "src": 60,
+      "dst": 63,
+      "bytes": 4,
+      "kind": "p2p",
+      "route": ["nvlink_0_1"]
+    },
+    {
+      "id": 151,
+      "src": 60,
+      "dst": 64,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 152,
+      "src": 60,
+      "dst": 65,
+      "bytes": 4,
+      "kind": "p2p",
+      "route": ["nvlink_0_3"]
+    },
+    {
+      "id": 153,
+      "src": 60,
+      "dst": 66,
+      "bytes": 4,
+      "kind": "p2p",
+      "route": ["nvlink_0_2"]
+    },
+    {
+      "id": 154,
+      "src": 60,
+      "dst": 67,
+      "bytes": 4,
+      "kind": "p2p",
+      "route": ["nvlink_0_1"]
+    },
+    {
+      "id": 155,
+      "src": 60,
+      "dst": 68,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 156,
+      "src": 61,
+      "dst": 87,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 157,
+      "src": 62,
+      "dst": 88,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 158,
+      "src": 63,
+      "dst": 89,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 159,
+      "src": 64,
+      "dst": 90,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 160,
+      "src": 65,
+      "dst": 69,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 161,
+      "src": 65,
+      "dst": 74,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 162,
+      "src": 65,
+      "dst": 91,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 163,
+      "src": 66,
+      "dst": 70,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 164,
+      "src": 66,
+      "dst": 75,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 165,
+      "src": 66,
+      "dst": 92,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 166,
+      "src": 67,
+      "dst": 71,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 167,
+      "src": 67,
+      "dst": 76,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 168,
+      "src": 67,
+      "dst": 93,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 169,
+      "src": 68,
+      "dst": 72,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 170,
+      "src": 68,
+      "dst": 77,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 171,
+      "src": 68,
+      "dst": 94,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 172,
+      "src": 69,
+      "dst": 73,
+      "bytes": 4,
+      "kind": "allreduce",
+      "route": ["nvlink_3_0"]
+    },
+    {
+      "id": 173,
+      "src": 69,
+      "dst": 86,
+      "bytes": 4,
+      "kind": "allreduce",
+      "route": ["nvlink_3_0"]
+    },
+    {
+      "id": 174,
+      "src": 69,
+      "dst": 99,
+      "bytes": 4,
+      "kind": "allreduce",
+      "route": ["nvlink_3_0"]
+    },
+    {
+      "id": 175,
+      "src": 70,
+      "dst": 73,
+      "bytes": 4,
+      "kind": "allreduce",
+      "route": ["nvlink_2_0"]
+    },
+    {
+      "id": 176,
+      "src": 70,
+      "dst": 86,
+      "bytes": 4,
+      "kind": "allreduce",
+      "route": ["nvlink_2_0"]
+    },
+    {
+      "id": 177,
+      "src": 70,
+      "dst": 99,
+      "bytes": 4,
+      "kind": "allreduce",
+      "route": ["nvlink_2_0"]
+    },
+    {
+      "id": 178,
+      "src": 71,
+      "dst": 73,
+      "bytes": 4,
+      "kind": "allreduce",
+      "route": ["nvlink_1_0"]
+    },
+    {
+      "id": 179,
+      "src": 71,
+      "dst": 86,
+      "bytes": 4,
+      "kind": "allreduce",
+      "route": ["nvlink_1_0"]
+    },
+    {
+      "id": 180,
+      "src": 71,
+      "dst": 99,
+      "bytes": 4,
+      "kind": "allreduce",
+      "route": ["nvlink_1_0"]
+    },
+    {
+      "id": 181,
+      "src": 72,
+      "dst": 73,
+      "bytes": 0,
+      "kind": "allreduce",
+      "route": []
+    },
+    {
+      "id": 182,
+      "src": 72,
+      "dst": 86,
+      "bytes": 0,
+      "kind": "allreduce",
+      "route": []
+    },
+    {
+      "id": 183,
+      "src": 72,
+      "dst": 99,
+      "bytes": 0,
+      "kind": "allreduce",
+      "route": []
+    },
+    {
+      "id": 184,
+      "src": 73,
+      "dst": 74,
+      "bytes": 4,
+      "kind": "p2p",
+      "route": ["nvlink_0_3"]
+    },
+    {
+      "id": 185,
+      "src": 73,
+      "dst": 75,
+      "bytes": 4,
+      "kind": "p2p",
+      "route": ["nvlink_0_2"]
+    },
+    {
+      "id": 186,
+      "src": 73,
+      "dst": 76,
+      "bytes": 4,
+      "kind": "p2p",
+      "route": ["nvlink_0_1"]
+    },
+    {
+      "id": 187,
+      "src": 73,
+      "dst": 77,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 188,
+      "src": 74,
+      "dst": 78,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 189,
+      "src": 74,
+      "dst": 82,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 190,
+      "src": 74,
+      "dst": 87,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 191,
+      "src": 74,
+      "dst": 100,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 192,
+      "src": 75,
+      "dst": 79,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 193,
+      "src": 75,
+      "dst": 83,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 194,
+      "src": 75,
+      "dst": 88,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 195,
+      "src": 75,
+      "dst": 101,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 196,
+      "src": 76,
+      "dst": 80,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 197,
+      "src": 76,
+      "dst": 84,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 198,
+      "src": 76,
+      "dst": 89,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 199,
+      "src": 76,
+      "dst": 102,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 200,
+      "src": 77,
+      "dst": 81,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 201,
+      "src": 77,
+      "dst": 85,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 202,
+      "src": 77,
+      "dst": 90,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 203,
+      "src": 77,
+      "dst": 103,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 204,
+      "src": 78,
+      "dst": 82,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 205,
+      "src": 78,
+      "dst": 91,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 206,
+      "src": 79,
+      "dst": 83,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 207,
+      "src": 79,
+      "dst": 92,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 208,
+      "src": 80,
+      "dst": 84,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 209,
+      "src": 80,
+      "dst": 93,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 210,
+      "src": 81,
+      "dst": 85,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 211,
+      "src": 81,
+      "dst": 94,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 212,
+      "src": 82,
+      "dst": 86,
+      "bytes": 4,
+      "kind": "allreduce",
+      "route": ["nvlink_3_0"]
+    },
+    {
+      "id": 213,
+      "src": 83,
+      "dst": 86,
+      "bytes": 4,
+      "kind": "allreduce",
+      "route": ["nvlink_2_0"]
+    },
+    {
+      "id": 214,
+      "src": 84,
+      "dst": 86,
+      "bytes": 4,
+      "kind": "allreduce",
+      "route": ["nvlink_1_0"]
+    },
+    {
+      "id": 215,
+      "src": 85,
+      "dst": 86,
+      "bytes": 0,
+      "kind": "allreduce",
+      "route": []
+    },
+    {
+      "id": 216,
+      "src": 86,
+      "dst": 87,
+      "bytes": 4,
+      "kind": "p2p",
+      "route": ["nvlink_0_3"]
+    },
+    {
+      "id": 217,
+      "src": 86,
+      "dst": 88,
+      "bytes": 4,
+      "kind": "p2p",
+      "route": ["nvlink_0_2"]
+    },
+    {
+      "id": 218,
+      "src": 86,
+      "dst": 89,
+      "bytes": 4,
+      "kind": "p2p",
+      "route": ["nvlink_0_1"]
+    },
+    {
+      "id": 219,
+      "src": 86,
+      "dst": 90,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 220,
+      "src": 86,
+      "dst": 91,
+      "bytes": 4,
+      "kind": "p2p",
+      "route": ["nvlink_0_3"]
+    },
+    {
+      "id": 221,
+      "src": 86,
+      "dst": 92,
+      "bytes": 4,
+      "kind": "p2p",
+      "route": ["nvlink_0_2"]
+    },
+    {
+      "id": 222,
+      "src": 86,
+      "dst": 93,
+      "bytes": 4,
+      "kind": "p2p",
+      "route": ["nvlink_0_1"]
+    },
+    {
+      "id": 223,
+      "src": 86,
+      "dst": 94,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 224,
+      "src": 87,
+      "dst": 113,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 225,
+      "src": 88,
+      "dst": 114,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 226,
+      "src": 89,
+      "dst": 115,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 227,
+      "src": 90,
+      "dst": 116,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 228,
+      "src": 91,
+      "dst": 95,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 229,
+      "src": 91,
+      "dst": 100,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 230,
+      "src": 91,
+      "dst": 117,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 231,
+      "src": 92,
+      "dst": 96,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 232,
+      "src": 92,
+      "dst": 101,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 233,
+      "src": 92,
+      "dst": 118,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 234,
+      "src": 93,
+      "dst": 97,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 235,
+      "src": 93,
+      "dst": 102,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 236,
+      "src": 93,
+      "dst": 119,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 237,
+      "src": 94,
+      "dst": 98,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 238,
+      "src": 94,
+      "dst": 103,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 239,
+      "src": 94,
+      "dst": 120,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 240,
+      "src": 95,
+      "dst": 99,
+      "bytes": 4,
+      "kind": "allreduce",
+      "route": ["nvlink_3_0"]
+    },
+    {
+      "id": 241,
+      "src": 95,
+      "dst": 112,
+      "bytes": 4,
+      "kind": "allreduce",
+      "route": ["nvlink_3_0"]
+    },
+    {
+      "id": 242,
+      "src": 95,
+      "dst": 125,
+      "bytes": 4,
+      "kind": "allreduce",
+      "route": ["nvlink_3_0"]
+    },
+    {
+      "id": 243,
+      "src": 96,
+      "dst": 99,
+      "bytes": 4,
+      "kind": "allreduce",
+      "route": ["nvlink_2_0"]
+    },
+    {
+      "id": 244,
+      "src": 96,
+      "dst": 112,
+      "bytes": 4,
+      "kind": "allreduce",
+      "route": ["nvlink_2_0"]
+    },
+    {
+      "id": 245,
+      "src": 96,
+      "dst": 125,
+      "bytes": 4,
+      "kind": "allreduce",
+      "route": ["nvlink_2_0"]
+    },
+    {
+      "id": 246,
+      "src": 97,
+      "dst": 99,
+      "bytes": 4,
+      "kind": "allreduce",
+      "route": ["nvlink_1_0"]
+    },
+    {
+      "id": 247,
+      "src": 97,
+      "dst": 112,
+      "bytes": 4,
+      "kind": "allreduce",
+      "route": ["nvlink_1_0"]
+    },
+    {
+      "id": 248,
+      "src": 97,
+      "dst": 125,
+      "bytes": 4,
+      "kind": "allreduce",
+      "route": ["nvlink_1_0"]
+    },
+    {
+      "id": 249,
+      "src": 98,
+      "dst": 99,
+      "bytes": 0,
+      "kind": "allreduce",
+      "route": []
+    },
+    {
+      "id": 250,
+      "src": 98,
+      "dst": 112,
+      "bytes": 0,
+      "kind": "allreduce",
+      "route": []
+    },
+    {
+      "id": 251,
+      "src": 98,
+      "dst": 125,
+      "bytes": 0,
+      "kind": "allreduce",
+      "route": []
+    },
+    {
+      "id": 252,
+      "src": 99,
+      "dst": 100,
+      "bytes": 4,
+      "kind": "p2p",
+      "route": ["nvlink_0_3"]
+    },
+    {
+      "id": 253,
+      "src": 99,
+      "dst": 101,
+      "bytes": 4,
+      "kind": "p2p",
+      "route": ["nvlink_0_2"]
+    },
+    {
+      "id": 254,
+      "src": 99,
+      "dst": 102,
+      "bytes": 4,
+      "kind": "p2p",
+      "route": ["nvlink_0_1"]
+    },
+    {
+      "id": 255,
+      "src": 99,
+      "dst": 103,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 256,
+      "src": 100,
+      "dst": 104,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 257,
+      "src": 100,
+      "dst": 108,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 258,
+      "src": 100,
+      "dst": 113,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 259,
+      "src": 100,
+      "dst": 126,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 260,
+      "src": 101,
+      "dst": 105,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 261,
+      "src": 101,
+      "dst": 109,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 262,
+      "src": 101,
+      "dst": 114,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 263,
+      "src": 101,
+      "dst": 127,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 264,
+      "src": 102,
+      "dst": 106,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 265,
+      "src": 102,
+      "dst": 110,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 266,
+      "src": 102,
+      "dst": 115,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 267,
+      "src": 102,
+      "dst": 128,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 268,
+      "src": 103,
+      "dst": 107,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 269,
+      "src": 103,
+      "dst": 111,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 270,
+      "src": 103,
+      "dst": 116,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 271,
+      "src": 103,
+      "dst": 129,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 272,
+      "src": 104,
+      "dst": 108,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 273,
+      "src": 104,
+      "dst": 117,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 274,
+      "src": 105,
+      "dst": 109,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 275,
+      "src": 105,
+      "dst": 118,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 276,
+      "src": 106,
+      "dst": 110,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 277,
+      "src": 106,
+      "dst": 119,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 278,
+      "src": 107,
+      "dst": 111,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 279,
+      "src": 107,
+      "dst": 120,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 280,
+      "src": 108,
+      "dst": 112,
+      "bytes": 4,
+      "kind": "allreduce",
+      "route": ["nvlink_3_0"]
+    },
+    {
+      "id": 281,
+      "src": 109,
+      "dst": 112,
+      "bytes": 4,
+      "kind": "allreduce",
+      "route": ["nvlink_2_0"]
+    },
+    {
+      "id": 282,
+      "src": 110,
+      "dst": 112,
+      "bytes": 4,
+      "kind": "allreduce",
+      "route": ["nvlink_1_0"]
+    },
+    {
+      "id": 283,
+      "src": 111,
+      "dst": 112,
+      "bytes": 0,
+      "kind": "allreduce",
+      "route": []
+    },
+    {
+      "id": 284,
+      "src": 112,
+      "dst": 113,
+      "bytes": 4,
+      "kind": "p2p",
+      "route": ["nvlink_0_3"]
+    },
+    {
+      "id": 285,
+      "src": 112,
+      "dst": 114,
+      "bytes": 4,
+      "kind": "p2p",
+      "route": ["nvlink_0_2"]
+    },
+    {
+      "id": 286,
+      "src": 112,
+      "dst": 115,
+      "bytes": 4,
+      "kind": "p2p",
+      "route": ["nvlink_0_1"]
+    },
+    {
+      "id": 287,
+      "src": 112,
+      "dst": 116,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 288,
+      "src": 112,
+      "dst": 117,
+      "bytes": 4,
+      "kind": "p2p",
+      "route": ["nvlink_0_3"]
+    },
+    {
+      "id": 289,
+      "src": 112,
+      "dst": 118,
+      "bytes": 4,
+      "kind": "p2p",
+      "route": ["nvlink_0_2"]
+    },
+    {
+      "id": 290,
+      "src": 112,
+      "dst": 119,
+      "bytes": 4,
+      "kind": "p2p",
+      "route": ["nvlink_0_1"]
+    },
+    {
+      "id": 291,
+      "src": 112,
+      "dst": 120,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 292,
+      "src": 113,
+      "dst": 139,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 293,
+      "src": 114,
+      "dst": 140,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 294,
+      "src": 115,
+      "dst": 141,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 295,
+      "src": 116,
+      "dst": 142,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 296,
+      "src": 117,
+      "dst": 121,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 297,
+      "src": 117,
+      "dst": 126,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 298,
+      "src": 117,
+      "dst": 143,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 299,
+      "src": 118,
+      "dst": 122,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 300,
+      "src": 118,
+      "dst": 127,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 301,
+      "src": 118,
+      "dst": 144,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 302,
+      "src": 119,
+      "dst": 123,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 303,
+      "src": 119,
+      "dst": 128,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 304,
+      "src": 119,
+      "dst": 145,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 305,
+      "src": 120,
+      "dst": 124,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 306,
+      "src": 120,
+      "dst": 129,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 307,
+      "src": 120,
+      "dst": 146,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 308,
+      "src": 121,
+      "dst": 125,
+      "bytes": 4,
+      "kind": "allreduce",
+      "route": ["nvlink_3_0"]
+    },
+    {
+      "id": 309,
+      "src": 121,
+      "dst": 138,
+      "bytes": 4,
+      "kind": "allreduce",
+      "route": ["nvlink_3_0"]
+    },
+    {
+      "id": 310,
+      "src": 121,
+      "dst": 151,
+      "bytes": 4,
+      "kind": "allreduce",
+      "route": ["nvlink_3_0"]
+    },
+    {
+      "id": 311,
+      "src": 122,
+      "dst": 125,
+      "bytes": 4,
+      "kind": "allreduce",
+      "route": ["nvlink_2_0"]
+    },
+    {
+      "id": 312,
+      "src": 122,
+      "dst": 138,
+      "bytes": 4,
+      "kind": "allreduce",
+      "route": ["nvlink_2_0"]
+    },
+    {
+      "id": 313,
+      "src": 122,
+      "dst": 151,
+      "bytes": 4,
+      "kind": "allreduce",
+      "route": ["nvlink_2_0"]
+    },
+    {
+      "id": 314,
+      "src": 123,
+      "dst": 125,
+      "bytes": 4,
+      "kind": "allreduce",
+      "route": ["nvlink_1_0"]
+    },
+    {
+      "id": 315,
+      "src": 123,
+      "dst": 138,
+      "bytes": 4,
+      "kind": "allreduce",
+      "route": ["nvlink_1_0"]
+    },
+    {
+      "id": 316,
+      "src": 123,
+      "dst": 151,
+      "bytes": 4,
+      "kind": "allreduce",
+      "route": ["nvlink_1_0"]
+    },
+    {
+      "id": 317,
+      "src": 124,
+      "dst": 125,
+      "bytes": 0,
+      "kind": "allreduce",
+      "route": []
+    },
+    {
+      "id": 318,
+      "src": 124,
+      "dst": 138,
+      "bytes": 0,
+      "kind": "allreduce",
+      "route": []
+    },
+    {
+      "id": 319,
+      "src": 124,
+      "dst": 151,
+      "bytes": 0,
+      "kind": "allreduce",
+      "route": []
+    },
+    {
+      "id": 320,
+      "src": 125,
+      "dst": 126,
+      "bytes": 4,
+      "kind": "p2p",
+      "route": ["nvlink_0_3"]
+    },
+    {
+      "id": 321,
+      "src": 125,
+      "dst": 127,
+      "bytes": 4,
+      "kind": "p2p",
+      "route": ["nvlink_0_2"]
+    },
+    {
+      "id": 322,
+      "src": 125,
+      "dst": 128,
+      "bytes": 4,
+      "kind": "p2p",
+      "route": ["nvlink_0_1"]
+    },
+    {
+      "id": 323,
+      "src": 125,
+      "dst": 129,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 324,
+      "src": 126,
+      "dst": 130,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 325,
+      "src": 126,
+      "dst": 134,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 326,
+      "src": 126,
+      "dst": 139,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 327,
+      "src": 126,
+      "dst": 152,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 328,
+      "src": 127,
+      "dst": 131,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 329,
+      "src": 127,
+      "dst": 135,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 330,
+      "src": 127,
+      "dst": 140,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 331,
+      "src": 127,
+      "dst": 153,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 332,
+      "src": 128,
+      "dst": 132,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 333,
+      "src": 128,
+      "dst": 136,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 334,
+      "src": 128,
+      "dst": 141,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 335,
+      "src": 128,
+      "dst": 154,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 336,
+      "src": 129,
+      "dst": 133,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 337,
+      "src": 129,
+      "dst": 137,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 338,
+      "src": 129,
+      "dst": 142,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 339,
+      "src": 129,
+      "dst": 155,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 340,
+      "src": 130,
+      "dst": 134,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 341,
+      "src": 130,
+      "dst": 143,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 342,
+      "src": 131,
+      "dst": 135,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 343,
+      "src": 131,
+      "dst": 144,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 344,
+      "src": 132,
+      "dst": 136,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 345,
+      "src": 132,
+      "dst": 145,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 346,
+      "src": 133,
+      "dst": 137,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 347,
+      "src": 133,
+      "dst": 146,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 348,
+      "src": 134,
+      "dst": 138,
+      "bytes": 4,
+      "kind": "allreduce",
+      "route": ["nvlink_3_0"]
+    },
+    {
+      "id": 349,
+      "src": 135,
+      "dst": 138,
+      "bytes": 4,
+      "kind": "allreduce",
+      "route": ["nvlink_2_0"]
+    },
+    {
+      "id": 350,
+      "src": 136,
+      "dst": 138,
+      "bytes": 4,
+      "kind": "allreduce",
+      "route": ["nvlink_1_0"]
+    },
+    {
+      "id": 351,
+      "src": 137,
+      "dst": 138,
+      "bytes": 0,
+      "kind": "allreduce",
+      "route": []
+    },
+    {
+      "id": 352,
+      "src": 138,
+      "dst": 139,
+      "bytes": 4,
+      "kind": "p2p",
+      "route": ["nvlink_0_3"]
+    },
+    {
+      "id": 353,
+      "src": 138,
+      "dst": 140,
+      "bytes": 4,
+      "kind": "p2p",
+      "route": ["nvlink_0_2"]
+    },
+    {
+      "id": 354,
+      "src": 138,
+      "dst": 141,
+      "bytes": 4,
+      "kind": "p2p",
+      "route": ["nvlink_0_1"]
+    },
+    {
+      "id": 355,
+      "src": 138,
+      "dst": 142,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 356,
+      "src": 138,
+      "dst": 143,
+      "bytes": 4,
+      "kind": "p2p",
+      "route": ["nvlink_0_3"]
+    },
+    {
+      "id": 357,
+      "src": 138,
+      "dst": 144,
+      "bytes": 4,
+      "kind": "p2p",
+      "route": ["nvlink_0_2"]
+    },
+    {
+      "id": 358,
+      "src": 138,
+      "dst": 145,
+      "bytes": 4,
+      "kind": "p2p",
+      "route": ["nvlink_0_1"]
+    },
+    {
+      "id": 359,
+      "src": 138,
+      "dst": 146,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 360,
+      "src": 139,
+      "dst": 165,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 361,
+      "src": 140,
+      "dst": 166,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 362,
+      "src": 141,
+      "dst": 167,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 363,
+      "src": 142,
+      "dst": 168,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 364,
+      "src": 143,
+      "dst": 147,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 365,
+      "src": 143,
+      "dst": 152,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 366,
+      "src": 143,
+      "dst": 169,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 367,
+      "src": 144,
+      "dst": 148,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 368,
+      "src": 144,
+      "dst": 153,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 369,
+      "src": 144,
+      "dst": 170,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 370,
+      "src": 145,
+      "dst": 149,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 371,
+      "src": 145,
+      "dst": 154,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 372,
+      "src": 145,
+      "dst": 171,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 373,
+      "src": 146,
+      "dst": 150,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 374,
+      "src": 146,
+      "dst": 155,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 375,
+      "src": 146,
+      "dst": 172,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 376,
+      "src": 147,
+      "dst": 151,
+      "bytes": 4,
+      "kind": "allreduce",
+      "route": ["nvlink_3_0"]
+    },
+    {
+      "id": 377,
+      "src": 147,
+      "dst": 164,
+      "bytes": 4,
+      "kind": "allreduce",
+      "route": ["nvlink_3_0"]
+    },
+    {
+      "id": 378,
+      "src": 147,
+      "dst": 177,
+      "bytes": 4,
+      "kind": "allreduce",
+      "route": ["nvlink_3_0"]
+    },
+    {
+      "id": 379,
+      "src": 148,
+      "dst": 151,
+      "bytes": 4,
+      "kind": "allreduce",
+      "route": ["nvlink_2_0"]
+    },
+    {
+      "id": 380,
+      "src": 148,
+      "dst": 164,
+      "bytes": 4,
+      "kind": "allreduce",
+      "route": ["nvlink_2_0"]
+    },
+    {
+      "id": 381,
+      "src": 148,
+      "dst": 177,
+      "bytes": 4,
+      "kind": "allreduce",
+      "route": ["nvlink_2_0"]
+    },
+    {
+      "id": 382,
+      "src": 149,
+      "dst": 151,
+      "bytes": 4,
+      "kind": "allreduce",
+      "route": ["nvlink_1_0"]
+    },
+    {
+      "id": 383,
+      "src": 149,
+      "dst": 164,
+      "bytes": 4,
+      "kind": "allreduce",
+      "route": ["nvlink_1_0"]
+    },
+    {
+      "id": 384,
+      "src": 149,
+      "dst": 177,
+      "bytes": 4,
+      "kind": "allreduce",
+      "route": ["nvlink_1_0"]
+    },
+    {
+      "id": 385,
+      "src": 150,
+      "dst": 151,
+      "bytes": 0,
+      "kind": "allreduce",
+      "route": []
+    },
+    {
+      "id": 386,
+      "src": 150,
+      "dst": 164,
+      "bytes": 0,
+      "kind": "allreduce",
+      "route": []
+    },
+    {
+      "id": 387,
+      "src": 150,
+      "dst": 177,
+      "bytes": 0,
+      "kind": "allreduce",
+      "route": []
+    },
+    {
+      "id": 388,
+      "src": 151,
+      "dst": 152,
+      "bytes": 4,
+      "kind": "p2p",
+      "route": ["nvlink_0_3"]
+    },
+    {
+      "id": 389,
+      "src": 151,
+      "dst": 153,
+      "bytes": 4,
+      "kind": "p2p",
+      "route": ["nvlink_0_2"]
+    },
+    {
+      "id": 390,
+      "src": 151,
+      "dst": 154,
+      "bytes": 4,
+      "kind": "p2p",
+      "route": ["nvlink_0_1"]
+    },
+    {
+      "id": 391,
+      "src": 151,
+      "dst": 155,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 392,
+      "src": 152,
+      "dst": 156,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 393,
+      "src": 152,
+      "dst": 160,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 394,
+      "src": 152,
+      "dst": 165,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 395,
+      "src": 152,
+      "dst": 178,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 396,
+      "src": 153,
+      "dst": 157,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 397,
+      "src": 153,
+      "dst": 161,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 398,
+      "src": 153,
+      "dst": 166,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 399,
+      "src": 153,
+      "dst": 179,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 400,
+      "src": 154,
+      "dst": 158,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 401,
+      "src": 154,
+      "dst": 162,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 402,
+      "src": 154,
+      "dst": 167,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 403,
+      "src": 154,
+      "dst": 180,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 404,
+      "src": 155,
+      "dst": 159,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 405,
+      "src": 155,
+      "dst": 163,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 406,
+      "src": 155,
+      "dst": 168,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 407,
+      "src": 155,
+      "dst": 181,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 408,
+      "src": 156,
+      "dst": 160,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 409,
+      "src": 156,
+      "dst": 169,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 410,
+      "src": 157,
+      "dst": 161,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 411,
+      "src": 157,
+      "dst": 170,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 412,
+      "src": 158,
+      "dst": 162,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 413,
+      "src": 158,
+      "dst": 171,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 414,
+      "src": 159,
+      "dst": 163,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 415,
+      "src": 159,
+      "dst": 172,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 416,
+      "src": 160,
+      "dst": 164,
+      "bytes": 4,
+      "kind": "allreduce",
+      "route": ["nvlink_3_0"]
+    },
+    {
+      "id": 417,
+      "src": 161,
+      "dst": 164,
+      "bytes": 4,
+      "kind": "allreduce",
+      "route": ["nvlink_2_0"]
+    },
+    {
+      "id": 418,
+      "src": 162,
+      "dst": 164,
+      "bytes": 4,
+      "kind": "allreduce",
+      "route": ["nvlink_1_0"]
+    },
+    {
+      "id": 419,
+      "src": 163,
+      "dst": 164,
+      "bytes": 0,
+      "kind": "allreduce",
+      "route": []
+    },
+    {
+      "id": 420,
+      "src": 164,
+      "dst": 165,
+      "bytes": 4,
+      "kind": "p2p",
+      "route": ["nvlink_0_3"]
+    },
+    {
+      "id": 421,
+      "src": 164,
+      "dst": 166,
+      "bytes": 4,
+      "kind": "p2p",
+      "route": ["nvlink_0_2"]
+    },
+    {
+      "id": 422,
+      "src": 164,
+      "dst": 167,
+      "bytes": 4,
+      "kind": "p2p",
+      "route": ["nvlink_0_1"]
+    },
+    {
+      "id": 423,
+      "src": 164,
+      "dst": 168,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 424,
+      "src": 164,
+      "dst": 169,
+      "bytes": 4,
+      "kind": "p2p",
+      "route": ["nvlink_0_3"]
+    },
+    {
+      "id": 425,
+      "src": 164,
+      "dst": 170,
+      "bytes": 4,
+      "kind": "p2p",
+      "route": ["nvlink_0_2"]
+    },
+    {
+      "id": 426,
+      "src": 164,
+      "dst": 171,
+      "bytes": 4,
+      "kind": "p2p",
+      "route": ["nvlink_0_1"]
+    },
+    {
+      "id": 427,
+      "src": 164,
+      "dst": 172,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 428,
+      "src": 165,
+      "dst": 191,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 429,
+      "src": 166,
+      "dst": 192,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 430,
+      "src": 167,
+      "dst": 193,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 431,
+      "src": 168,
+      "dst": 194,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 432,
+      "src": 169,
+      "dst": 173,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 433,
+      "src": 169,
+      "dst": 178,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 434,
+      "src": 169,
+      "dst": 195,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 435,
+      "src": 170,
+      "dst": 174,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 436,
+      "src": 170,
+      "dst": 179,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 437,
+      "src": 170,
+      "dst": 196,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 438,
+      "src": 171,
+      "dst": 175,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 439,
+      "src": 171,
+      "dst": 180,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 440,
+      "src": 171,
+      "dst": 197,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 441,
+      "src": 172,
+      "dst": 176,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 442,
+      "src": 172,
+      "dst": 181,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 443,
+      "src": 172,
+      "dst": 198,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 444,
+      "src": 173,
+      "dst": 177,
+      "bytes": 4,
+      "kind": "allreduce",
+      "route": ["nvlink_3_0"]
+    },
+    {
+      "id": 445,
+      "src": 173,
+      "dst": 190,
+      "bytes": 4,
+      "kind": "allreduce",
+      "route": ["nvlink_3_0"]
+    },
+    {
+      "id": 446,
+      "src": 173,
+      "dst": 203,
+      "bytes": 4,
+      "kind": "allreduce",
+      "route": ["nvlink_3_0"]
+    },
+    {
+      "id": 447,
+      "src": 174,
+      "dst": 177,
+      "bytes": 4,
+      "kind": "allreduce",
+      "route": ["nvlink_2_0"]
+    },
+    {
+      "id": 448,
+      "src": 174,
+      "dst": 190,
+      "bytes": 4,
+      "kind": "allreduce",
+      "route": ["nvlink_2_0"]
+    },
+    {
+      "id": 449,
+      "src": 174,
+      "dst": 203,
+      "bytes": 4,
+      "kind": "allreduce",
+      "route": ["nvlink_2_0"]
+    },
+    {
+      "id": 450,
+      "src": 175,
+      "dst": 177,
+      "bytes": 4,
+      "kind": "allreduce",
+      "route": ["nvlink_1_0"]
+    },
+    {
+      "id": 451,
+      "src": 175,
+      "dst": 190,
+      "bytes": 4,
+      "kind": "allreduce",
+      "route": ["nvlink_1_0"]
+    },
+    {
+      "id": 452,
+      "src": 175,
+      "dst": 203,
+      "bytes": 4,
+      "kind": "allreduce",
+      "route": ["nvlink_1_0"]
+    },
+    {
+      "id": 453,
+      "src": 176,
+      "dst": 177,
+      "bytes": 0,
+      "kind": "allreduce",
+      "route": []
+    },
+    {
+      "id": 454,
+      "src": 176,
+      "dst": 190,
+      "bytes": 0,
+      "kind": "allreduce",
+      "route": []
+    },
+    {
+      "id": 455,
+      "src": 176,
+      "dst": 203,
+      "bytes": 0,
+      "kind": "allreduce",
+      "route": []
+    },
+    {
+      "id": 456,
+      "src": 177,
+      "dst": 178,
+      "bytes": 4,
+      "kind": "p2p",
+      "route": ["nvlink_0_3"]
+    },
+    {
+      "id": 457,
+      "src": 177,
+      "dst": 179,
+      "bytes": 4,
+      "kind": "p2p",
+      "route": ["nvlink_0_2"]
+    },
+    {
+      "id": 458,
+      "src": 177,
+      "dst": 180,
+      "bytes": 4,
+      "kind": "p2p",
+      "route": ["nvlink_0_1"]
+    },
+    {
+      "id": 459,
+      "src": 177,
+      "dst": 181,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 460,
+      "src": 178,
+      "dst": 182,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 461,
+      "src": 178,
+      "dst": 186,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 462,
+      "src": 178,
+      "dst": 191,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 463,
+      "src": 178,
+      "dst": 204,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 464,
+      "src": 179,
+      "dst": 183,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 465,
+      "src": 179,
+      "dst": 187,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 466,
+      "src": 179,
+      "dst": 192,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 467,
+      "src": 179,
+      "dst": 205,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 468,
+      "src": 180,
+      "dst": 184,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 469,
+      "src": 180,
+      "dst": 188,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 470,
+      "src": 180,
+      "dst": 193,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 471,
+      "src": 180,
+      "dst": 206,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 472,
+      "src": 181,
+      "dst": 185,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 473,
+      "src": 181,
+      "dst": 189,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 474,
+      "src": 181,
+      "dst": 194,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 475,
+      "src": 181,
+      "dst": 207,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 476,
+      "src": 182,
+      "dst": 186,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 477,
+      "src": 182,
+      "dst": 195,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 478,
+      "src": 183,
+      "dst": 187,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 479,
+      "src": 183,
+      "dst": 196,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 480,
+      "src": 184,
+      "dst": 188,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 481,
+      "src": 184,
+      "dst": 197,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 482,
+      "src": 185,
+      "dst": 189,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 483,
+      "src": 185,
+      "dst": 198,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 484,
+      "src": 186,
+      "dst": 190,
+      "bytes": 4,
+      "kind": "allreduce",
+      "route": ["nvlink_3_0"]
+    },
+    {
+      "id": 485,
+      "src": 187,
+      "dst": 190,
+      "bytes": 4,
+      "kind": "allreduce",
+      "route": ["nvlink_2_0"]
+    },
+    {
+      "id": 486,
+      "src": 188,
+      "dst": 190,
+      "bytes": 4,
+      "kind": "allreduce",
+      "route": ["nvlink_1_0"]
+    },
+    {
+      "id": 487,
+      "src": 189,
+      "dst": 190,
+      "bytes": 0,
+      "kind": "allreduce",
+      "route": []
+    },
+    {
+      "id": 488,
+      "src": 190,
+      "dst": 191,
+      "bytes": 4,
+      "kind": "p2p",
+      "route": ["nvlink_0_3"]
+    },
+    {
+      "id": 489,
+      "src": 190,
+      "dst": 192,
+      "bytes": 4,
+      "kind": "p2p",
+      "route": ["nvlink_0_2"]
+    },
+    {
+      "id": 490,
+      "src": 190,
+      "dst": 193,
+      "bytes": 4,
+      "kind": "p2p",
+      "route": ["nvlink_0_1"]
+    },
+    {
+      "id": 491,
+      "src": 190,
+      "dst": 194,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 492,
+      "src": 190,
+      "dst": 195,
+      "bytes": 4,
+      "kind": "p2p",
+      "route": ["nvlink_0_3"]
+    },
+    {
+      "id": 493,
+      "src": 190,
+      "dst": 196,
+      "bytes": 4,
+      "kind": "p2p",
+      "route": ["nvlink_0_2"]
+    },
+    {
+      "id": 494,
+      "src": 190,
+      "dst": 197,
+      "bytes": 4,
+      "kind": "p2p",
+      "route": ["nvlink_0_1"]
+    },
+    {
+      "id": 495,
+      "src": 190,
+      "dst": 198,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 496,
+      "src": 191,
+      "dst": 217,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 497,
+      "src": 192,
+      "dst": 218,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 498,
+      "src": 193,
+      "dst": 219,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 499,
+      "src": 194,
+      "dst": 220,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 500,
+      "src": 195,
+      "dst": 199,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 501,
+      "src": 195,
+      "dst": 204,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 502,
+      "src": 195,
+      "dst": 221,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 503,
+      "src": 196,
+      "dst": 200,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 504,
+      "src": 196,
+      "dst": 205,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 505,
+      "src": 196,
+      "dst": 222,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 506,
+      "src": 197,
+      "dst": 201,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 507,
+      "src": 197,
+      "dst": 206,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 508,
+      "src": 197,
+      "dst": 223,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 509,
+      "src": 198,
+      "dst": 202,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 510,
+      "src": 198,
+      "dst": 207,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 511,
+      "src": 198,
+      "dst": 224,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 512,
+      "src": 199,
+      "dst": 203,
+      "bytes": 4,
+      "kind": "allreduce",
+      "route": ["nvlink_3_0"]
+    },
+    {
+      "id": 513,
+      "src": 199,
+      "dst": 216,
+      "bytes": 4,
+      "kind": "allreduce",
+      "route": ["nvlink_3_0"]
+    },
+    {
+      "id": 514,
+      "src": 199,
+      "dst": 229,
+      "bytes": 4,
+      "kind": "allreduce",
+      "route": ["nvlink_3_0"]
+    },
+    {
+      "id": 515,
+      "src": 200,
+      "dst": 203,
+      "bytes": 4,
+      "kind": "allreduce",
+      "route": ["nvlink_2_0"]
+    },
+    {
+      "id": 516,
+      "src": 200,
+      "dst": 216,
+      "bytes": 4,
+      "kind": "allreduce",
+      "route": ["nvlink_2_0"]
+    },
+    {
+      "id": 517,
+      "src": 200,
+      "dst": 229,
+      "bytes": 4,
+      "kind": "allreduce",
+      "route": ["nvlink_2_0"]
+    },
+    {
+      "id": 518,
+      "src": 201,
+      "dst": 203,
+      "bytes": 4,
+      "kind": "allreduce",
+      "route": ["nvlink_1_0"]
+    },
+    {
+      "id": 519,
+      "src": 201,
+      "dst": 216,
+      "bytes": 4,
+      "kind": "allreduce",
+      "route": ["nvlink_1_0"]
+    },
+    {
+      "id": 520,
+      "src": 201,
+      "dst": 229,
+      "bytes": 4,
+      "kind": "allreduce",
+      "route": ["nvlink_1_0"]
+    },
+    {
+      "id": 521,
+      "src": 202,
+      "dst": 203,
+      "bytes": 0,
+      "kind": "allreduce",
+      "route": []
+    },
+    {
+      "id": 522,
+      "src": 202,
+      "dst": 216,
+      "bytes": 0,
+      "kind": "allreduce",
+      "route": []
+    },
+    {
+      "id": 523,
+      "src": 202,
+      "dst": 229,
+      "bytes": 0,
+      "kind": "allreduce",
+      "route": []
+    },
+    {
+      "id": 524,
+      "src": 203,
+      "dst": 204,
+      "bytes": 4,
+      "kind": "p2p",
+      "route": ["nvlink_0_3"]
+    },
+    {
+      "id": 525,
+      "src": 203,
+      "dst": 205,
+      "bytes": 4,
+      "kind": "p2p",
+      "route": ["nvlink_0_2"]
+    },
+    {
+      "id": 526,
+      "src": 203,
+      "dst": 206,
+      "bytes": 4,
+      "kind": "p2p",
+      "route": ["nvlink_0_1"]
+    },
+    {
+      "id": 527,
+      "src": 203,
+      "dst": 207,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 528,
+      "src": 204,
+      "dst": 208,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 529,
+      "src": 204,
+      "dst": 212,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 530,
+      "src": 204,
+      "dst": 217,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 531,
+      "src": 204,
+      "dst": 230,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 532,
+      "src": 205,
+      "dst": 209,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 533,
+      "src": 205,
+      "dst": 213,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 534,
+      "src": 205,
+      "dst": 218,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 535,
+      "src": 205,
+      "dst": 231,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 536,
+      "src": 206,
+      "dst": 210,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 537,
+      "src": 206,
+      "dst": 214,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 538,
+      "src": 206,
+      "dst": 219,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 539,
+      "src": 206,
+      "dst": 232,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 540,
+      "src": 207,
+      "dst": 211,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 541,
+      "src": 207,
+      "dst": 215,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 542,
+      "src": 207,
+      "dst": 220,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 543,
+      "src": 207,
+      "dst": 233,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 544,
+      "src": 208,
+      "dst": 212,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 545,
+      "src": 208,
+      "dst": 221,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 546,
+      "src": 209,
+      "dst": 213,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 547,
+      "src": 209,
+      "dst": 222,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 548,
+      "src": 210,
+      "dst": 214,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 549,
+      "src": 210,
+      "dst": 223,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 550,
+      "src": 211,
+      "dst": 215,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 551,
+      "src": 211,
+      "dst": 224,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 552,
+      "src": 212,
+      "dst": 216,
+      "bytes": 4,
+      "kind": "allreduce",
+      "route": ["nvlink_3_0"]
+    },
+    {
+      "id": 553,
+      "src": 213,
+      "dst": 216,
+      "bytes": 4,
+      "kind": "allreduce",
+      "route": ["nvlink_2_0"]
+    },
+    {
+      "id": 554,
+      "src": 214,
+      "dst": 216,
+      "bytes": 4,
+      "kind": "allreduce",
+      "route": ["nvlink_1_0"]
+    },
+    {
+      "id": 555,
+      "src": 215,
+      "dst": 216,
+      "bytes": 0,
+      "kind": "allreduce",
+      "route": []
+    },
+    {
+      "id": 556,
+      "src": 216,
+      "dst": 217,
+      "bytes": 4,
+      "kind": "p2p",
+      "route": ["nvlink_0_3"]
+    },
+    {
+      "id": 557,
+      "src": 216,
+      "dst": 218,
+      "bytes": 4,
+      "kind": "p2p",
+      "route": ["nvlink_0_2"]
+    },
+    {
+      "id": 558,
+      "src": 216,
+      "dst": 219,
+      "bytes": 4,
+      "kind": "p2p",
+      "route": ["nvlink_0_1"]
+    },
+    {
+      "id": 559,
+      "src": 216,
+      "dst": 220,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 560,
+      "src": 216,
+      "dst": 221,
+      "bytes": 4,
+      "kind": "p2p",
+      "route": ["nvlink_0_3"]
+    },
+    {
+      "id": 561,
+      "src": 216,
+      "dst": 222,
+      "bytes": 4,
+      "kind": "p2p",
+      "route": ["nvlink_0_2"]
+    },
+    {
+      "id": 562,
+      "src": 216,
+      "dst": 223,
+      "bytes": 4,
+      "kind": "p2p",
+      "route": ["nvlink_0_1"]
+    },
+    {
+      "id": 563,
+      "src": 216,
+      "dst": 224,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 564,
+      "src": 217,
+      "dst": 243,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 565,
+      "src": 218,
+      "dst": 244,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 566,
+      "src": 219,
+      "dst": 245,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 567,
+      "src": 220,
+      "dst": 246,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 568,
+      "src": 221,
+      "dst": 225,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 569,
+      "src": 221,
+      "dst": 230,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 570,
+      "src": 221,
+      "dst": 247,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 571,
+      "src": 222,
+      "dst": 226,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 572,
+      "src": 222,
+      "dst": 231,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 573,
+      "src": 222,
+      "dst": 248,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 574,
+      "src": 223,
+      "dst": 227,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 575,
+      "src": 223,
+      "dst": 232,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 576,
+      "src": 223,
+      "dst": 249,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 577,
+      "src": 224,
+      "dst": 228,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 578,
+      "src": 224,
+      "dst": 233,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 579,
+      "src": 224,
+      "dst": 250,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 580,
+      "src": 225,
+      "dst": 229,
+      "bytes": 4,
+      "kind": "allreduce",
+      "route": ["nvlink_3_0"]
+    },
+    {
+      "id": 581,
+      "src": 225,
+      "dst": 242,
+      "bytes": 4,
+      "kind": "allreduce",
+      "route": ["nvlink_3_0"]
+    },
+    {
+      "id": 582,
+      "src": 225,
+      "dst": 255,
+      "bytes": 4,
+      "kind": "allreduce",
+      "route": ["nvlink_3_0"]
+    },
+    {
+      "id": 583,
+      "src": 226,
+      "dst": 229,
+      "bytes": 4,
+      "kind": "allreduce",
+      "route": ["nvlink_2_0"]
+    },
+    {
+      "id": 584,
+      "src": 226,
+      "dst": 242,
+      "bytes": 4,
+      "kind": "allreduce",
+      "route": ["nvlink_2_0"]
+    },
+    {
+      "id": 585,
+      "src": 226,
+      "dst": 255,
+      "bytes": 4,
+      "kind": "allreduce",
+      "route": ["nvlink_2_0"]
+    },
+    {
+      "id": 586,
+      "src": 227,
+      "dst": 229,
+      "bytes": 4,
+      "kind": "allreduce",
+      "route": ["nvlink_1_0"]
+    },
+    {
+      "id": 587,
+      "src": 227,
+      "dst": 242,
+      "bytes": 4,
+      "kind": "allreduce",
+      "route": ["nvlink_1_0"]
+    },
+    {
+      "id": 588,
+      "src": 227,
+      "dst": 255,
+      "bytes": 4,
+      "kind": "allreduce",
+      "route": ["nvlink_1_0"]
+    },
+    {
+      "id": 589,
+      "src": 228,
+      "dst": 229,
+      "bytes": 0,
+      "kind": "allreduce",
+      "route": []
+    },
+    {
+      "id": 590,
+      "src": 228,
+      "dst": 242,
+      "bytes": 0,
+      "kind": "allreduce",
+      "route": []
+    },
+    {
+      "id": 591,
+      "src": 228,
+      "dst": 255,
+      "bytes": 0,
+      "kind": "allreduce",
+      "route": []
+    },
+    {
+      "id": 592,
+      "src": 229,
+      "dst": 230,
+      "bytes": 4,
+      "kind": "p2p",
+      "route": ["nvlink_0_3"]
+    },
+    {
+      "id": 593,
+      "src": 229,
+      "dst": 231,
+      "bytes": 4,
+      "kind": "p2p",
+      "route": ["nvlink_0_2"]
+    },
+    {
+      "id": 594,
+      "src": 229,
+      "dst": 232,
+      "bytes": 4,
+      "kind": "p2p",
+      "route": ["nvlink_0_1"]
+    },
+    {
+      "id": 595,
+      "src": 229,
+      "dst": 233,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 596,
+      "src": 230,
+      "dst": 234,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 597,
+      "src": 230,
+      "dst": 238,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 598,
+      "src": 230,
+      "dst": 243,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 599,
+      "src": 230,
+      "dst": 256,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 600,
+      "src": 231,
+      "dst": 235,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 601,
+      "src": 231,
+      "dst": 239,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 602,
+      "src": 231,
+      "dst": 244,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 603,
+      "src": 231,
+      "dst": 257,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 604,
+      "src": 232,
+      "dst": 236,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 605,
+      "src": 232,
+      "dst": 240,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 606,
+      "src": 232,
+      "dst": 245,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 607,
+      "src": 232,
+      "dst": 258,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 608,
+      "src": 233,
+      "dst": 237,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 609,
+      "src": 233,
+      "dst": 241,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 610,
+      "src": 233,
+      "dst": 246,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 611,
+      "src": 233,
+      "dst": 259,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 612,
+      "src": 234,
+      "dst": 238,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 613,
+      "src": 234,
+      "dst": 247,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 614,
+      "src": 235,
+      "dst": 239,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 615,
+      "src": 235,
+      "dst": 248,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 616,
+      "src": 236,
+      "dst": 240,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 617,
+      "src": 236,
+      "dst": 249,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 618,
+      "src": 237,
+      "dst": 241,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 619,
+      "src": 237,
+      "dst": 250,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 620,
+      "src": 238,
+      "dst": 242,
+      "bytes": 4,
+      "kind": "allreduce",
+      "route": ["nvlink_3_0"]
+    },
+    {
+      "id": 621,
+      "src": 239,
+      "dst": 242,
+      "bytes": 4,
+      "kind": "allreduce",
+      "route": ["nvlink_2_0"]
+    },
+    {
+      "id": 622,
+      "src": 240,
+      "dst": 242,
+      "bytes": 4,
+      "kind": "allreduce",
+      "route": ["nvlink_1_0"]
+    },
+    {
+      "id": 623,
+      "src": 241,
+      "dst": 242,
+      "bytes": 0,
+      "kind": "allreduce",
+      "route": []
+    },
+    {
+      "id": 624,
+      "src": 242,
+      "dst": 243,
+      "bytes": 4,
+      "kind": "p2p",
+      "route": ["nvlink_0_3"]
+    },
+    {
+      "id": 625,
+      "src": 242,
+      "dst": 244,
+      "bytes": 4,
+      "kind": "p2p",
+      "route": ["nvlink_0_2"]
+    },
+    {
+      "id": 626,
+      "src": 242,
+      "dst": 245,
+      "bytes": 4,
+      "kind": "p2p",
+      "route": ["nvlink_0_1"]
+    },
+    {
+      "id": 627,
+      "src": 242,
+      "dst": 246,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 628,
+      "src": 242,
+      "dst": 247,
+      "bytes": 4,
+      "kind": "p2p",
+      "route": ["nvlink_0_3"]
+    },
+    {
+      "id": 629,
+      "src": 242,
+      "dst": 248,
+      "bytes": 4,
+      "kind": "p2p",
+      "route": ["nvlink_0_2"]
+    },
+    {
+      "id": 630,
+      "src": 242,
+      "dst": 249,
+      "bytes": 4,
+      "kind": "p2p",
+      "route": ["nvlink_0_1"]
+    },
+    {
+      "id": 631,
+      "src": 242,
+      "dst": 250,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 632,
+      "src": 247,
+      "dst": 251,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 633,
+      "src": 247,
+      "dst": 256,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 634,
+      "src": 248,
+      "dst": 252,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 635,
+      "src": 248,
+      "dst": 257,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 636,
+      "src": 249,
+      "dst": 253,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 637,
+      "src": 249,
+      "dst": 258,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 638,
+      "src": 250,
+      "dst": 254,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 639,
+      "src": 250,
+      "dst": 259,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    },
+    {
+      "id": 640,
+      "src": 251,
+      "dst": 255,
+      "bytes": 4,
+      "kind": "allreduce",
+      "route": ["nvlink_3_0"]
+    },
+    {
+      "id": 641,
+      "src": 252,
+      "dst": 255,
+      "bytes": 4,
+      "kind": "allreduce",
+      "route": ["nvlink_2_0"]
+    },
+    {
+      "id": 642,
+      "src": 253,
+      "dst": 255,
+      "bytes": 4,
+      "kind": "allreduce",
+      "route": ["nvlink_1_0"]
+    },
+    {
+      "id": 643,
+      "src": 254,
+      "dst": 255,
+      "bytes": 0,
+      "kind": "allreduce",
+      "route": []
+    },
+    {
+      "id": 644,
+      "src": 255,
+      "dst": 256,
+      "bytes": 4,
+      "kind": "p2p",
+      "route": ["nvlink_0_3"]
+    },
+    {
+      "id": 645,
+      "src": 255,
+      "dst": 257,
+      "bytes": 4,
+      "kind": "p2p",
+      "route": ["nvlink_0_2"]
+    },
+    {
+      "id": 646,
+      "src": 255,
+      "dst": 258,
+      "bytes": 4,
+      "kind": "p2p",
+      "route": ["nvlink_0_1"]
+    },
+    {
+      "id": 647,
+      "src": 255,
+      "dst": 259,
+      "bytes": 0,
+      "kind": "p2p",
+      "route": []
+    }
+  ]
+}

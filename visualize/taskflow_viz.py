@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 import argparse
+from collections import Counter
 import json
 from pathlib import Path
+import shlex
 import shutil
 import struct
 import subprocess
@@ -21,6 +23,130 @@ def make_label(task):
     if subtype:
         return f"{tid}: {name}\\n{kind}/{subtype}\\n@dev {device}"
     return f"{tid}: {name}\\n{kind}\\n@dev {device}"
+
+def _parse_base_and_iter(name: str):
+    base = name.split("@", 1)[0]
+    parts = base.split("_")
+    if parts and parts[-1].isdigit():
+        return "_".join(parts[:-1]), int(parts[-1])
+    return base, None
+
+def abstract_taskflow(data, mode: str):
+    if mode == "none":
+        return data
+
+    tasks = data.get("tasks", [])
+    edges = data.get("edges", [])
+
+    groups = {}
+    for t in tasks:
+        name = str(t.get("name", ""))
+        base, it = _parse_base_and_iter(name)
+        subtype = t.get("subtype", "") or base
+        device = str(t.get("device", "?"))
+
+        if mode == "op":
+            key = (subtype,)
+        elif mode == "iter":
+            key = (it if it is not None else -1,)
+        elif mode == "device":
+            key = (device,)
+        else:  # iter_op
+            key = (it if it is not None else -1, subtype)
+
+        if key not in groups:
+            groups[key] = {
+                "task_ids": [],
+                "subtype": subtype,
+                "iter": it,
+                "devices": set(),
+                "flops": 0,
+                "name": base,
+            }
+        g = groups[key]
+        g["task_ids"].append(t["id"])
+        g["devices"].add(device)
+        g["flops"] += t.get("flops", 0)
+
+    group_ids = {k: idx for idx, k in enumerate(sorted(groups.keys()))}
+    task_to_group = {}
+    for k, g in groups.items():
+        gid = group_ids[k]
+        for tid in g["task_ids"]:
+            task_to_group[tid] = gid
+
+    abstract_tasks = []
+    for k, g in groups.items():
+        gid = group_ids[k]
+        devs = sorted(g["devices"])
+        dev_label = ",".join(devs)
+        if len(devs) > 3:
+            dev_label = f"{len(devs)} devices"
+
+        if mode == "op":
+            label = f"{g['subtype']}\\ncount={len(g['task_ids'])}\\n{dev_label}"
+        elif mode == "iter":
+            label = f"iter {g['iter']}\\ncount={len(g['task_ids'])}\\n{dev_label}"
+        elif mode == "device":
+            label = f"device {dev_label}\\ncount={len(g['task_ids'])}"
+        else:
+            label = f"iter {g['iter']} | {g['subtype']}\\ncount={len(g['task_ids'])}\\n{dev_label}"
+
+        abstract_tasks.append({
+            "id": gid,
+            "kind": "compute",
+            "name": label,
+            "subtype": g["subtype"],
+            "device": dev_label,
+            "flops": g["flops"],
+        })
+
+    edge_agg = {}
+    for e in edges:
+        src = e.get("src")
+        dst = e.get("dst")
+        if src not in task_to_group or dst not in task_to_group:
+            continue
+        gs = task_to_group[src]
+        gd = task_to_group[dst]
+        if gs == gd:
+            continue
+        key = (gs, gd)
+        if key not in edge_agg:
+            edge_agg[key] = {
+                "src": gs,
+                "dst": gd,
+                "bytes": 0,
+                "kinds": set(),
+            }
+        edge_agg[key]["bytes"] += e.get("bytes", 0)
+        kind = e.get("kind")
+        if kind:
+            edge_agg[key]["kinds"].add(kind)
+
+    abstract_edges = []
+    for idx, item in enumerate(edge_agg.values()):
+        kinds = item["kinds"]
+        if len(kinds) == 1:
+            kind = next(iter(kinds))
+        elif len(kinds) == 0:
+            kind = ""
+        else:
+            kind = "mixed"
+        abstract_edges.append({
+            "id": idx,
+            "src": item["src"],
+            "dst": item["dst"],
+            "bytes": item["bytes"],
+            "kind": kind,
+            "route": [],
+        })
+
+    return {
+        "time_unit": data.get("time_unit", ""),
+        "tasks": abstract_tasks,
+        "edges": abstract_edges,
+    }
 
 def to_mermaid(data, include_bytes=True, include_route=False, group_by_device=False):
     tasks = data.get("tasks", [])
@@ -94,15 +220,95 @@ def to_dot(data, include_bytes=True, include_route=False):
     return "\n".join(lines) + "\n"
 
 def parse_args():
-    p = argparse.ArgumentParser(description="Visualize taskflow.json as Mermaid, Graphviz DOT, or PNG.")
+    p = argparse.ArgumentParser(description="Visualize taskflow.json as Graphviz DOT/SVG/PNG or Mermaid.")
     p.add_argument("--input", required=True, help="Path to taskflow.json")
-    p.add_argument("--output", help="Output file; if omitted, prints to stdout")
-    p.add_argument("--format", choices=["mermaid", "dot", "png"], default="mermaid")
+    p.add_argument("--output", help="Output file; defaults to taskflow.svg for DOT rendering")
+    p.add_argument("--format", choices=["mermaid", "dot", "png"], default="dot")
     p.add_argument("--png", help="Write PNG to this path (requires dot for --format=dot or mmdc for --format=mermaid)")
     p.add_argument("--no-bytes", action="store_true", help="Do not label edges with bytes (zero bytes are hidden)")
     p.add_argument("--route", action="store_true", help="Include route list in edge labels")
     p.add_argument("--group-by-device", action="store_true", help="Group nodes into device subgraphs (mermaid only)")
+    p.add_argument("--abstract", action="store_true", help="Abstract taskflow by grouping tasks")
+    p.add_argument("--abstract-by", choices=["iter_op", "iter", "op", "device"], default="iter_op")
+    p.add_argument("--max-nodes", type=int, default=2500, help="Skip rendering when task count exceeds this value (<=0 disables check)")
+    p.add_argument("--max-edges", type=int, default=10000, help="Skip rendering when edge count exceeds this value (<=0 disables check)")
+    p.add_argument("--force-render", action="store_true", help="Force rendering even if graph is larger than limits")
+    p.add_argument("--summary", help="Write schedule summary text to this path")
+    p.add_argument("--quiet-skip-summary", action="store_true", help="When rendering is skipped, avoid printing full summary text to stderr")
     return p.parse_args()
+
+def _to_int(value):
+    try:
+        return int(value)
+    except (TypeError, ValueError):
+        return 0
+
+def canonical_task_subtype(value):
+    text = str(value or "unknown").strip().lower().replace("-", "_").replace(" ", "_")
+    if text == "scalar":
+        return "scalar_div"
+    return text
+
+def graph_stats(data):
+    tasks = [t for t in data.get("tasks", []) if isinstance(t, dict)]
+    edges = [e for e in data.get("edges", []) if isinstance(e, dict)]
+    subtype_counter = Counter()
+    device_counter = Counter()
+    total_edge_bytes = 0
+    kind_bytes = Counter()
+
+    for task in tasks:
+        subtype = canonical_task_subtype(task.get("subtype") or task.get("kind") or "unknown")
+        device = str(task.get("device", "?"))
+        subtype_counter[subtype] += 1
+        device_counter[device] += 1
+
+    for edge in edges:
+        edge_bytes = _to_int(edge.get("bytes", 0))
+        total_edge_bytes += edge_bytes
+        if edge_bytes > 0:
+            kind = str(edge.get("kind") or "unknown")
+            kind_bytes[kind] += edge_bytes
+
+    return {
+        "task_count": len(tasks),
+        "edge_count": len(edges),
+        "device_count": len(device_counter),
+        "subtype_counter": subtype_counter,
+        "device_counter": device_counter,
+        "kind_bytes": kind_bytes,
+        "total_edge_bytes": total_edge_bytes,
+    }
+
+def build_schedule_summary(data, stats, args):
+    top_subtypes = ", ".join(
+        f"{name}:{count}" for name, count in stats["subtype_counter"].most_common(6)
+    ) or "N/A"
+    top_devices = ", ".join(
+        f"{name}:{count}" for name, count in stats["device_counter"].most_common(6)
+    ) or "N/A"
+    top_kinds = ", ".join(
+        f"{name}:{bytes_val}B" for name, bytes_val in stats["kind_bytes"].most_common(4) if bytes_val > 0
+    ) or "N/A"
+    in_path = shlex.quote(str(Path(args.input)))
+
+    lines = [
+        "Taskflow summary (render skipped due to graph size)",
+        f"- tasks: {stats['task_count']}",
+        f"- edges: {stats['edge_count']}",
+        f"- devices: {stats['device_count']}",
+        f"- total edge bytes: {stats['total_edge_bytes']}B",
+        f"- top task subtypes: {top_subtypes}",
+        f"- top communication kinds by bytes: {top_kinds}",
+        f"- tasks per device: {top_devices}",
+        "",
+        "Suggested schedule-graph description plans:",
+        f"1) Device-level abstract view: python3 visualize/taskflow_viz.py --input {in_path} --abstract --abstract-by device --output taskflow_device.svg",
+        f"2) Iteration-level abstract view: python3 visualize/taskflow_viz.py --input {in_path} --abstract --abstract-by iter --output taskflow_iter.svg",
+        f"3) Operator-level abstract view: python3 visualize/taskflow_viz.py --input {in_path} --abstract --abstract-by op --output taskflow_op.svg",
+        f"4) Text-first Mermaid (group by device): python3 visualize/taskflow_viz.py --input {in_path} --format mermaid --group-by-device --output taskflow.mmd",
+    ]
+    return "\n".join(lines) + "\n"
 
 def write_png_from_dot(dot_text: str, png_path: Path) -> int:
     dot = shutil.which("dot")
@@ -110,6 +316,14 @@ def write_png_from_dot(dot_text: str, png_path: Path) -> int:
         print("error: Graphviz 'dot' not found; install graphviz or use --format=mermaid with mmdc.", file=sys.stderr)
         return 2
     proc = subprocess.run([dot, "-Tpng", "-o", str(png_path)], input=dot_text.encode("utf-8"))
+    return proc.returncode
+
+def write_svg_from_dot(dot_text: str, svg_path: Path) -> int:
+    dot = shutil.which("dot")
+    if not dot:
+        print("error: Graphviz 'dot' not found; install graphviz or use --format=mermaid with mmdc.", file=sys.stderr)
+        return 2
+    proc = subprocess.run([dot, "-Tsvg", "-o", str(svg_path)], input=dot_text.encode("utf-8"))
     return proc.returncode
 
 def write_png_from_mermaid(mermaid_text: str, png_path: Path) -> int:
@@ -362,7 +576,27 @@ def to_png(data, output_path: Path, include_bytes=True):
 def main():
     args = parse_args()
     data = load_taskflow(Path(args.input))
+    if args.abstract:
+        data = abstract_taskflow(data, args.abstract_by)
     include_bytes = not args.no_bytes
+    stats = graph_stats(data)
+
+    too_many_nodes = args.max_nodes > 0 and stats["task_count"] > args.max_nodes
+    too_many_edges = args.max_edges > 0 and stats["edge_count"] > args.max_edges
+    if not args.force_render and (too_many_nodes or too_many_edges):
+        reasons = []
+        if too_many_nodes:
+            reasons.append(f"tasks={stats['task_count']} > max_nodes={args.max_nodes}")
+        if too_many_edges:
+            reasons.append(f"edges={stats['edge_count']} > max_edges={args.max_edges}")
+        print("warning: rendering skipped for large graph (" + ", ".join(reasons) + ")", file=sys.stderr)
+        summary = build_schedule_summary(data, stats, args)
+        if args.summary:
+            Path(args.summary).write_text(summary)
+            print(f"summary written to {args.summary}", file=sys.stderr)
+        if not args.quiet_skip_summary:
+            print(summary, file=sys.stderr, end="")
+        sys.exit(3)
 
     if args.format == "mermaid":
         output = to_mermaid(data, include_bytes=include_bytes, include_route=args.route, group_by_device=args.group_by_device)
@@ -383,9 +617,14 @@ def main():
     if args.png:
         sys.exit(write_png_from_dot(output, Path(args.png)))
     if args.output:
-        Path(args.output).write_text(output)
-    else:
-        print(output, end="")
+        out_path = Path(args.output)
+        if out_path.suffix == ".dot":
+            out_path.write_text(output)
+            return
+        if out_path.suffix == ".png":
+            sys.exit(write_png_from_dot(output, out_path))
+        sys.exit(write_svg_from_dot(output, out_path))
+    sys.exit(write_svg_from_dot(output, Path("taskflow.svg")))
 
 if __name__ == "__main__":
     main()
