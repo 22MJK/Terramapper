@@ -66,6 +66,10 @@ bool is_collective_kind(const std::string& kind) {
            kind == "reduce" || kind == "alltoall";
 }
 
+bool is_cpu_device(const hardware_topology::Device* device) {
+    return device != nullptr && device->type == "CPU";
+}
+
 std::string to_et_collective_type(const std::string& kind) {
     const std::string canonical = canonical_comm_kind(kind);
     if (canonical == "allreduce") {
@@ -299,15 +303,18 @@ void TaskflowWriter::write(const std::string& path,
         node.name = task.name;
         node.type = "COMP_NODE";
         const auto& assigned_device = mapping_plan.node_for(task.name);
-        add_attr_bool(node.attrs, "is_cpu_op", false);
-        add_attr_str(node.attrs, "compute_target", "gpu");
+        const auto* device = topology.device(assigned_device);
+        const bool on_cpu = is_cpu_device(device);
+        // Reflect the mapped device type so CPU tasks are emitted as valid compute ops.
+        add_attr_bool(node.attrs, "is_cpu_op", on_cpu);
+        add_attr_str(node.attrs, "compute_target", on_cpu ? "cpu" : "gpu");
         add_attr_u64(node.attrs, "num_ops", flops_to_uint64(task.compute_flops));
         add_attr_u64(node.attrs, "tensor_size", bytes_to_uint64(task.memory_bytes));
         add_attr_str(node.attrs, "assigned_device", assigned_device);
         if (!task.subtype.empty()) {
             add_attr_str(node.attrs, "subtype", task.subtype);
         }
-        node.duration_micros = estimate_comp_duration_micros(task, topology.device(assigned_device));
+        node.duration_micros = estimate_comp_duration_micros(task, device);
         task_name_to_node_index.emplace(task.name, nodes.size());
         nodes.push_back(std::move(node));
     }

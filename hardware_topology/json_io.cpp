@@ -339,6 +339,18 @@ std::optional<int> get_int(const JsonObject& obj, const std::string& key) {
     return static_cast<int>(*num);
 }
 
+std::string canonical_device_type(std::string type) {
+    // Normalize supported compute device kinds so downstream code can
+    // recognize both existing GPUs and newly added CPUs consistently.
+    for (char& ch : type) {
+        ch = static_cast<char>(std::toupper(static_cast<unsigned char>(ch)));
+    }
+    if (type == "GPU" || type == "CPU") {
+        return type;
+    }
+    return type;
+}
+
 }  // namespace
 
 bool load_from_json(const std::string& path, HardwareTopology& out, std::string* error) {
@@ -405,7 +417,8 @@ bool load_from_json(const std::string& path, HardwareTopology& out, std::string*
         Device dev;
         dev.id = *id;
         dev.name = *name;
-        dev.type = *type;
+        // Preserve GPU behavior and recognize CPU as another valid compute type.
+        dev.type = canonical_device_type(*type);
         dev.peak_gflops = *peak;
         dev.mem_bw_gbps = *mem_bw;
         dev.max_concurrent = *max_concurrent;
