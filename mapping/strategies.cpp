@@ -6,7 +6,7 @@ std::vector<std::vector<Task>> LayerPartition::partition(const TaskGraph& graph,
     if (parts <= 0) {
         throw std::runtime_error("Parts must be >= 1");
     }
-    const auto ordered = graph.topological_order();
+    const auto& ordered = graph.topological_order();
     std::vector<std::vector<Task>> result(parts);
     const int base = static_cast<int>(ordered.size()) / parts;
     int remainder = static_cast<int>(ordered.size()) % parts;

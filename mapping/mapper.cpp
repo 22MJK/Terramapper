@@ -103,7 +103,7 @@ std::unordered_set<std::string> allowed_devices_from_tags(const Task& task) {
 }  // namespace
 
 MappingPlan GreedyMapper::map(const TaskGraph& graph, const hardware_topology::HardwareTopology& topology) const {
-    const auto devices = topology.devices();
+    const auto& devices = topology.devices();
     if (devices.empty()) {
         throw std::runtime_error("Topology has no devices");
     }
@@ -195,7 +195,7 @@ struct LinkStats {
 };
 
 LinkStats average_link_stats(const hardware_topology::HardwareTopology& topology) {
-    const auto links = topology.links();
+    const auto& links = topology.links();
     if (links.empty()) {
         return {};
     }
@@ -295,12 +295,12 @@ double average_comm_time(const TaskEdge& edge,
 }  // namespace
 
 MappingPlan HeftMapper::map(const TaskGraph& graph, const hardware_topology::HardwareTopology& topology) const {
-    const auto devices = topology.devices();
+    const auto& devices = topology.devices();
     if (devices.empty()) {
         throw std::runtime_error("Topology has no devices");
     }
 
-    const auto topo = graph.topological_order();
+    const auto& topo = graph.topological_order();
     std::unordered_map<std::string, Task> tasks;
     tasks.reserve(topo.size());
     for (const auto& task : topo) {
@@ -466,6 +466,214 @@ MappingPlan HeftMapper::map(const TaskGraph& graph, const hardware_topology::Har
 
         assignment[name] = devices[best_device]->id;
         finish_time[name] = best_finish;
+        available[best_device] = best_finish;
+    }
+
+    MappingPlan plan;
+    plan.assignments = std::move(assignment);
+    return plan;
+}
+
+MappingPlan PeftMapper::map(const TaskGraph& graph, const hardware_topology::HardwareTopology& topology) const {
+    const auto& devices = topology.devices();
+    if (devices.empty()) {
+        throw std::runtime_error("Topology has no devices");
+    }
+
+    const auto& topo = graph.topological_order();
+    std::unordered_map<std::string, Task> tasks;
+    tasks.reserve(topo.size());
+    for (const auto& task : topo) {
+        tasks.emplace(task.name, task);
+    }
+
+    const auto collective_info = build_collective_info(graph);
+    const auto kInf = std::numeric_limits<double>::infinity();
+
+    auto eligible_device_indices = [&](const Task& task) {
+        std::vector<std::size_t> indices;
+        indices.reserve(devices.size());
+
+        const auto pin = pinned_device_tag(task);
+        const auto allowed = allowed_devices_from_tags(task);
+        for (std::size_t i = 0; i < devices.size(); ++i) {
+            const auto* device = devices[i];
+            if (pin.has_value() && device->id != *pin) {
+                continue;
+            }
+            if (!allowed.empty() && allowed.find(device->id) == allowed.end()) {
+                continue;
+            }
+            indices.push_back(i);
+        }
+
+        if (pin.has_value() && indices.empty()) {
+            throw std::runtime_error("Pinned device not found or not allowed for task: " + task.name);
+        }
+        if (indices.empty()) {
+            throw std::runtime_error("No eligible device for task: " + task.name);
+        }
+        return indices;
+    };
+
+    std::unordered_map<std::string, std::vector<double>> oct_cache;
+    oct_cache.reserve(topo.size());
+
+    std::function<const std::vector<double>&(const std::string&)> compute_oct =
+        [&](const std::string& task_name) -> const std::vector<double>& {
+        const auto cached = oct_cache.find(task_name);
+        if (cached != oct_cache.end()) {
+            return cached->second;
+        }
+
+        const auto& task = tasks.at(task_name);
+        auto eligible = eligible_device_indices(task);
+        std::vector<double> oct(devices.size(), kInf);
+
+            const auto& successors = graph.successors(task_name);
+        for (const auto device_idx : eligible) {
+            double value = 0.0;
+            for (const auto& edge : successors) {
+                const auto& succ_task = tasks.at(edge.dst);
+                const auto succ_eligible = eligible_device_indices(succ_task);
+                const auto& succ_oct = compute_oct(edge.dst);
+
+                double best_successor = kInf;
+                for (const auto succ_idx : succ_eligible) {
+                    double comm = 0.0;
+                    if (is_collective_kind(edge.comm_kind)) {
+                        auto info_it = collective_info.find(collective_event_key(edge));
+                        std::size_t participants = devices.size();
+                        double bytes = edge.tensor_bytes;
+                        std::string kind = edge.comm_kind;
+                        if (info_it != collective_info.end()) {
+                            participants = std::max<std::size_t>(2, info_it->second.all_tasks.size());
+                            bytes = std::max(bytes, info_it->second.bytes);
+                            kind = info_it->second.kind;
+                        }
+                        comm = collective_time_seconds(kind, bytes, participants, topology);
+                    } else if (devices[device_idx]->id != devices[succ_idx]->id && edge.tensor_bytes > 0.0) {
+                        comm = topology.get_transfer_time(devices[device_idx]->id,
+                                                          devices[succ_idx]->id,
+                                                          static_cast<size_t>(edge.tensor_bytes));
+                    }
+
+                    const double succ_cost = compute_time_seconds(succ_task, devices[succ_idx]);
+                    const double candidate = comm + succ_cost + succ_oct[succ_idx];
+                    if (candidate < best_successor) {
+                        best_successor = candidate;
+                    }
+                }
+                value = std::max(value, best_successor);
+            }
+            oct[device_idx] = value;
+        }
+
+        return oct_cache.emplace(task_name, std::move(oct)).first->second;
+    };
+
+    for (const auto& task : topo) {
+        compute_oct(task.name);
+    }
+
+    std::unordered_map<std::string, std::string> assignment;
+    std::unordered_map<std::string, double> finish_time;
+    std::unordered_map<std::string, double> collective_finish_time;
+    assignment.reserve(topo.size());
+    finish_time.reserve(topo.size());
+    std::vector<double> available(devices.size(), 0.0);
+
+    for (const auto& task : topo) {
+        const auto eligible = eligible_device_indices(task);
+        const auto& oct = oct_cache.at(task.name);
+
+        double best_metric = kInf;
+        double best_finish = kInf;
+        std::size_t best_device = eligible.front();
+
+        for (const auto device_idx : eligible) {
+            const auto* device = devices[device_idx];
+            double ready = available[device_idx];
+
+            for (const auto& edge : graph.dependencies(task.name)) {
+                const auto& pred_name = edge.src;
+                const auto pred_assign = assignment.find(pred_name);
+                const auto pred_finish = finish_time.find(pred_name);
+                if (pred_assign == assignment.end() || pred_finish == finish_time.end()) {
+                    throw std::runtime_error("Task dependencies must be assigned before successors");
+                }
+
+                double comm = 0.0;
+                if (is_collective_kind(edge.comm_kind)) {
+                    const auto key = collective_event_key(edge);
+                    const auto cached = collective_finish_time.find(key);
+                    if (cached != collective_finish_time.end()) {
+                        ready = std::max(ready, cached->second);
+                        continue;
+                    }
+
+                    auto info_it = collective_info.find(key);
+                    double collective_start = pred_finish->second;
+                    std::size_t participants = devices.size();
+                    double bytes = edge.tensor_bytes;
+                    std::string kind = edge.comm_kind;
+                    if (info_it != collective_info.end()) {
+                        participants = std::max<std::size_t>(2, info_it->second.all_tasks.size());
+                        bytes = std::max(bytes, info_it->second.bytes);
+                        kind = info_it->second.kind;
+                        collective_start = 0.0;
+                        bool all_ready = true;
+                        for (const auto& src_task : info_it->second.src_tasks) {
+                            const auto src_finish = finish_time.find(src_task);
+                            if (src_finish == finish_time.end()) {
+                                all_ready = false;
+                                break;
+                            }
+                            collective_start = std::max(collective_start, src_finish->second);
+                        }
+                        if (!all_ready) {
+                            ready = kInf;
+                            break;
+                        }
+                    }
+
+                    comm = collective_time_seconds(kind, bytes, participants, topology);
+                    const double collective_done = collective_start + comm;
+                    collective_finish_time.emplace(key, collective_done);
+                    ready = std::max(ready, collective_done);
+                    continue;
+                }
+
+                if (pred_assign->second != device->id && edge.tensor_bytes > 0.0) {
+                    comm = topology.get_transfer_time(pred_assign->second,
+                                                     device->id,
+                                                     static_cast<size_t>(edge.tensor_bytes));
+                }
+                ready = std::max(ready, pred_finish->second + comm);
+            }
+
+            if (!std::isfinite(ready)) {
+                continue;
+            }
+
+            const double exec = compute_time_seconds(task, device);
+            const double eft = ready + exec;
+            const double metric = eft + oct[device_idx];
+            if (metric < best_metric ||
+                (metric == best_metric &&
+                 (eft < best_finish || (eft == best_finish && device->id < devices[best_device]->id)))) {
+                best_metric = metric;
+                best_finish = eft;
+                best_device = device_idx;
+            }
+        }
+
+        if (!std::isfinite(best_finish)) {
+            throw std::runtime_error("No eligible device for task: " + task.name);
+        }
+
+        assignment[task.name] = devices[best_device]->id;
+        finish_time[task.name] = best_finish;
         available[best_device] = best_finish;
     }
 

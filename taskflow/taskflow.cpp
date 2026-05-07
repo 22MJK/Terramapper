@@ -272,12 +272,13 @@ void TaskflowWriter::write(const std::string& path,
                            const mapping::TaskGraph& graph,
                            const mapping::MappingPlan& mapping_plan,
                            const hardware_topology::HardwareTopology& topology) {
+    (void)time_unit;  // Keep the public API stable while omitting the non-ET metadata field.
     std::ofstream out(path);
     if (!out) {
         throw std::runtime_error("Failed to open " + path);
     }
 
-    const auto topo_tasks = graph.topological_order();
+    const auto& topo_tasks = graph.topological_order();
     std::unordered_map<std::string, std::uint64_t> task_id;
     task_id.reserve(topo_tasks.size());
     for (std::uint64_t i = 0; i < topo_tasks.size(); ++i) {
@@ -285,7 +286,7 @@ void TaskflowWriter::write(const std::string& path,
     }
 
     std::unordered_map<std::string, std::uint64_t> device_rank;
-    const auto devices = topology.devices();
+    const auto& devices = topology.devices();
     device_rank.reserve(devices.size());
     for (std::uint64_t i = 0; i < devices.size(); ++i) {
         device_rank.emplace(devices[i]->id, i);
@@ -305,9 +306,8 @@ void TaskflowWriter::write(const std::string& path,
         const auto& assigned_device = mapping_plan.node_for(task.name);
         const auto* device = topology.device(assigned_device);
         const bool on_cpu = is_cpu_device(device);
-        // Reflect the mapped device type so CPU tasks are emitted as valid compute ops.
-        add_attr_bool(node.attrs, "is_cpu_op", on_cpu);
-        add_attr_str(node.attrs, "compute_target", on_cpu ? "cpu" : "gpu");
+        // Emit the documented ET target string for dedicated CPU-node vs GPU compute.
+        add_attr_str(node.attrs, "compute_target", on_cpu ? "cpu_node" : "gpu");
         add_attr_u64(node.attrs, "num_ops", flops_to_uint64(task.compute_flops));
         add_attr_u64(node.attrs, "tensor_size", bytes_to_uint64(task.memory_bytes));
         add_attr_str(node.attrs, "assigned_device", assigned_device);
@@ -409,9 +409,6 @@ void TaskflowWriter::write(const std::string& path,
     out << "  \"global_metadata\": {\n";
     out << "    \"version\": ";
     json::write_string(out, "0.0.4");
-    out << ",\n";
-    out << "    \"time_unit\": ";
-    json::write_string(out, time_unit);
     out << "\n";
     out << "  },\n";
     out << "  \"nodes\": [\n";

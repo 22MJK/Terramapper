@@ -2,6 +2,15 @@
 
 namespace mapping {
 
+namespace {
+
+const std::vector<TaskEdge>& empty_edges() {
+    static const std::vector<TaskEdge> kEmpty;
+    return kEmpty;
+}
+
+}  // namespace
+
 void TaskGraph::add_task(Task task) {
     const auto [it, inserted] = tasks_.emplace(task.name, task);
     if (inserted) {
@@ -9,6 +18,7 @@ void TaskGraph::add_task(Task task) {
     } else {
         it->second = std::move(task);
     }
+    invalidate_caches();
 }
 
 void TaskGraph::add_edge(const std::string& src,
@@ -31,26 +41,63 @@ void TaskGraph::add_edge(const std::string& src,
                   std::move(access_pattern)};
     edges_[src].push_back(edge);
     reverse_edges_[dst].push_back(edge);
+    invalidate_caches();
 }
 
-std::vector<TaskEdge> TaskGraph::dependencies(const std::string& name) const {
+const std::vector<TaskEdge>& TaskGraph::dependencies(const std::string& name) const {
     const auto it = reverse_edges_.find(name);
     if (it == reverse_edges_.end()) {
-        return {};
+        return empty_edges();
     }
     return it->second;
 }
 
-std::vector<TaskEdge> TaskGraph::successors(const std::string& name) const {
+const std::vector<TaskEdge>& TaskGraph::successors(const std::string& name) const {
     const auto it = edges_.find(name);
     if (it == edges_.end()) {
-        return {};
+        return empty_edges();
     }
     return it->second;
 }
 
-std::vector<Task> TaskGraph::topological_order() const {
+const std::vector<Task>& TaskGraph::topological_order() const {
+    if (!topo_valid_) {
+        rebuild_topological_order();
+    }
+    return topo_cache_;
+}
+
+const std::vector<Task>& TaskGraph::source_tasks() const {
+    if (!source_valid_) {
+        rebuild_source_tasks();
+    }
+    return source_cache_;
+}
+
+const std::vector<Task>& TaskGraph::sink_tasks() const {
+    if (!sink_valid_) {
+        rebuild_sink_tasks();
+    }
+    return sink_cache_;
+}
+
+bool TaskGraph::has_task(const std::string& name) const {
+    return tasks_.find(name) != tasks_.end();
+}
+
+const Task& TaskGraph::task(const std::string& name) const {
+    return tasks_.at(name);
+}
+
+void TaskGraph::invalidate_caches() {
+    topo_valid_ = false;
+    source_valid_ = false;
+    sink_valid_ = false;
+}
+
+void TaskGraph::rebuild_topological_order() const {
     std::unordered_map<std::string, int> indegree;
+    indegree.reserve(insertion_order_.size());
     for (const auto& name : insertion_order_) {
         indegree[name] = 0;
     }
@@ -68,11 +115,16 @@ std::vector<Task> TaskGraph::topological_order() const {
     }
 
     std::vector<Task> order;
+    order.reserve(tasks_.size());
     while (!queue.empty()) {
         const auto current = queue.front();
         queue.pop_front();
         order.push_back(tasks_.at(current));
-        for (const auto& edge : successors(current)) {
+        const auto succ_it = edges_.find(current);
+        if (succ_it == edges_.end()) {
+            continue;
+        }
+        for (const auto& edge : succ_it->second) {
             indegree[edge.dst] -= 1;
             if (indegree[edge.dst] == 0) {
                 queue.push_back(edge.dst);
@@ -83,35 +135,32 @@ std::vector<Task> TaskGraph::topological_order() const {
     if (order.size() != tasks_.size()) {
         throw std::runtime_error("TaskGraph contains a cycle");
     }
-    return order;
+    topo_cache_ = std::move(order);
+    topo_valid_ = true;
 }
 
-std::vector<Task> TaskGraph::source_tasks() const {
+void TaskGraph::rebuild_source_tasks() const {
     std::vector<Task> result;
+    result.reserve(insertion_order_.size());
     for (const auto& name : insertion_order_) {
         if (reverse_edges_.find(name) == reverse_edges_.end()) {
             result.push_back(tasks_.at(name));
         }
     }
-    return result;
+    source_cache_ = std::move(result);
+    source_valid_ = true;
 }
 
-std::vector<Task> TaskGraph::sink_tasks() const {
+void TaskGraph::rebuild_sink_tasks() const {
     std::vector<Task> result;
+    result.reserve(insertion_order_.size());
     for (const auto& name : insertion_order_) {
         if (edges_.find(name) == edges_.end()) {
             result.push_back(tasks_.at(name));
         }
     }
-    return result;
-}
-
-bool TaskGraph::has_task(const std::string& name) const {
-    return tasks_.find(name) != tasks_.end();
-}
-
-const Task& TaskGraph::task(const std::string& name) const {
-    return tasks_.at(name);
+    sink_cache_ = std::move(result);
+    sink_valid_ = true;
 }
 
 }  // namespace mapping

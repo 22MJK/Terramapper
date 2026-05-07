@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstddef>
+#include <cstdint>
 #include <string>
 #include <string_view>
 #include <optional>
@@ -37,8 +38,8 @@ public:
     void add_link(Link link);
 
     const Device* device(std::string_view id) const;
-    std::vector<const Device*> devices() const;
-    std::vector<Link> links() const;
+    const std::vector<const Device*>& devices() const;
+    const std::vector<Link>& links() const;
 
     // Direct-link queries (directed).
     std::optional<double> bw_gbps(std::string_view src, std::string_view dst) const;
@@ -56,9 +57,35 @@ public:
     double get_transfer_time(std::string_view src, std::string_view dst, size_t bytes) const;
 
 private:
+    struct TransferCacheKey {
+        std::string src;
+        std::string dst;
+        std::uint64_t bytes{0};
+
+        bool operator==(const TransferCacheKey& other) const {
+            return src == other.src && dst == other.dst && bytes == other.bytes;
+        }
+    };
+
+    struct TransferCacheKeyHash {
+        std::size_t operator()(const TransferCacheKey& key) const;
+    };
+
+    void invalidate_caches();
+    void rebuild_device_cache() const;
+    void rebuild_link_caches() const;
+    double shortest_route_cost_seconds(std::string_view src, std::string_view dst, std::size_t bytes) const;
+
     std::string time_unit_{"s"};
     std::unordered_map<std::string, Device> devices_;
     std::vector<Link> links_;
+    mutable bool devices_cache_valid_{false};
+    mutable bool links_cache_valid_{false};
+    mutable std::vector<const Device*> devices_cache_;
+    mutable std::vector<Link> links_cache_;
+    mutable std::unordered_map<std::string, std::vector<const Link*>> outgoing_cache_;
+    mutable std::unordered_map<std::string, const Link*> link_by_id_cache_;
+    mutable std::unordered_map<TransferCacheKey, double, TransferCacheKeyHash> transfer_time_cache_;
 };
 
 }  // namespace hardware_topology

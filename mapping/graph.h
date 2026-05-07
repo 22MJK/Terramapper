@@ -38,20 +38,31 @@ public:
                   std::string comm_kind = {},
                   std::string access_pattern = {});
 
-    std::vector<TaskEdge> dependencies(const std::string& name) const;
-    std::vector<TaskEdge> successors(const std::string& name) const;
-    std::vector<Task> topological_order() const;
-    std::vector<Task> source_tasks() const;
-    std::vector<Task> sink_tasks() const;
+    const std::vector<TaskEdge>& dependencies(const std::string& name) const;
+    const std::vector<TaskEdge>& successors(const std::string& name) const;
+    const std::vector<Task>& topological_order() const;
+    const std::vector<Task>& source_tasks() const;
+    const std::vector<Task>& sink_tasks() const;
 
     bool has_task(const std::string& name) const;
     const Task& task(const std::string& name) const;
 
 private:
+    void invalidate_caches();
+    void rebuild_topological_order() const;
+    void rebuild_source_tasks() const;
+    void rebuild_sink_tasks() const;
+
     std::unordered_map<std::string, Task> tasks_;
     std::unordered_map<std::string, std::vector<TaskEdge>> edges_;
     std::unordered_map<std::string, std::vector<TaskEdge>> reverse_edges_;
     std::vector<std::string> insertion_order_;
+    mutable bool topo_valid_{false};
+    mutable bool source_valid_{false};
+    mutable bool sink_valid_{false};
+    mutable std::vector<Task> topo_cache_;
+    mutable std::vector<Task> source_cache_;
+    mutable std::vector<Task> sink_cache_;
 };
 
 }  // namespace mapping

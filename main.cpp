@@ -260,7 +260,7 @@ int main(int argc, char** argv) {
     }
     if (hardware_path.empty() || workload_path.empty()) {
         std::cerr << "Usage: mapper_demo --hardware=PATH --workload=PATH [--parts=P] [--time_unit=UNIT] "
-                     "[--mapper=heft|greedy] [--parallel=auto|none|hint|all] [--out=PATH|--output=PATH] "
+                     "[--mapper=heft|peft|greedy] [--parallel=auto|none|hint|all] [--out=PATH|--output=PATH] "
                      "[--no-viz] [--viz-max-tasks=N] [--viz-max-edges=N] [--viz-force] [--viz-summary=PATH]\n";
         return 2;
     }

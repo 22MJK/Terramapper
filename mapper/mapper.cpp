@@ -261,7 +261,7 @@ mapping::TaskGraph annotate_comm_bytes(const mapping::TaskGraph& graph,
                                        const workload::Workload& workload,
                                        const hardware_topology::HardwareTopology& topology) {
     mapping::TaskGraph annotated;
-    const auto ordered = graph.topological_order();
+    const auto& ordered = graph.topological_order();
     for (const auto& task : ordered) {
         annotated.add_task(task);
     }
@@ -438,7 +438,7 @@ mapping::TaskGraph expand_data_parallel(const mapping::TaskGraph& graph,
     std::unordered_map<std::string, ExpandedTask> expanded;
     mapping::TaskGraph expanded_graph;
 
-    const auto ordered = graph.topological_order();
+    const auto& ordered = graph.topological_order();
     for (const auto& task : ordered) {
         auto it = placement.find(task.name);
         const bool by_hint = (it != placement.end() && it->second.parallelism == "data_parallel");
@@ -575,7 +575,7 @@ struct LinkStats {
 };
 
 LinkStats average_link_stats(const hardware_topology::HardwareTopology& topology) {
-    const auto links = topology.links();
+    const auto& links = topology.links();
     if (links.empty()) {
         return {};
     }
@@ -645,7 +645,7 @@ double collective_time_seconds(const std::string& comm_kind,
 double estimate_makespan_seconds(const mapping::TaskGraph& graph,
                                  const mapping::MappingPlan& plan,
                                  const hardware_topology::HardwareTopology& topology) {
-    const auto devices = topology.devices();
+    const auto& devices = topology.devices();
     if (devices.empty()) {
         return std::numeric_limits<double>::infinity();
     }
@@ -731,6 +731,8 @@ std::unique_ptr<mapping::Mapper> build_mapper_for_graph(const mapping::TaskGraph
     std::unique_ptr<mapping::Mapper> base_mapper;
     if (options.mapper == "heft") {
         base_mapper = std::make_unique<mapping::HeftMapper>();
+    } else if (options.mapper == "peft") {
+        base_mapper = std::make_unique<mapping::PeftMapper>();
     } else if (options.mapper == "greedy") {
         base_mapper = std::make_unique<mapping::GreedyMapper>();
     } else {
@@ -875,7 +877,7 @@ RunResult write_taskflow(const hardware_topology::HardwareTopology& topology,
     std::uint64_t total_edge_bytes = 0;
     std::uint64_t cross_device_edge_bytes = 0;
 
-    const auto topo = best_graph.topological_order();
+    const auto& topo = best_graph.topological_order();
     source_count = best_graph.source_tasks().size();
     sink_count = best_graph.sink_tasks().size();
 
