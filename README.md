@@ -9,6 +9,7 @@
 - 支持 `heft`、`peft`、`greedy` 映射
 - 支持 `auto/none/hint/all` 并行模式
 - 生成调度摘要与 SVG 可视化
+- 打印 mapper 运行耗时（不包含绘图时间）
 
 ## 安装
 - 环境：`clang++` 或 `g++`、`make`、`python3`
@@ -18,6 +19,8 @@
 - 运行：`./mapper_demo --hardware=hardware_topology/cg_hardware.json --workload=workload/cg_iteration_workload.json`
 - 指定输出：`--out=taskflow.json`
 - 渲染图：`python3 visualize/taskflow_viz.py --input taskflow.json --output taskflow.svg`
+- 运行结束后会输出 `Mapper runtime (excluding visualization): ... s`
+- 默认不会执行 `expand_data_parallel`；如需展开，请显式传 `--parallel=hint`、`--parallel=all` 或 `--parallel=auto`
 
 ## 示例
 - `./mapper_demo --hardware=hardware_topology/cg_hardware_4gpu.json --workload=workload/cg_iteration_workload_large.json --mapper=heft --parallel=auto`

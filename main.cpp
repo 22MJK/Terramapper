@@ -5,6 +5,7 @@
 #include "workload/workload.h"
 
 #include <algorithm>
+#include <chrono>
 #include <cstdlib>
 #include <filesystem>
 #include <iomanip>
@@ -181,7 +182,7 @@ int main(int argc, char** argv) {
     std::string hardware_path;
     std::string workload_path;
     std::string mapper_name = "heft";
-    std::string parallel_mode = "auto";
+    std::string parallel_mode = "none";
     bool enable_viz = true;
     bool viz_force = false;
     int viz_max_tasks = 2500;
@@ -292,12 +293,18 @@ int main(int argc, char** argv) {
     options.time_unit = time_unit;
     options.mapper = mapper_name;
     options.parallel = parallel_mode;
+    const auto mapper_start = std::chrono::steady_clock::now();
     const auto result = mapper::write_taskflow(topology, workload, taskflow_path, options);
+    const auto mapper_end = std::chrono::steady_clock::now();
+    const std::chrono::duration<double> mapper_runtime = mapper_end - mapper_start;
     std::cout << "Wrote " << taskflow_path << "\n";
     std::cout << "Estimated makespan: " << std::fixed << std::setprecision(6)
               << result.estimated_makespan_s << " s"
               << " (parallel=" << result.selected_parallel
               << ", tasks=" << result.task_count << ")\n";
+    std::cout << "Mapper runtime (excluding visualization): "
+              << std::fixed << std::setprecision(6)
+              << mapper_runtime.count() << " s\n";
     print_schedule_summary(result, taskflow_path);
     std::cout.flush();
     if (enable_viz) {
